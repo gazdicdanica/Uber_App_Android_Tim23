@@ -17,7 +17,7 @@ public class SplashActivity extends Activity {
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
-                startActivity(new Intent(SplashActivity.this, UserLoginActivity.class));
+                startActivity(new Intent(SplashActivity.this, PassengerMainActivity.class));
                 finish();
             }
         }, 5000);
