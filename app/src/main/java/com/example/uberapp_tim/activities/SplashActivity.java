@@ -20,7 +20,7 @@ public class SplashActivity extends Activity {
                 startActivity(new Intent(SplashActivity.this, PassengerMainActivity.class));
                 finish();
             }
-        }, 5000);
+        }, 1000);
     }
 
     @Override
