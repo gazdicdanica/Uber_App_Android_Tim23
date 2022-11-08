@@ -24,14 +24,6 @@ public class UserLoginActivity extends Activity {
                 startActivity(new Intent(UserLoginActivity.this, PassengerMainActivity.class));
             }
         });
-
-        Button registerButton = findViewById(R.id.button4);
-        registerButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(UserLoginActivity.this, PassengerRegisterActivity.class));
-            }
-        });
     }
 
     @Override
