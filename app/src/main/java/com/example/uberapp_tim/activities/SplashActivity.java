@@ -16,14 +16,13 @@ public class SplashActivity extends Activity {
     protected void onCreate(Bundle savedInstance){
         super.onCreate(savedInstance);
         setContentView(R.layout.splash);
-        Toast.makeText(this, "Splash", Toast.LENGTH_SHORT).show();
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
                 startActivity(new Intent(SplashActivity.this, UserLoginActivity.class));
                 finish();
             }
-        }, 5000);
+        }, 3000);
     }
 
     @Override

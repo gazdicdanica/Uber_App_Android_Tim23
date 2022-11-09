@@ -19,7 +19,6 @@ public class UserLoginActivity extends AppCompatActivity {
         setContentView(R.layout.user_login_activity);
 //        Toast.makeText(this, "UserLogin", Toast.LENGTH_SHORT).show();
 
-        getSupportActionBar().hide();
         Button logInButton = findViewById(R.id.button3);
         logInButton.setOnClickListener(new View.OnClickListener() {
             @Override
