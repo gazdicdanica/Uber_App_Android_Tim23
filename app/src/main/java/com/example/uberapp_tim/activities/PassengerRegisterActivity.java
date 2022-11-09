@@ -2,11 +2,13 @@ package com.example.uberapp_tim.activities;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.widget.Toast;
 
 public class PassengerRegisterActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstance){
         super.onCreate(savedInstance);
+        Toast.makeText(this, "register", Toast.LENGTH_SHORT).show();
     }
 
     @Override

@@ -15,6 +15,7 @@ public class PassengerMainActivity extends Activity {
         setContentView(R.layout.passenger_main_activity);
 
 
+
         Button button = (Button) findViewById(R.id.button);
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
