@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -24,6 +25,22 @@ public class UserLoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(UserLoginActivity.this, PassengerMainActivity.class));
+            }
+        });
+        Button signInButton = findViewById(R.id.buttonSignIn);
+        signInButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(UserLoginActivity.this, PassengerRegisterActivity.class));
+            }
+        });
+
+        TextView txtForgotPassword = findViewById(R.id.txtViewForgotPassword);
+        txtForgotPassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //TODO Forgot password activity
+//                startActivity(new Intent(UserLoginActivity.this, ));
             }
         });
     }
