@@ -15,20 +15,6 @@ public class PassengerMainActivity extends Activity {
         setContentView(R.layout.passenger_main_activity);
 
 
-
-        Button button = (Button) findViewById(R.id.button);
-        button.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                startActivity(new Intent(PassengerMainActivity.this, PassengerAccountActivity.class));
-            }
-        });
-
-        Button button2 = (Button) findViewById(R.id.button2);
-        button2.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                startActivity(new Intent(PassengerMainActivity.this, PassengerInboxActivity.class));
-            }
-        });
     }
     @Override
     protected void onStart(){
