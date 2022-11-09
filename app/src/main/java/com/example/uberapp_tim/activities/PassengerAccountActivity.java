@@ -2,6 +2,7 @@ package com.example.uberapp_tim.activities;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.widget.Toast;
 
 import com.example.uberapp_tim.R;
 
@@ -10,6 +11,7 @@ public class PassengerAccountActivity extends Activity {
     protected void onCreate(Bundle savedInstance){
         super.onCreate(savedInstance);
         setContentView(R.layout.passenger_account_activity);
+        Toast.makeText(this, "Usao u Nalog", Toast.LENGTH_SHORT).show();
     }
 
     @Override
