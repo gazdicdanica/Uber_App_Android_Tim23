@@ -54,6 +54,9 @@
             android:name=".activities.UserLoginActivity"
             android:exported="true">
         </activity>
+        <activity android:name=".activities.DriverMainActivity"
+            android:exported="true">
+        </activity>
     </application>
 
 </manifest>
