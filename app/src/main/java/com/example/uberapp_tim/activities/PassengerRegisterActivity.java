@@ -4,11 +4,14 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.widget.Toast;
 
+import com.example.uberapp_tim.R;
+
 public class PassengerRegisterActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstance){
         super.onCreate(savedInstance);
-        Toast.makeText(this, "register", Toast.LENGTH_SHORT).show();
+        setContentView(R.layout.passenger_register_activity);
+        Toast.makeText(this, "RegisterActivityCreated", Toast.LENGTH_SHORT).show();
     }
 
     @Override
