@@ -14,4 +14,15 @@
     <string name="confirm_password">Confirm Password</string>
     <string name="create_account">Create Account</string>
     <string name="edit_account">Edit Account</string>
+    <string name="vehicle">Vehicle</string>
+    <string name="vehicle_registration">Vehicle Registration</string>
+    <string name="car_data">Car Data</string>
+    <string name="registration_and_licence">Registration and Licence</string>
+    <string name="car_model">Car Model</string>
+    <string name="registration">Registration</string>
+    <string name="accept_pets">Accept Pets</string>
+    <string name="accept_babies">Accept Babies</string>
+    <string name="confirm">Confirm</string>
+    <string name="id_number">ID Number</string>
+    <string name="vehicle_registration_id">Vehicle Registration ID</string>
 </resources>

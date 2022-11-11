@@ -8,26 +8,33 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatToggleButton;
 
 import com.example.uberapp_tim.R;
 
-public class PassengerRegisterActivity extends AppCompatActivity {
+public class DriverAccountActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstance){
         super.onCreate(savedInstance);
-        setContentView(R.layout.passenger_register_activity);
-        Toast.makeText(this, "RegisterActivityCreated", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "DriverAccAct", Toast.LENGTH_SHORT).show();
+        setContentView(R.layout.driver_account_activity);
 
 
-        Button reg = findViewById(R.id.regFormCreateAccButton);
-        reg.setOnClickListener(new View.OnClickListener() {
+        Button car = findViewById(R.id.carButton);
+        car.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(PassengerRegisterActivity.this, DriverAccountActivity.class));
+                startActivity(new Intent(DriverAccountActivity.this, CarActivity.class));
             }
         });
 
-        Toast.makeText(this, "Prosao", Toast.LENGTH_SHORT).show();
+        Button documents = findViewById(R.id.papersButton);
+        documents.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(DriverAccountActivity.this, DriverPapersActivity.class));
+            }
+        });
     }
 
     @Override

@@ -1,33 +1,29 @@
 package com.example.uberapp_tim.activities;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
-
-import androidx.appcompat.app.AppCompatActivity;
+import android.widget.NumberPicker;
 
 import com.example.uberapp_tim.R;
 
-public class PassengerRegisterActivity extends AppCompatActivity {
+public class CarActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstance){
         super.onCreate(savedInstance);
-        setContentView(R.layout.passenger_register_activity);
-        Toast.makeText(this, "RegisterActivityCreated", Toast.LENGTH_SHORT).show();
+        setContentView(R.layout.activity_car);
+        NumberPicker picker1 = findViewById(R.id.numberPicker);
+        picker1.setMaxValue(8);
+        picker1.setMinValue(1);
 
-
-        Button reg = findViewById(R.id.regFormCreateAccButton);
-        reg.setOnClickListener(new View.OnClickListener() {
+        Button cont = findViewById(R.id.confirmCarParamButton);
+        cont.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(PassengerRegisterActivity.this, DriverAccountActivity.class));
+                finish();
             }
         });
-
-        Toast.makeText(this, "Prosao", Toast.LENGTH_SHORT).show();
     }
 
     @Override
