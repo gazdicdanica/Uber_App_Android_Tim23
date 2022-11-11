@@ -26,10 +26,11 @@ public class PassengerAccountActivity extends AppCompatActivity {
         if(actionBar != null){
             actionBar.setDisplayShowTitleEnabled(false);
             actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setDisplayShowHomeEnabled(true);
             actionBar.setHomeButtonEnabled(true);
         }
         Toast.makeText(this, "Usao u Nalog", Toast.LENGTH_SHORT).show();
-        
+
     }
 
     @Override
@@ -40,9 +41,12 @@ public class PassengerAccountActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == R.id.edit_account){
-            //TODO open editAccount activity
+        switch(item.getItemId()){
+            case(android.R.id.home):
+                this.finish();
+                return true;
+            case (R.id.edit_account):
+                break;
         }
 
         return super.onOptionsItemSelected(item);

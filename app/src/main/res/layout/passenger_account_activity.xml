@@ -20,7 +20,8 @@
                 android:id="@+id/toolbarPassAcc"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                android:background="?attr/colorPrimary">
+                android:background="?attr/colorPrimary"
+                android:theme="@style/ToolBarTheme">
 
             </androidx.appcompat.widget.Toolbar>
         </com.google.android.material.appbar.AppBarLayout>
@@ -73,7 +74,9 @@
             android:layout_height="wrap_content"
             android:inputType="textEmailAddress"
             android:layout_marginEnd="20dp"
-            android:layout_marginStart="20dp"/>
+            android:layout_marginStart="20dp"
+            android:text="danicagazdic"
+            android:focusable="false"/>
 
         <androidx.appcompat.widget.AppCompatTextView
             android:layout_width="match_parent"
@@ -92,7 +95,9 @@
             android:layout_height="wrap_content"
             android:inputType="text"
             android:layout_marginEnd="20dp"
-            android:layout_marginStart="20dp"/>
+            android:layout_marginStart="20dp"
+            android:text="JNA 12"
+            android:focusable="false"/>
 
         <androidx.appcompat.widget.AppCompatTextView
             android:layout_width="match_parent"
@@ -111,7 +116,9 @@
             android:layout_height="wrap_content"
             android:inputType="phone"
             android:layout_marginEnd="20dp"
-            android:layout_marginStart="20dp"/>
+            android:layout_marginStart="20dp"
+            android:text="0691852001"
+            android:focusable="false"/>
 
 
 
