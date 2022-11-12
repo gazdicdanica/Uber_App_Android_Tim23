@@ -4,20 +4,24 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="2"
+        android:layout_weight="4"
         android:background="@drawable/black_border_radius"
         android:orientation="vertical">
 
         <com.google.android.material.appbar.AppBarLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:fitsSystemWindows="true">
             <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbarPassAcc"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                >
+                android:layout_height="?attr/actionBarSize"
+                android:background="?attr/colorPrimary"
+                android:theme="@style/ToolBarTheme">
 
             </androidx.appcompat.widget.Toolbar>
         </com.google.android.material.appbar.AppBarLayout>
@@ -29,7 +33,9 @@
             android:layout_gravity="center"
             android:src="@drawable/man"
             app:civ_border_color="@color/white"
-            app:civ_border_width="3dp">
+            app:civ_border_width="3dp"
+            android:layout_marginTop="10dp"
+            android:layout_centerInParent="true">
         </de.hdodenhof.circleimageview.CircleImageView>
         <TextView
             android:id="@+id/user_full_name"
@@ -41,12 +47,14 @@
             android:textSize="25sp"
             android:padding="5dp"
             android:layout_marginTop="15dp"
+            android:layout_below="@+id/profile_pic"
+            android:layout_centerHorizontal="true"
             />
-    </LinearLayout>
+    </RelativeLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="1"
+        android:layout_weight="3"
         android:orientation="vertical">
 
         <androidx.appcompat.widget.AppCompatTextView
@@ -66,7 +74,8 @@
             android:layout_height="wrap_content"
             android:inputType="textEmailAddress"
             android:layout_marginEnd="20dp"
-            android:layout_marginStart="20dp"/>
+            android:layout_marginStart="20dp"
+            android:focusable="false"/>
 
         <androidx.appcompat.widget.AppCompatTextView
             android:layout_width="match_parent"
@@ -85,7 +94,8 @@
             android:layout_height="wrap_content"
             android:inputType="text"
             android:layout_marginEnd="20dp"
-            android:layout_marginStart="20dp"/>
+            android:layout_marginStart="20dp"
+            android:focusable="false"/>
 
         <androidx.appcompat.widget.AppCompatTextView
             android:layout_width="match_parent"
@@ -104,7 +114,28 @@
             android:layout_height="wrap_content"
             android:inputType="phone"
             android:layout_marginEnd="20dp"
-            android:layout_marginStart="20dp"/>
+            android:layout_marginStart="20dp"
+            android:focusable="false"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            app:drawableStartCompat="@drawable/ic_round_lock_24"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:text="@string/password"
+            android:drawablePadding="7dp"
+            android:drawableTint="?attr/colorOnBackground"/>
+
+        <EditText
+            android:id="@+id/user_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPassword"
+            android:layout_marginEnd="20dp"
+            android:layout_marginStart="20dp"
+            android:focusable="false"/>
 
 
 
