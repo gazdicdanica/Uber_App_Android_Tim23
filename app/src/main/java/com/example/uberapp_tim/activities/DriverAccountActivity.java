@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -19,8 +21,18 @@ public class DriverAccountActivity extends AppCompatActivity {
         Toast.makeText(this, "DriverAccAct", Toast.LENGTH_SHORT).show();
         setContentView(R.layout.driver_account_activity);
 
+        setListener();
+    }
 
+    public void setListener(){
         Button car = findViewById(R.id.carButton);
+        Button documents = findViewById(R.id.papersButton);
+        TextView driverFullName = findViewById(R.id.driver_full_name);
+        EditText email = findViewById(R.id.user_email);
+        EditText address = findViewById(R.id.user_address);
+        EditText phoneNum = findViewById(R.id.user_phone);
+        EditText password = findViewById(R.id.user_pw);
+
         car.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -28,11 +40,67 @@ public class DriverAccountActivity extends AppCompatActivity {
             }
         });
 
-        Button documents = findViewById(R.id.papersButton);
         documents.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(DriverAccountActivity.this, DriverPapersActivity.class));
+            }
+        });
+
+        driverFullName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(DriverAccountActivity.this, EditActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("label1", "Name: ");
+                bundle.putString("label2", "Lastname: ");
+                i.putExtras(bundle);
+                startActivity(i);
+            }
+        });
+
+        email.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(DriverAccountActivity.this, EditActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("label1", "E-mail: ");
+                i.putExtras(bundle);
+                startActivity(i);
+            }
+        });
+
+        address.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(DriverAccountActivity.this, EditActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("label1", "Address: ");
+                i.putExtras(bundle);
+                startActivity(i);
+            }
+        });
+
+        phoneNum.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(DriverAccountActivity.this, EditActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("label1", "Phone: ");
+                i.putExtras(bundle);
+                startActivity(i);
+            }
+        });
+
+        password.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(DriverAccountActivity.this, EditActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("label1", "Old password: ");
+                bundle.putString("label2", "New password: ");
+                i.putExtras(bundle);
+                startActivity(i);
             }
         });
     }

@@ -35,7 +35,7 @@
             android:layout_centerInParent="true">
         </de.hdodenhof.circleimageview.CircleImageView>
         <TextView
-            android:id="@+id/user_full_name"
+            android:id="@+id/driver_full_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Imenko Prezimic"
@@ -48,6 +48,11 @@
             android:layout_centerHorizontal="true"
             />
     </RelativeLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -71,12 +76,13 @@
             android:layout_height="wrap_content"
             android:inputType="textEmailAddress"
             android:layout_marginEnd="20dp"
-            android:layout_marginStart="20dp"/>
+            android:layout_marginStart="20dp"
+            android:focusable="false"/>
 
         <androidx.appcompat.widget.AppCompatTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="10dp"
             app:drawableStartCompat="@drawable/ic_baseline_home_24"
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp"
@@ -90,12 +96,13 @@
             android:layout_height="wrap_content"
             android:inputType="text"
             android:layout_marginEnd="20dp"
+            android:focusable="false"
             android:layout_marginStart="20dp"/>
 
         <androidx.appcompat.widget.AppCompatTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="10dp"
             app:drawableStartCompat="@drawable/ic_baseline_phone_24"
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp"
@@ -109,9 +116,31 @@
             android:layout_height="wrap_content"
             android:inputType="phone"
             android:layout_marginEnd="20dp"
+            android:focusable="false"
+            android:layout_marginStart="20dp"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            app:drawableStartCompat="@drawable/ic_round_lock_24"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:text="@string/password"
+            android:drawablePadding="7dp"
+            android:drawableTint="?attr/colorOnBackground"/>
+
+        <EditText
+            android:id="@+id/user_pw"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:focusable="false"
+            android:inputType="textPassword"
+            android:layout_marginEnd="20dp"
             android:layout_marginStart="20dp"/>
 
         <LinearLayout
+
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
@@ -150,5 +179,10 @@
 
         </LinearLayout>
 
+
+
     </LinearLayout>
+
+    </ScrollView>
+
 </LinearLayout>
