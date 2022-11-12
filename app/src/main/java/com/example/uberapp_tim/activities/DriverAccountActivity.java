@@ -33,6 +33,12 @@ public class DriverAccountActivity extends AppCompatActivity {
         EditText phoneNum = findViewById(R.id.user_phone);
         EditText password = findViewById(R.id.user_pw);
 
+        driverFullName.setText("Petar Petrovic");
+        email.setText("test@gmail.com", TextView.BufferType.EDITABLE);
+        address.setText("Branka Bajica 16", TextView.BufferType.EDITABLE);
+        phoneNum.setText("0642314554", TextView.BufferType.EDITABLE);
+        password.setText("password", TextView.BufferType.EDITABLE);
+
         car.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
