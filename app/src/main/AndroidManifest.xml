@@ -36,7 +36,8 @@
         </activity>
         <activity
             android:name=".activities.PassengerRegisterActivity"
-            android:exported="true">
+            android:exported="true"
+            android:windowSoftInputMode="stateVisible|adjustResize">
 
         </activity>
         <activity android:name=".activities.DriverAccountActivity"
@@ -54,7 +55,8 @@
         </activity>
         <activity
             android:name=".activities.UserLoginActivity"
-            android:exported="true">
+            android:exported="true"
+            android:windowSoftInputMode="stateVisible|adjustResize">
 
         </activity>
         <activity
@@ -68,7 +70,8 @@
         </activity>
 
         <activity android:name=".activities.EditActivity"
-            android:exported="true">
+            android:exported="true"
+            android:windowSoftInputMode="stateVisible|adjustResize">
 
         </activity>
     </application>

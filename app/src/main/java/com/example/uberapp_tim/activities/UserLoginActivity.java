@@ -51,7 +51,7 @@ public class UserLoginActivity extends AppCompatActivity {
                         startActivity(i);
                     }catch(ClassCastException e){
                         Passenger p = (Passenger)user;
-                        Intent i = new Intent(UserLoginActivity.this, PassengerMainActivity.class);
+                        Intent i = new Intent(UserLoginActivity.this, PassengerAccountActivity.class);
                         i.putExtra("user", p);
                         UserLoginActivity.this.finish();
                         startActivity(i);
