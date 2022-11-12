@@ -1,11 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:fitsSystemWindows="true"
+        android:id="@+id/appBarLayout">
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbarDriverPapers"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:theme="@style/ToolBarTheme">
+
+        </androidx.appcompat.widget.Toolbar>
+    </com.google.android.material.appbar.AppBarLayout>
+
     <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/idTxtView"
+        android:layout_below="@+id/appBarLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:drawableStartCompat="@drawable/id_card"
@@ -23,9 +40,11 @@
         android:inputType="number"
         android:focusable="false"
         android:layout_marginEnd="20dp"
-        android:layout_marginStart="20dp"/>
+        android:layout_marginStart="20dp"
+        android:layout_below="@+id/idTxtView"/>
 
     <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/regTxtView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:drawableStartCompat="@drawable/id_card"
@@ -34,7 +53,8 @@
         android:layout_marginEnd="20dp"
         android:text="@string/vehicle_registration_id"
         android:drawablePadding="7dp"
-        android:drawableTint="?attr/colorOnBackground"/>
+        android:drawableTint="?attr/colorOnBackground"
+        android:layout_below="@+id/idNum"/>
 
     <EditText
         android:id="@+id/vehicleRegistrationIdNum"
@@ -43,7 +63,8 @@
         android:inputType="number"
         android:focusable="false"
         android:layout_marginEnd="20dp"
-        android:layout_marginStart="20dp"/>
+        android:layout_marginStart="20dp"
+        android:layout_below="@+id/regTxtView"/>
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/confirmDriverIds"
@@ -52,12 +73,15 @@
         android:layout_marginEnd="20dp"
         android:layout_marginStart="20dp"
         android:layout_marginTop="1dp"
+        android:layout_marginBottom="20dp"
         android:padding="15dp"
         android:text="@string/confirm"
         android:textAllCaps="false"
         app:backgroundTint="@color/black"
         android:textColor="@color/white"
         app:strokeColor="@color/white"
-        app:strokeWidth="2dp"/>
+        app:strokeWidth="2dp"
+        android:layout_alignParentBottom="true"
+        android:textSize="18sp"/>
 
-</LinearLayout>
+</RelativeLayout>
