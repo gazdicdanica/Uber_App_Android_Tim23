@@ -4,8 +4,9 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.EditText;
-import android.widget.Toast;
+import android.widget.TextView;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -29,14 +30,53 @@ public class PassengerAccountActivity extends AppCompatActivity {
             actionBar.setDisplayShowHomeEnabled(true);
             actionBar.setHomeButtonEnabled(true);
         }
-        Toast.makeText(this, "Usao u Nalog", Toast.LENGTH_SHORT).show();
 
+        //TODO set parameters in edittext
+        setListeners();
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.account_toolbar_menu, menu);
-        return true;
+
+    private void setListeners(){
+        TextView fullName = findViewById(R.id.user_full_name);
+        EditText email = findViewById(R.id.user_email);
+        EditText address = findViewById(R.id.user_address);
+        EditText phone = findViewById(R.id.user_phone);
+        EditText password = findViewById(R.id.user_password);
+
+        fullName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+
+        email.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+
+        address.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+
+        phone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+
+        password.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
     }
 
     @Override
@@ -45,19 +85,9 @@ public class PassengerAccountActivity extends AppCompatActivity {
             case(android.R.id.home):
                 this.finish();
                 return true;
-            case (R.id.edit_account):
-                break;
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    private void disableEditText(EditText editText) {
-        editText.setFocusable(false);
-        editText.setEnabled(false);
-        editText.setCursorVisible(false);
-        editText.setKeyListener(null);
-        editText.setBackgroundColor(Color.TRANSPARENT);
     }
 
     @Override

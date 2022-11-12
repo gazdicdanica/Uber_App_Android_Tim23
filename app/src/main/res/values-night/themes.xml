@@ -3,11 +3,11 @@
     <style name="Theme.UberApp_Tim" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/black</item>
-        <item name="colorPrimaryVariant">@color/transparent_white</item>
+        <item name="colorPrimaryVariant">@color/partially_dark</item>
         <item name="colorOnPrimary">@color/white</item>
         <item name="colorOnBackground">@color/white</item>
         <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/partially_dark</item>
+        <item name="colorSecondary">@color/orange</item>
         <item name="colorSecondaryVariant">@color/teal_200</item>
         <item name="colorOnSecondary">@color/transparent_white</item>
         <!-- Customize your theme here. -->

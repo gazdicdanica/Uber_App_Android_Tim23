@@ -11,4 +11,5 @@
     <color name="transparent_white">#20ffffff</color>
     <color name="partially_light">#30000000</color>
     <color name="partially_dark">#30ffffff</color>
+    <color name="orange">#f57804</color>
 </resources>
