@@ -24,4 +24,7 @@
     <string name="confirm">Confirm</string>
     <string name="id_number">ID Number</string>
     <string name="vehicle_registration_id">Vehicle Registration ID</string>
+    <string name="main_activity">Main</string>
+    <string name="inbox_activity">Inbox</string>
+    <string name="account_activitY">Account</string>
 </resources>

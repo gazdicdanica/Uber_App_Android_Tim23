@@ -20,7 +20,6 @@
                 android:id="@+id/toolbarPassAcc"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                android:background="?attr/colorPrimary"
                 android:theme="@style/ToolBarTheme">
 
             </androidx.appcompat.widget.Toolbar>

@@ -20,7 +20,7 @@ public class UserLoginActivity extends AppCompatActivity {
         logInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(UserLoginActivity.this, PassengerAccountActivity.class));
+                startActivity(new Intent(UserLoginActivity.this, DriverMainActivity.class));
             }
         });
         Button signInButton = findViewById(R.id.buttonSignIn);
