@@ -97,20 +97,20 @@ public class EditActivity extends AppCompatActivity {
 
     private void setInputType(String label, EditText editText1, EditText editText2){
         switch(label){
-            case "Name: ":
+            case "Name":
                 editText1.setInputType(InputType.TYPE_CLASS_TEXT);
                 editText2.setInputType(InputType.TYPE_CLASS_TEXT);
                 break;
-            case "Address: ":
+            case "Address":
                 editText1.setInputType(InputType.TYPE_CLASS_TEXT);
                 break;
-            case "Phone: ":
+            case "Phone":
                 editText1.setInputType(InputType.TYPE_CLASS_PHONE);
                 break;
-            case "E-mail: ":
+            case "E-mail":
                 editText1.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
                 break;
-            case "Old password: ":
+            case "Old password":
                 editText1.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
                 editText2.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
                 break;

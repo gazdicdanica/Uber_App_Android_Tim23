@@ -75,7 +75,10 @@
             android:inputType="textEmailAddress"
             android:layout_marginEnd="20dp"
             android:layout_marginStart="20dp"
-            android:focusable="false"/>
+            android:focusable="false"
+            android:drawableEnd="@drawable/ic_baseline_arrow_forward_18"
+            android:drawablePadding="5dp"
+            android:drawableTint="?attr/colorOnBackground"/>
 
         <androidx.appcompat.widget.AppCompatTextView
             android:layout_width="match_parent"
@@ -95,7 +98,10 @@
             android:inputType="text"
             android:layout_marginEnd="20dp"
             android:layout_marginStart="20dp"
-            android:focusable="false"/>
+            android:focusable="false"
+            android:drawableEnd="@drawable/ic_baseline_arrow_forward_18"
+            android:drawablePadding="5dp"
+            android:drawableTint="?attr/colorOnBackground"/>
 
         <androidx.appcompat.widget.AppCompatTextView
             android:layout_width="match_parent"
@@ -115,7 +121,10 @@
             android:inputType="phone"
             android:layout_marginEnd="20dp"
             android:layout_marginStart="20dp"
-            android:focusable="false"/>
+            android:focusable="false"
+            android:drawableEnd="@drawable/ic_baseline_arrow_forward_18"
+            android:drawablePadding="5dp"
+            android:drawableTint="?attr/colorOnBackground"/>
 
         <androidx.appcompat.widget.AppCompatTextView
             android:layout_width="match_parent"
@@ -135,7 +144,10 @@
             android:inputType="textPassword"
             android:layout_marginEnd="20dp"
             android:layout_marginStart="20dp"
-            android:focusable="false"/>
+            android:focusable="false"
+            android:drawableEnd="@drawable/ic_baseline_arrow_forward_18"
+            android:drawablePadding="5dp"
+            android:drawableTint="?attr/colorOnBackground"/>
 
 
 

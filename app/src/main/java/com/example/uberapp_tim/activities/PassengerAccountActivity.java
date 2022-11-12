@@ -47,8 +47,8 @@ public class PassengerAccountActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent i = new Intent(PassengerAccountActivity.this, EditActivity.class);
                 Bundle bundle = new Bundle();
-                bundle.putString("label1", "Name: ");
-                bundle.putString("label2", "Surname: ");
+                bundle.putString("label1", "Name");
+                bundle.putString("label2", "Surname");
                 i.putExtras(bundle);
                 startActivity(i);
             }
@@ -59,7 +59,7 @@ public class PassengerAccountActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent i = new Intent(PassengerAccountActivity.this, EditActivity.class);
                 Bundle bundle = new Bundle();
-                bundle.putString("label1", "E-mail: ");
+                bundle.putString("label1", "E-mail");
                 i.putExtras(bundle);
                 startActivity(i);
             }
@@ -70,7 +70,7 @@ public class PassengerAccountActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent i = new Intent(PassengerAccountActivity.this, EditActivity.class);
                 Bundle bundle = new Bundle();
-                bundle.putString("label1", "Address: ");
+                bundle.putString("label1", "Address");
                 i.putExtras(bundle);
                 startActivity(i);
             }
@@ -81,7 +81,7 @@ public class PassengerAccountActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent i = new Intent(PassengerAccountActivity.this, EditActivity.class);
                 Bundle bundle = new Bundle();
-                bundle.putString("label1", "Phone: ");
+                bundle.putString("label1", "Phone");
                 i.putExtras(bundle);
                 startActivity(i);
             }
@@ -92,8 +92,8 @@ public class PassengerAccountActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent i = new Intent(PassengerAccountActivity.this, EditActivity.class);
                 Bundle bundle = new Bundle();
-                bundle.putString("label1", "Old password: ");
-                bundle.putString("label2", "New password: ");
+                bundle.putString("label1", "Old password");
+                bundle.putString("label2", "New password");
                 i.putExtras(bundle);
                 startActivity(i);
             }
