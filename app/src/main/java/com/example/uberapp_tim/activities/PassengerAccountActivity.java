@@ -1,8 +1,7 @@
 package com.example.uberapp_tim.activities;
 
-import android.graphics.Color;
+import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
@@ -46,35 +45,57 @@ public class PassengerAccountActivity extends AppCompatActivity {
         fullName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                Intent i = new Intent(PassengerAccountActivity.this, EditActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("label1", "Name: ");
+                bundle.putString("label2", "Surname: ");
+                i.putExtras(bundle);
+                startActivity(i);
             }
         });
 
         email.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                Intent i = new Intent(PassengerAccountActivity.this, EditActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("label1", "E-mail: ");
+                i.putExtras(bundle);
+                startActivity(i);
             }
         });
 
         address.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                Intent i = new Intent(PassengerAccountActivity.this, EditActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("label1", "Address: ");
+                i.putExtras(bundle);
+                startActivity(i);
             }
         });
 
         phone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                Intent i = new Intent(PassengerAccountActivity.this, EditActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("label1", "Phone: ");
+                i.putExtras(bundle);
+                startActivity(i);
             }
         });
 
         password.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                Intent i = new Intent(PassengerAccountActivity.this, EditActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("label1", "Old password: ");
+                bundle.putString("label2", "New password: ");
+                i.putExtras(bundle);
+                startActivity(i);
             }
         });
     }
