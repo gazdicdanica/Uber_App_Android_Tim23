@@ -48,7 +48,7 @@ public class PassengerAccountActivity extends AppCompatActivity {
                 Intent i = new Intent(PassengerAccountActivity.this, EditActivity.class);
                 Bundle bundle = new Bundle();
                 bundle.putString("label1", "Name");
-                bundle.putString("label2", "Surname");
+                bundle.putString("label2", "Last name");
                 i.putExtras(bundle);
                 startActivity(i);
             }

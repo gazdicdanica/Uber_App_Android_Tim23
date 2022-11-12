@@ -9,8 +9,10 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatToggleButton;
+import androidx.appcompat.widget.Toolbar;
 
 import com.example.uberapp_tim.R;
 
@@ -20,6 +22,17 @@ public class DriverAccountActivity extends AppCompatActivity {
         super.onCreate(savedInstance);
         Toast.makeText(this, "DriverAccAct", Toast.LENGTH_SHORT).show();
         setContentView(R.layout.driver_account_activity);
+
+        Toolbar toolbar = findViewById(R.id.toolbarDriverAcc);
+        setSupportActionBar(toolbar);
+        final ActionBar actionBar = getSupportActionBar();
+
+        if(actionBar != null){
+            actionBar.setDisplayShowTitleEnabled(false);
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setDisplayShowHomeEnabled(true);
+            actionBar.setHomeButtonEnabled(true);
+        }
 
         setListener();
     }

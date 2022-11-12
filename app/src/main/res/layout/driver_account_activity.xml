@@ -15,24 +15,28 @@
         <com.google.android.material.appbar.AppBarLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true">
+            android:layout_alignParentTop="true"
+            android:fitsSystemWindows="true">
             <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbarDriverAcc"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:theme="@style/ToolBarTheme">
 
             </androidx.appcompat.widget.Toolbar>
         </com.google.android.material.appbar.AppBarLayout>
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/profile_pic"
-            android:layout_width="212dp"
-            android:layout_height="115dp"
+            android:layout_width="164dp"
+            android:layout_height="100dp"
+            android:layout_centerInParent="true"
             android:layout_gravity="center"
+            android:layout_marginTop="10dp"
             android:src="@drawable/man"
             app:civ_border_color="@color/white"
-            app:civ_border_width="3dp"
-            android:layout_marginTop="10dp"
-            android:layout_centerInParent="true">
+            app:civ_border_width="3dp">
+
         </de.hdodenhof.circleimageview.CircleImageView>
         <TextView
             android:id="@+id/driver_full_name"
@@ -49,15 +53,11 @@
             />
     </RelativeLayout>
 
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="3"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:layout_weight="2">
 
         <androidx.appcompat.widget.AppCompatTextView
             android:layout_width="match_parent"
@@ -77,7 +77,10 @@
             android:inputType="textEmailAddress"
             android:layout_marginEnd="20dp"
             android:layout_marginStart="20dp"
-            android:focusable="false"/>
+            android:focusable="false"
+            android:drawableEnd="@drawable/ic_baseline_arrow_forward_18"
+            android:drawableTint="?attr/colorOnBackground"
+            android:drawablePadding="7dp"/>
 
         <androidx.appcompat.widget.AppCompatTextView
             android:layout_width="match_parent"
@@ -97,7 +100,10 @@
             android:inputType="text"
             android:layout_marginEnd="20dp"
             android:focusable="false"
-            android:layout_marginStart="20dp"/>
+            android:layout_marginStart="20dp"
+            android:drawableEnd="@drawable/ic_baseline_arrow_forward_18"
+            android:drawableTint="?attr/colorOnBackground"
+            android:drawablePadding="7dp"/>
 
         <androidx.appcompat.widget.AppCompatTextView
             android:layout_width="match_parent"
@@ -117,7 +123,10 @@
             android:inputType="phone"
             android:layout_marginEnd="20dp"
             android:focusable="false"
-            android:layout_marginStart="20dp"/>
+            android:layout_marginStart="20dp"
+            android:drawableEnd="@drawable/ic_baseline_arrow_forward_18"
+            android:drawableTint="?attr/colorOnBackground"
+            android:drawablePadding="7dp"/>
 
         <androidx.appcompat.widget.AppCompatTextView
             android:layout_width="match_parent"
@@ -137,14 +146,18 @@
             android:focusable="false"
             android:inputType="textPassword"
             android:layout_marginEnd="20dp"
-            android:layout_marginStart="20dp"/>
+            android:layout_marginStart="20dp"
+            android:drawableEnd="@drawable/ic_baseline_arrow_forward_18"
+            android:drawableTint="?attr/colorOnBackground"
+            android:drawablePadding="7dp"/>
 
         <LinearLayout
 
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:gravity="center">
+            android:gravity="center"
+            android:layout_marginTop="10dp">
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/carButton"
@@ -157,6 +170,7 @@
                 android:text="@string/car_data"
                 android:layout_gravity="center"
                 android:textAllCaps="false"
+                android:textSize="15sp"
                 app:backgroundTint="@color/black"
                 android:textColor="@color/white"
                 app:strokeColor="@color/white"
@@ -172,17 +186,13 @@
                 android:padding="15dp"
                 android:text="@string/registration_and_licence"
                 android:textAllCaps="false"
+                android:textSize="15sp"
                 app:backgroundTint="@color/black"
                 android:textColor="@color/white"
                 app:strokeColor="@color/white"
                 app:strokeWidth="2dp"/>
 
         </LinearLayout>
-
-
-
     </LinearLayout>
-
-    </ScrollView>
 
 </LinearLayout>
