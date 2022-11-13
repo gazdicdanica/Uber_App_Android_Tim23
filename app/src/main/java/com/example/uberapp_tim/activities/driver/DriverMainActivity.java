@@ -1,4 +1,4 @@
-package com.example.uberapp_tim.activities;
+package com.example.uberapp_tim.activities.driver;
 
 import android.content.Intent;
 import android.os.Bundle;

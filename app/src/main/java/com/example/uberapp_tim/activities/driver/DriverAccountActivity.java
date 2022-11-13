@@ -1,6 +1,5 @@
-package com.example.uberapp_tim.activities;
+package com.example.uberapp_tim.activities.driver;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -12,10 +11,11 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.AppCompatToggleButton;
 import androidx.appcompat.widget.Toolbar;
 
 import com.example.uberapp_tim.R;
+import com.example.uberapp_tim.activities.CarActivity;
+import com.example.uberapp_tim.activities.EditActivity;
 
 public class DriverAccountActivity extends AppCompatActivity {
     @Override

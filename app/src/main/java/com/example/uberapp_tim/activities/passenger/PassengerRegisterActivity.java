@@ -1,6 +1,5 @@
-package com.example.uberapp_tim.activities;
+package com.example.uberapp_tim.activities.passenger;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -10,6 +9,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.uberapp_tim.R;
+import com.example.uberapp_tim.activities.driver.DriverAccountActivity;
 
 public class PassengerRegisterActivity extends AppCompatActivity {
     @Override

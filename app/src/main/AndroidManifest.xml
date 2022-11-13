@@ -20,27 +20,27 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".activities.PassengerAccountActivity"
+            android:name=".activities.passenger.PassengerAccountActivity"
             android:exported="true">
 
         </activity>
         <activity
-            android:name=".activities.PassengerInboxActivity"
+            android:name=".activities.passenger.PassengerInboxActivity"
             android:exported="true">
 
         </activity>
         <activity
-            android:name=".activities.PassengerMainActivity"
+            android:name=".activities.passenger.PassengerMainActivity"
             android:exported="true">
 
         </activity>
         <activity
-            android:name=".activities.PassengerRegisterActivity"
+            android:name=".activities.passenger.PassengerRegisterActivity"
             android:exported="true"
             android:windowSoftInputMode="stateVisible|adjustResize">
 
         </activity>
-        <activity android:name=".activities.DriverAccountActivity"
+        <activity android:name=".activities.driver.DriverAccountActivity"
             android:exported="true">
 
         </activity>
@@ -60,11 +60,11 @@
 
         </activity>
         <activity
-            android:name=".activities.DriverMainActivity"
+            android:name=".activities.driver.DriverMainActivity"
             android:exported="true">
 
         </activity>
-        <activity android:name=".activities.DriverPapersActivity"
+        <activity android:name=".activities.driver.DriverPapersActivity"
             android:exported="true">
 
         </activity>
