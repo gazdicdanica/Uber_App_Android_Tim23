@@ -28,4 +28,6 @@
     <string name="inbox_activity">Inbox</string>
     <string name="account_activitY">Account</string>
     <string name="max_people">Max People Capacity</string>
+    <string name="online">Online</string>
+    <string name="offline">Offline</string>
 </resources>

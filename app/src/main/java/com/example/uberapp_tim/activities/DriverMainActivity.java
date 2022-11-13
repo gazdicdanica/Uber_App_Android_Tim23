@@ -3,6 +3,9 @@ package com.example.uberapp_tim.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.widget.CompoundButton;
+import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
@@ -53,6 +56,17 @@ public class DriverMainActivity extends AppCompatActivity {
                         return true;
                 }
                 return false;
+            }
+        });
+
+        ToggleButton toggle = (ToggleButton) findViewById(R.id.status_toggle);
+        toggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    Toast.makeText(DriverMainActivity.this, "Online", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(DriverMainActivity.this, "Offline", Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
