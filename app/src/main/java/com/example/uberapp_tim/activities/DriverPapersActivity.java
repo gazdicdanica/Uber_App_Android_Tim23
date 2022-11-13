@@ -2,6 +2,7 @@ package com.example.uberapp_tim.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -70,6 +71,18 @@ public class DriverPapersActivity extends AppCompatActivity {
             }
         });
     }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId()){
+            case(android.R.id.home):
+                this.finish();
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
     @Override
     protected void onStart(){
         super.onStart();
