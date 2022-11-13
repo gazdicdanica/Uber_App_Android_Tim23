@@ -17,7 +17,10 @@ import androidx.appcompat.widget.Toolbar;
 import com.example.uberapp_tim.R;
 import com.example.uberapp_tim.activities.CarActivity;
 import com.example.uberapp_tim.activities.EditActivity;
+import com.example.uberapp_tim.activities.RideHistoryActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import model.users.Driver;
 
 public class DriverAccountActivity extends AppCompatActivity {
 
@@ -72,29 +75,29 @@ public class DriverAccountActivity extends AppCompatActivity {
                         return true;
                     case (R.id.action_inbox):
 
-                        //TODO DriverInboxActivity
-
-//                        i = new Intent(DriverMainActivity.this, DriverInboxActivity.class);
-//                        startActivity(i);
+                        i = new Intent(DriverAccountActivity.this, DriverInboxActivity.class);
+                        startActivity(i);
                         return true;
                     case (R.id.action_history):
-                        //TODO RideHistoryActivity
-//                        i = new Intent(DriverMainActivity.this, DriverRideHistoryActivity.class);
-//                        startActivity(i);
+                        i = new Intent(DriverAccountActivity.this, RideHistoryActivity.class);
+                        startActivity(i);
                         return true;
                 }
                 return false;
             }
         });
+        setParameters();
     }
 
-    public void setListener(){
-
+    private void setParameters(){
         fullName.setText("Petar Petrovic");
         email.setText("test@gmail.com", TextView.BufferType.EDITABLE);
         address.setText("Branka Bajica 16", TextView.BufferType.EDITABLE);
         phoneNum.setText("0642314554", TextView.BufferType.EDITABLE);
         password.setText("password", TextView.BufferType.EDITABLE);
+    }
+
+    private void setListener(){
 
         car.setOnClickListener(new View.OnClickListener() {
             @Override

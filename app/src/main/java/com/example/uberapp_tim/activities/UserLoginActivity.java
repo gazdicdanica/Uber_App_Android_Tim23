@@ -47,13 +47,11 @@ public class UserLoginActivity extends AppCompatActivity {
                     try{
                         Driver d = (Driver)user;
                         Intent i = new Intent(UserLoginActivity.this, DriverMainActivity.class);
-                        i.putExtra("user", d);
                         UserLoginActivity.this.finish();
                         startActivity(i);
                     }catch(ClassCastException e){
                         Passenger p = (Passenger)user;
                         Intent i = new Intent(UserLoginActivity.this, PassengerMainActivity.class);
-                        i.putExtra("user", p);
                         UserLoginActivity.this.finish();
                         startActivity(i);
 

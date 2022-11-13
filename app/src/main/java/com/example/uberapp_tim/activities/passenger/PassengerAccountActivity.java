@@ -18,6 +18,13 @@ import com.example.uberapp_tim.activities.RideHistoryActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class PassengerAccountActivity extends AppCompatActivity {
+
+    TextView fullName;
+    EditText email;
+    EditText address;
+    EditText phoneNum;
+    EditText password;
+
     @Override
     protected void onCreate(Bundle savedInstance){
         super.onCreate(savedInstance);
@@ -34,6 +41,12 @@ public class PassengerAccountActivity extends AppCompatActivity {
             actionBar.setHomeButtonEnabled(true);
         }
 
+        fullName = findViewById(R.id.user_full_name);
+        email = findViewById(R.id.user_email);
+        address = findViewById(R.id.user_address);
+        phoneNum = findViewById(R.id.user_phone);
+        password = findViewById(R.id.user_password);
+
         //TODO set parameters in edittext
         setListeners();
 
@@ -47,10 +60,9 @@ public class PassengerAccountActivity extends AppCompatActivity {
 
                     case (R.id.action_main):
                         i = new Intent(PassengerAccountActivity.this, PassengerMainActivity.class);
+                        startActivity(i);
                         return true;
                     case (R.id.action_account):
-                        i = new Intent(PassengerAccountActivity.this, PassengerAccountActivity.class);
-                        startActivity(i);
                         return true;
                     case (R.id.action_inbox):
                         i = new Intent(PassengerAccountActivity.this, PassengerInboxActivity.class);
@@ -65,15 +77,20 @@ public class PassengerAccountActivity extends AppCompatActivity {
             }
         });
 
+        setParameters();
+
+    }
+
+    private void setParameters(){
+        fullName.setText("Jovan Jovanovic");
+        email.setText("test2@gmail.com");
+        phoneNum.setText("0691852001");
+        address.setText("JNA 12");
+        password.setText("danica");
     }
 
 
     private void setListeners(){
-        TextView fullName = findViewById(R.id.user_full_name);
-        EditText email = findViewById(R.id.user_email);
-        EditText address = findViewById(R.id.user_address);
-        EditText phone = findViewById(R.id.user_phone);
-        EditText password = findViewById(R.id.user_password);
 
         fullName.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -109,7 +126,7 @@ public class PassengerAccountActivity extends AppCompatActivity {
             }
         });
 
-        phone.setOnClickListener(new View.OnClickListener() {
+        phoneNum.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(PassengerAccountActivity.this, EditActivity.class);
