@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import com.example.uberapp_tim.R;
+import com.example.uberapp_tim.activities.RideHistoryActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class DriverMainActivity extends AppCompatActivity {
@@ -42,6 +43,8 @@ public class DriverMainActivity extends AppCompatActivity {
                 switch (item.getItemId()) {
 
                     case (R.id.action_main):
+                        DriverMainActivity.this.recreate();
+                        overridePendingTransition(0,0);
                         return true;
                     case (R.id.action_account):
                         i = new Intent(DriverMainActivity.this, DriverAccountActivity.class);
@@ -52,15 +55,15 @@ public class DriverMainActivity extends AppCompatActivity {
 
                         //TODO DriverInboxActivity
 
-//                        i = new Intent(DriverMainActivity.this, DriverInboxActivity.class);
-//                        startActivity(i);
-//                        overridePendingTransition(0,0);
+                        i = new Intent(DriverMainActivity.this, DriverInboxActivity.class);
+                        startActivity(i);
+                        overridePendingTransition(0,0);
                         return true;
                     case (R.id.action_history):
                         //TODO RideHistoryActivity
-//                        i = new Intent(DriverMainActivity.this, DriverRideHistoryActivity.class);
-//                        startActivity(i);
-//                        overridePendingTransition(0,0);
+                        i = new Intent(DriverMainActivity.this, RideHistoryActivity.class);
+                        startActivity(i);
+                        overridePendingTransition(0,0);
                         return true;
                 }
                 return false;

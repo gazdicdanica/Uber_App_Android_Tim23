@@ -74,6 +74,16 @@
             android:windowSoftInputMode="stateVisible|adjustResize">
 
         </activity>
+        <activity android:name=".activities.driver.DriverInboxActivity"
+            android:exported="true"
+            android:windowSoftInputMode="stateVisible|adjustResize">
+
+        </activity>
+        <activity android:name=".activities.RideHistoryActivity"
+            android:exported="true"
+            android:windowSoftInputMode="stateVisible|adjustResize">
+
+        </activity>
     </application>
 
 </manifest>
