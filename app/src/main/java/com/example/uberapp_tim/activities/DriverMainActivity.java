@@ -54,6 +54,11 @@ public class DriverMainActivity extends AppCompatActivity {
 //                        i = new Intent(DriverMainActivity.this, DriverInboxActivity.class);
 //                        startActivity(i);
                         return true;
+                    case (R.id.action_history):
+                        //TODO RideHistoryActivity
+//                        i = new Intent(DriverMainActivity.this, DriverRideHistoryActivity.class);
+//                        startActivity(i);
+                        return true;
                 }
                 return false;
             }

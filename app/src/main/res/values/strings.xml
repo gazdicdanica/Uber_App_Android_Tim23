@@ -30,4 +30,5 @@
     <string name="max_people">Max People Capacity</string>
     <string name="online">Online</string>
     <string name="offline">Offline</string>
+    <string name="history_activity">History</string>
 </resources>
