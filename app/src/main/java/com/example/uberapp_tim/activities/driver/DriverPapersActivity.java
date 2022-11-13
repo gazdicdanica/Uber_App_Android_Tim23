@@ -1,4 +1,4 @@
-package com.example.uberapp_tim.activities;
+package com.example.uberapp_tim.activities.driver;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import com.example.uberapp_tim.R;
+import com.example.uberapp_tim.activities.EditActivity;
 
 public class DriverPapersActivity extends AppCompatActivity {
     @Override

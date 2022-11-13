@@ -1,7 +1,6 @@
 package com.example.uberapp_tim.activities;
 
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -10,9 +9,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.AppCompatTextView;
 
 import com.example.uberapp_tim.R;
+import com.example.uberapp_tim.activities.driver.DriverMainActivity;
+import com.example.uberapp_tim.activities.passenger.PassengerMainActivity;
+import com.example.uberapp_tim.activities.passenger.PassengerRegisterActivity;
 
 import java.util.List;
 
@@ -51,7 +52,7 @@ public class UserLoginActivity extends AppCompatActivity {
                         startActivity(i);
                     }catch(ClassCastException e){
                         Passenger p = (Passenger)user;
-                        Intent i = new Intent(UserLoginActivity.this, PassengerAccountActivity.class);
+                        Intent i = new Intent(UserLoginActivity.this, PassengerMainActivity.class);
                         i.putExtra("user", p);
                         UserLoginActivity.this.finish();
                         startActivity(i);

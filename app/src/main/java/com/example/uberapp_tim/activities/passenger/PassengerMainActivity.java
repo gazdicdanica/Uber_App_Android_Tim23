@@ -1,4 +1,4 @@
-package com.example.uberapp_tim.activities;
+package com.example.uberapp_tim.activities.passenger;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,14 +12,14 @@ import androidx.appcompat.widget.Toolbar;
 import com.example.uberapp_tim.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-public class DriverMainActivity extends AppCompatActivity {
+public class PassengerMainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstance){
         super.onCreate(savedInstance);
-        setContentView(R.layout.driver_main);
+        setContentView(R.layout.passenger_main_activity);
 
-        Toolbar toolbar = findViewById(R.id.toolbarDriverMain);
-        setSupportActionBar(toolbar);
+        Toolbar tb = findViewById(R.id.toolbarPassengerMain);
+        setSupportActionBar(tb);
 
         final ActionBar actionBar = getSupportActionBar();
 
@@ -30,44 +30,34 @@ public class DriverMainActivity extends AppCompatActivity {
             actionBar.setHomeButtonEnabled(true);
         }
 
-        BottomNavigationView driverNav = findViewById(R.id.driverNav);
-        driverNav.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+        BottomNavigationView passengerNav = findViewById(R.id.passengerNav);
+        passengerNav.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 Intent i;
                 switch (item.getItemId()) {
 
                     case (R.id.action_main):
-                        i = new Intent(DriverMainActivity.this, DriverMainActivity.class);
+                        i = new Intent(PassengerMainActivity.this, PassengerMainActivity.class);
                         return true;
                     case (R.id.action_account):
-                        i = new Intent(DriverMainActivity.this, DriverAccountActivity.class);
+                        i = new Intent(PassengerMainActivity.this, PassengerAccountActivity.class);
                         startActivity(i);
                         return true;
                     case (R.id.action_inbox):
-
-                        //TODO DriverInboxActivity
-
-//                        i = new Intent(DriverMainActivity.this, DriverInboxActivity.class);
-//                        startActivity(i);
+                        i = new Intent(PassengerMainActivity.this, PassengerInboxActivity.class);
+                        startActivity(i);
                         return true;
+//                    case (R.id.action_history):
+//                        i = new Intent(PassengerMainActivity.this, RideHistoryActivity.class);
+//                        startActivity(i);
+//                        return true;
                 }
                 return false;
             }
         });
+
     }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch(item.getItemId()){
-            case(android.R.id.home):
-                this.finish();
-                return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
     @Override
     protected void onStart(){
         super.onStart();
@@ -81,8 +71,6 @@ public class DriverMainActivity extends AppCompatActivity {
     @Override
     protected void onResume(){
         super.onResume();
-        BottomNavigationView nav = findViewById(R.id.driverNav);
-        nav.getMenu().getItem(0).setChecked(true);
     }
 
     @Override
@@ -99,5 +87,4 @@ public class DriverMainActivity extends AppCompatActivity {
     protected void onDestroy(){
         super.onDestroy();
     }
-
 }
