@@ -41,7 +41,10 @@
         android:focusable="false"
         android:layout_marginEnd="20dp"
         android:layout_marginStart="20dp"
-        android:layout_below="@+id/idTxtView"/>
+        android:layout_below="@+id/idTxtView"
+        android:drawableEnd="@drawable/ic_baseline_arrow_forward_18"
+        android:drawablePadding="7dp"
+        android:drawableTint="?attr/colorOnBackground"/>
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/regTxtView"
@@ -64,7 +67,10 @@
         android:focusable="false"
         android:layout_marginEnd="20dp"
         android:layout_marginStart="20dp"
-        android:layout_below="@+id/regTxtView"/>
+        android:layout_below="@+id/regTxtView"
+        android:drawableEnd="@drawable/ic_baseline_arrow_forward_18"
+        android:drawablePadding="7dp"
+        android:drawableTint="?attr/colorOnBackground"/>
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/confirmDriverIds"

@@ -20,10 +20,18 @@ import com.example.uberapp_tim.activities.EditActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class DriverAccountActivity extends AppCompatActivity {
+
+    TextView fullName;
+    EditText email;
+    EditText address;
+    EditText phoneNum;
+    EditText password;
+    Button car;
+    Button documents;
+
     @Override
     protected void onCreate(Bundle savedInstance){
         super.onCreate(savedInstance);
-        Toast.makeText(this, "DriverAccAct", Toast.LENGTH_SHORT).show();
         setContentView(R.layout.driver_account_activity);
 
         Toolbar toolbar = findViewById(R.id.toolbarDriverAcc);
@@ -36,6 +44,14 @@ public class DriverAccountActivity extends AppCompatActivity {
             actionBar.setDisplayShowHomeEnabled(true);
             actionBar.setHomeButtonEnabled(true);
         }
+
+        car = findViewById(R.id.carButton);
+        documents = findViewById(R.id.papersButton);
+        fullName = findViewById(R.id.driver_full_name);
+        email = findViewById(R.id.user_email);
+        address = findViewById(R.id.user_address);
+        phoneNum = findViewById(R.id.user_phone);
+        password = findViewById(R.id.user_pw);
 
         setListener();
 
@@ -73,15 +89,8 @@ public class DriverAccountActivity extends AppCompatActivity {
     }
 
     public void setListener(){
-        Button car = findViewById(R.id.carButton);
-        Button documents = findViewById(R.id.papersButton);
-        TextView driverFullName = findViewById(R.id.driver_full_name);
-        EditText email = findViewById(R.id.user_email);
-        EditText address = findViewById(R.id.user_address);
-        EditText phoneNum = findViewById(R.id.user_phone);
-        EditText password = findViewById(R.id.user_pw);
 
-        driverFullName.setText("Petar Petrovic");
+        fullName.setText("Petar Petrovic");
         email.setText("test@gmail.com", TextView.BufferType.EDITABLE);
         address.setText("Branka Bajica 16", TextView.BufferType.EDITABLE);
         phoneNum.setText("0642314554", TextView.BufferType.EDITABLE);
@@ -101,7 +110,7 @@ public class DriverAccountActivity extends AppCompatActivity {
             }
         });
 
-        driverFullName.setOnClickListener(new View.OnClickListener() {
+        fullName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(DriverAccountActivity.this, EditActivity.class);

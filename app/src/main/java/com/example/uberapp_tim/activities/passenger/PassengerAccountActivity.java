@@ -7,12 +7,15 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import com.example.uberapp_tim.R;
 import com.example.uberapp_tim.activities.EditActivity;
+import com.example.uberapp_tim.activities.RideHistoryActivity;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class PassengerAccountActivity extends AppCompatActivity {
     @Override
@@ -33,6 +36,35 @@ public class PassengerAccountActivity extends AppCompatActivity {
 
         //TODO set parameters in edittext
         setListeners();
+
+        BottomNavigationView passengerNav = findViewById(R.id.passNav);
+        passengerNav.setSelectedItemId(R.id.action_account);
+        passengerNav.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                Intent i;
+                switch (item.getItemId()) {
+
+                    case (R.id.action_main):
+                        i = new Intent(PassengerAccountActivity.this, PassengerMainActivity.class);
+                        return true;
+                    case (R.id.action_account):
+                        i = new Intent(PassengerAccountActivity.this, PassengerAccountActivity.class);
+                        startActivity(i);
+                        return true;
+                    case (R.id.action_inbox):
+                        i = new Intent(PassengerAccountActivity.this, PassengerInboxActivity.class);
+                        startActivity(i);
+                        return true;
+                    case (R.id.action_history):
+                        i = new Intent(PassengerAccountActivity.this, RideHistoryActivity.class);
+                        startActivity(i);
+                        return true;
+                }
+                return false;
+            }
+        });
+
     }
 
 

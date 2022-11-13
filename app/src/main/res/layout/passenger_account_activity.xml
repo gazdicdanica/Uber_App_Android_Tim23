@@ -4,38 +4,36 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fitsSystemWindows="true">
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbarPassAcc"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:theme="@style/ToolBarTheme">
+
+        </androidx.appcompat.widget.Toolbar>
+    </com.google.android.material.appbar.AppBarLayout>
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="4"
+        android:layout_weight="3.5"
         android:background="@drawable/black_border_radius"
         android:orientation="vertical">
-
-        <com.google.android.material.appbar.AppBarLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:fitsSystemWindows="true">
-            <androidx.appcompat.widget.Toolbar
-                android:id="@+id/toolbarPassAcc"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                android:theme="@style/ToolBarTheme">
-
-            </androidx.appcompat.widget.Toolbar>
-        </com.google.android.material.appbar.AppBarLayout>
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/profile_pic"
             android:layout_width="164dp"
             android:layout_height="100dp"
-            android:layout_gravity="center"
             android:src="@drawable/man"
             app:civ_border_color="@color/white"
             app:civ_border_width="3dp"
             android:layout_marginTop="10dp"
-            android:layout_centerInParent="true">
+            android:layout_centerHorizontal="true">
         </de.hdodenhof.circleimageview.CircleImageView>
+
         <TextView
             android:id="@+id/user_full_name"
             android:layout_width="wrap_content"
@@ -48,6 +46,8 @@
             android:layout_marginTop="15dp"
             android:layout_below="@+id/profile_pic"
             android:layout_centerHorizontal="true"
+            app:drawableEndCompat="@drawable/ic_baseline_edit_18"
+            android:drawablePadding="10dp"
             />
     </RelativeLayout>
     <LinearLayout
@@ -151,6 +151,13 @@
 
 
     </LinearLayout>
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/passNav"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        app:menu="@menu/menu_navigation"
+        app:labelVisibilityMode="labeled"/>
 
 
 </LinearLayout>
