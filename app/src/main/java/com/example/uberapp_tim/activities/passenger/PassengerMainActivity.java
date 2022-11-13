@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import com.example.uberapp_tim.R;
+import com.example.uberapp_tim.activities.RideHistoryActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class PassengerMainActivity extends AppCompatActivity {
@@ -48,10 +49,10 @@ public class PassengerMainActivity extends AppCompatActivity {
                         i = new Intent(PassengerMainActivity.this, PassengerInboxActivity.class);
                         startActivity(i);
                         return true;
-//                    case (R.id.action_history):
-//                        i = new Intent(PassengerMainActivity.this, RideHistoryActivity.class);
-//                        startActivity(i);
-//                        return true;
+                    case (R.id.action_history):
+                        i = new Intent(PassengerMainActivity.this, RideHistoryActivity.class);
+                        startActivity(i);
+                        return true;
                 }
                 return false;
             }
