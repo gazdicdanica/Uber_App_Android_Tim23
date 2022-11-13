@@ -9,6 +9,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -16,6 +17,7 @@ import androidx.appcompat.widget.Toolbar;
 import com.example.uberapp_tim.R;
 import com.example.uberapp_tim.activities.CarActivity;
 import com.example.uberapp_tim.activities.EditActivity;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class DriverAccountActivity extends AppCompatActivity {
     @Override
@@ -36,6 +38,38 @@ public class DriverAccountActivity extends AppCompatActivity {
         }
 
         setListener();
+
+        BottomNavigationView driverNav = findViewById(R.id.driverAccNav);
+        driverNav.setSelectedItemId(R.id.action_account);
+        driverNav.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                Intent i;
+                switch (item.getItemId()) {
+
+                    case (R.id.action_main):
+                        i = new Intent(DriverAccountActivity.this, DriverMainActivity.class);
+                        startActivity(i);
+                        overridePendingTransition(0,0);
+                        return true;
+                    case (R.id.action_account):
+                        return true;
+                    case (R.id.action_inbox):
+
+                        //TODO DriverInboxActivity
+
+//                        i = new Intent(DriverMainActivity.this, DriverInboxActivity.class);
+//                        startActivity(i);
+                        return true;
+                    case (R.id.action_history):
+                        //TODO RideHistoryActivity
+//                        i = new Intent(DriverMainActivity.this, DriverRideHistoryActivity.class);
+//                        startActivity(i);
+                        return true;
+                }
+                return false;
+            }
+        });
     }
 
     public void setListener(){
@@ -139,6 +173,7 @@ public class DriverAccountActivity extends AppCompatActivity {
     @Override
     protected void onStart(){
         super.onStart();
+
     }
 
     @Override

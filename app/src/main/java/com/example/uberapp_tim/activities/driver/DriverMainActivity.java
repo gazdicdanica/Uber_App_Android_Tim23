@@ -34,6 +34,7 @@ public class DriverMainActivity extends AppCompatActivity {
         }
 
         BottomNavigationView driverNav = findViewById(R.id.driverNav);
+        driverNav.setSelectedItemId(R.id.action_main);
         driverNav.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -41,11 +42,11 @@ public class DriverMainActivity extends AppCompatActivity {
                 switch (item.getItemId()) {
 
                     case (R.id.action_main):
-                        i = new Intent(DriverMainActivity.this, DriverMainActivity.class);
                         return true;
                     case (R.id.action_account):
                         i = new Intent(DriverMainActivity.this, DriverAccountActivity.class);
                         startActivity(i);
+                        overridePendingTransition(0,0);
                         return true;
                     case (R.id.action_inbox):
 
@@ -53,11 +54,13 @@ public class DriverMainActivity extends AppCompatActivity {
 
 //                        i = new Intent(DriverMainActivity.this, DriverInboxActivity.class);
 //                        startActivity(i);
+//                        overridePendingTransition(0,0);
                         return true;
                     case (R.id.action_history):
                         //TODO RideHistoryActivity
 //                        i = new Intent(DriverMainActivity.this, DriverRideHistoryActivity.class);
 //                        startActivity(i);
+//                        overridePendingTransition(0,0);
                         return true;
                 }
                 return false;
