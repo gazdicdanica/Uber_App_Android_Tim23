@@ -14,8 +14,11 @@ import com.example.uberapp_tim.R;
 import com.example.uberapp_tim.activities.RideHistoryActivity;
 import com.example.uberapp_tim.activities.fragments.InboxFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationBarView;
 
 public class DriverInboxActivity extends AppCompatActivity {
+
+    BottomNavigationView driverNav;
 
     @Override
     protected void onCreate(Bundle savedInstance){
@@ -34,16 +37,17 @@ public class DriverInboxActivity extends AppCompatActivity {
             actionBar.setHomeButtonEnabled(true);
         }
 
-        BottomNavigationView driverNav = findViewById(R.id.driverInboxNav);
+        driverNav = findViewById(R.id.driverInboxNav);
         driverNav.setSelectedItemId(R.id.action_inbox);
-        driverNav.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+        driverNav.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 Intent i;
                 switch (item.getItemId()) {
 
                     case (R.id.action_main):
-                        DriverInboxActivity.this.recreate();
+                        i = new Intent(DriverInboxActivity.this, DriverMainActivity.class);
+                        startActivity(i);
                         overridePendingTransition(0,0);
                         return true;
                     case (R.id.action_account):
@@ -52,9 +56,6 @@ public class DriverInboxActivity extends AppCompatActivity {
                         overridePendingTransition(0,0);
                         return true;
                     case (R.id.action_inbox):
-                        i = new Intent(DriverInboxActivity.this, DriverInboxActivity.class);
-                        startActivity(i);
-                        overridePendingTransition(0,0);
                         return true;
                     case (R.id.action_history):
                         i = new Intent(DriverInboxActivity.this, RideHistoryActivity.class);
@@ -84,6 +85,7 @@ public class DriverInboxActivity extends AppCompatActivity {
     @Override
     protected void onResume(){
         super.onResume();
+        driverNav.setSelectedItemId(R.id.action_inbox);
     }
 
     @Override

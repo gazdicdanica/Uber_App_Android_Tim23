@@ -19,6 +19,7 @@ import com.example.uberapp_tim.activities.CarActivity;
 import com.example.uberapp_tim.activities.EditActivity;
 import com.example.uberapp_tim.activities.RideHistoryActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationBarView;
 
 import model.users.Driver;
 
@@ -31,6 +32,7 @@ public class DriverAccountActivity extends AppCompatActivity {
     EditText password;
     Button car;
     Button documents;
+    BottomNavigationView driverNav;
 
     @Override
     protected void onCreate(Bundle savedInstance){
@@ -58,9 +60,9 @@ public class DriverAccountActivity extends AppCompatActivity {
 
         setListener();
 
-        BottomNavigationView driverNav = findViewById(R.id.driverAccNav);
+        driverNav = findViewById(R.id.driverAccNav);
         driverNav.setSelectedItemId(R.id.action_account);
-        driverNav.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+        driverNav.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 Intent i;
@@ -77,10 +79,12 @@ public class DriverAccountActivity extends AppCompatActivity {
 
                         i = new Intent(DriverAccountActivity.this, DriverInboxActivity.class);
                         startActivity(i);
+                        overridePendingTransition(0,0);
                         return true;
                     case (R.id.action_history):
                         i = new Intent(DriverAccountActivity.this, RideHistoryActivity.class);
                         startActivity(i);
+                        overridePendingTransition(0,0);
                         return true;
                 }
                 return false;
@@ -196,6 +200,7 @@ public class DriverAccountActivity extends AppCompatActivity {
     @Override
     protected void onResume(){
         super.onResume();
+        driverNav.setSelectedItemId(R.id.action_account);
     }
 
     @Override

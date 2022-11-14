@@ -12,8 +12,11 @@ import androidx.appcompat.widget.Toolbar;
 import com.example.uberapp_tim.R;
 import com.example.uberapp_tim.activities.RideHistoryActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationBarView;
 
 public class PassengerMainActivity extends AppCompatActivity {
+
+    BottomNavigationView passengerNav;
     @Override
     protected void onCreate(Bundle savedInstance){
         super.onCreate(savedInstance);
@@ -31,8 +34,8 @@ public class PassengerMainActivity extends AppCompatActivity {
             actionBar.setHomeButtonEnabled(true);
         }
 
-        BottomNavigationView passengerNav = findViewById(R.id.passengerNav);
-        passengerNav.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+        passengerNav = findViewById(R.id.passengerNav);
+        passengerNav.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 Intent i;
@@ -72,6 +75,7 @@ public class PassengerMainActivity extends AppCompatActivity {
     @Override
     protected void onResume(){
         super.onResume();
+        passengerNav.setSelectedItemId(R.id.action_main);
     }
 
     @Override

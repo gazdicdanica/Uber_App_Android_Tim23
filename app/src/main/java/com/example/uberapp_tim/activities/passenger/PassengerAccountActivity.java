@@ -16,6 +16,7 @@ import com.example.uberapp_tim.R;
 import com.example.uberapp_tim.activities.EditActivity;
 import com.example.uberapp_tim.activities.RideHistoryActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationBarView;
 
 public class PassengerAccountActivity extends AppCompatActivity {
 
@@ -24,6 +25,7 @@ public class PassengerAccountActivity extends AppCompatActivity {
     EditText address;
     EditText phoneNum;
     EditText password;
+    BottomNavigationView passengerNav;
 
     @Override
     protected void onCreate(Bundle savedInstance){
@@ -50,9 +52,9 @@ public class PassengerAccountActivity extends AppCompatActivity {
         //TODO set parameters in edittext
         setListeners();
 
-        BottomNavigationView passengerNav = findViewById(R.id.passNav);
+        passengerNav = findViewById(R.id.passNav);
         passengerNav.setSelectedItemId(R.id.action_account);
-        passengerNav.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+        passengerNav.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 Intent i;
@@ -174,6 +176,7 @@ public class PassengerAccountActivity extends AppCompatActivity {
     @Override
     protected void onResume(){
         super.onResume();
+        passengerNav.setSelectedItemId(R.id.action_account);
     }
 
     @Override

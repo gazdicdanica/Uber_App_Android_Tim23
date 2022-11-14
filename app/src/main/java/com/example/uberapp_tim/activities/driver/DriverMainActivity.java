@@ -15,6 +15,7 @@ import androidx.appcompat.widget.Toolbar;
 import com.example.uberapp_tim.R;
 import com.example.uberapp_tim.activities.RideHistoryActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationBarView;
 
 public class DriverMainActivity extends AppCompatActivity {
     @Override
@@ -36,7 +37,7 @@ public class DriverMainActivity extends AppCompatActivity {
 
         BottomNavigationView driverNav = findViewById(R.id.driverNav);
         driverNav.setSelectedItemId(R.id.action_main);
-        driverNav.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+        driverNav.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 Intent i;
