@@ -170,6 +170,7 @@ public class PassengerAccountActivity extends AppCompatActivity {
         switch(item.getItemId()){
             case(android.R.id.home):
                 this.finish();
+                overridePendingTransition(0,0);
                 return true;
             case (R.id.action_logout):
                 Intent loginScreen =new Intent(PassengerAccountActivity.this, UserLoginActivity.class);

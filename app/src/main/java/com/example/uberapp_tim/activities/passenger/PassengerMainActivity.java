@@ -62,6 +62,19 @@ public class PassengerMainActivity extends AppCompatActivity {
         });
 
     }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId()){
+            case(android.R.id.home):
+                this.finish();
+                overridePendingTransition(0,0);
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
     @Override
     protected void onStart(){
         super.onStart();

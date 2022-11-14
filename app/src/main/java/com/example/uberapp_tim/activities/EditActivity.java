@@ -58,6 +58,7 @@ public class EditActivity extends AppCompatActivity {
         switch(item.getItemId()){
             case(android.R.id.home):
                 this.finish();
+                overridePendingTransition(0,0);
                 return true;
         }
 
@@ -93,7 +94,6 @@ public class EditActivity extends AppCompatActivity {
     protected void onDestroy(){
         super.onDestroy();
     }
-
 
     private void setInputType(String label, EditText editText1, EditText editText2){
         switch(label){

@@ -84,6 +84,7 @@ public class DriverMainActivity extends AppCompatActivity {
         switch(item.getItemId()){
             case(android.R.id.home):
                 this.finish();
+                overridePendingTransition(0,0);
                 return true;
         }
 
