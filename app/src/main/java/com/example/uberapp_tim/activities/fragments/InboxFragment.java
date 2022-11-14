@@ -9,6 +9,10 @@ import android.widget.ListView;
 import androidx.fragment.app.ListFragment;
 
 import com.example.uberapp_tim.R;
+import com.example.uberapp_tim.activities.adapters.MessageAdapter;
+
+import model.message.Message;
+import tools.Mokap;
 
 public class InboxFragment extends ListFragment {
 
@@ -23,6 +27,14 @@ public class InboxFragment extends ListFragment {
     public void onListItemClick(ListView l, View view, int position, long id){
         super.onListItemClick(l, view, position, id);
 
+        Message message = Mokap.getMessages().get(position);
+    }
 
+    @Override
+    public void onCreate(Bundle savedInstance){
+        super.onCreate(savedInstance);
+
+        MessageAdapter adapter = new MessageAdapter(getActivity());
+        setListAdapter(adapter);
     }
 }

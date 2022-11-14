@@ -22,4 +22,12 @@ public class Message {
         this.receiver = receiver;
     }
 
+    public String getMsgText(){
+        return this.msgText;
+    }
+
+    public User getSender(){
+        return this.sender;
+    }
+
 }
