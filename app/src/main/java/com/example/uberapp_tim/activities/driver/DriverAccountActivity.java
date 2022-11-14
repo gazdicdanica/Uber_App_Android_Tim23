@@ -2,6 +2,8 @@ package com.example.uberapp_tim.activities.driver;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -18,6 +20,7 @@ import com.example.uberapp_tim.R;
 import com.example.uberapp_tim.activities.CarActivity;
 import com.example.uberapp_tim.activities.EditActivity;
 import com.example.uberapp_tim.activities.RideHistoryActivity;
+import com.example.uberapp_tim.activities.UserLoginActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 
@@ -91,6 +94,13 @@ public class DriverAccountActivity extends AppCompatActivity {
             }
         });
         setParameters();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.toolbar_menu, menu);
+        return true;
     }
 
     private void setParameters(){
@@ -181,9 +191,15 @@ public class DriverAccountActivity extends AppCompatActivity {
             case(android.R.id.home):
                 this.finish();
                 return true;
+            case (R.id.action_logout):
+                Intent loginScreen =new Intent(DriverAccountActivity.this, UserLoginActivity.class);
+                loginScreen.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(loginScreen);
+                this.finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-
-        return super.onOptionsItemSelected(item);
     }
 
     @Override
