@@ -4,6 +4,7 @@ import java.sql.Array;
 import java.util.ArrayList;
 import java.util.List;
 
+import model.Chat;
 import model.users.Driver;
 import model.users.Passenger;
 import model.users.User;
@@ -20,4 +21,9 @@ public class Mokap {
 
         return users;
     }
+
+
+//    public static List<Chat> getChats(){
+//        ArrayList<Chat> chats = new ArrayList<Chat>();
+//    }
 }
