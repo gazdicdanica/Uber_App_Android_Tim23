@@ -35,7 +35,7 @@ public class Mokap {
 
         ArrayList<Message> mess = new ArrayList<Message>();
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-            Message m = new Message(1, "CAO", LocalDateTime.now(), MessageType.RIDE, u1, u2);
+            Message m = new Message(1, "Hej", LocalDateTime.now(), MessageType.RIDE, u1, u2);
             Message m1 = new Message(2, "CAO", LocalDateTime.now(), MessageType.RIDE, u1, u3);
             Message m2 = new Message(3, "CAO", LocalDateTime.now(), MessageType.RIDE, u1, u2);
             mess.add(m);
