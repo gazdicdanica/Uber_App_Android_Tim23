@@ -61,11 +61,13 @@
         </activity>
         <activity
             android:name=".activities.driver.DriverMainActivity"
-            android:exported="true">
+            android:exported="true"
+            android:windowSoftInputMode="stateVisible|adjustResize">
 
         </activity>
         <activity android:name=".activities.driver.DriverPapersActivity"
-            android:exported="true">
+            android:exported="true"
+            android:windowSoftInputMode="stateVisible|adjustResize">
 
         </activity>
 
@@ -80,6 +82,11 @@
 
         </activity>
         <activity android:name=".activities.driver.DriverRideHistoryActivity"
+            android:exported="true"
+            android:windowSoftInputMode="stateVisible|adjustResize">
+
+        </activity>
+        <activity android:name=".activities.passenger.PassengerRideHistoryActivity"
             android:exported="true"
             android:windowSoftInputMode="stateVisible|adjustResize">
 

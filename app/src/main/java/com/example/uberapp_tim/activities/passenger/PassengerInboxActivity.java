@@ -96,6 +96,7 @@ public class PassengerInboxActivity extends AppCompatActivity {
     @Override
     protected void onResume(){
         super.onResume();
+        passengerNav.setSelectedItemId(R.id.action_inbox);
     }
 
     @Override

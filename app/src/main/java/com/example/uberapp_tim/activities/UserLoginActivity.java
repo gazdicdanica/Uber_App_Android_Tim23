@@ -3,6 +3,7 @@ package com.example.uberapp_tim.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -48,11 +49,15 @@ public class UserLoginActivity extends AppCompatActivity {
                         Driver d = (Driver)user;
                         Intent i = new Intent(UserLoginActivity.this, DriverMainActivity.class);
                         UserLoginActivity.this.finish();
+                        InputMethodManager inputMethodManager = (InputMethodManager)getSystemService(INPUT_METHOD_SERVICE);
+                        inputMethodManager.hideSoftInputFromWindow(view.getApplicationWindowToken(),0);
                         startActivity(i);
                     }catch(ClassCastException e){
                         Passenger p = (Passenger)user;
                         Intent i = new Intent(UserLoginActivity.this, PassengerMainActivity.class);
                         UserLoginActivity.this.finish();
+                        InputMethodManager inputMethodManager = (InputMethodManager)getSystemService(INPUT_METHOD_SERVICE);
+                        inputMethodManager.hideSoftInputFromWindow(view.getApplicationWindowToken(),0);
                         startActivity(i);
 
                     }
@@ -68,14 +73,14 @@ public class UserLoginActivity extends AppCompatActivity {
             }
         });
 
-        TextView txtForgotPassword = findViewById(R.id.txtViewForgotPassword);
-        txtForgotPassword.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //TODO Forgot password activity
-//                startActivity(new Intent(UserLoginActivity.this, ));
-            }
-        });
+//        TextView txtForgotPassword = findViewById(R.id.txtViewForgotPassword);
+//        txtForgotPassword.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                //TODO Forgot password activity
+////                startActivity(new Intent(UserLoginActivity.this, ));
+//            }
+//        });
     }
 
     private User checkLogin(){

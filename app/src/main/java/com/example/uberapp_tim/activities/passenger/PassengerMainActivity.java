@@ -42,19 +42,21 @@ public class PassengerMainActivity extends AppCompatActivity {
                 switch (item.getItemId()) {
 
                     case (R.id.action_main):
-                        i = new Intent(PassengerMainActivity.this, PassengerMainActivity.class);
                         return true;
                     case (R.id.action_account):
                         i = new Intent(PassengerMainActivity.this, PassengerAccountActivity.class);
                         startActivity(i);
+                        overridePendingTransition(0,0);
                         return true;
                     case (R.id.action_inbox):
                         i = new Intent(PassengerMainActivity.this, PassengerInboxActivity.class);
                         startActivity(i);
+                        overridePendingTransition(0,0);
                         return true;
                     case (R.id.action_history):
                         i = new Intent(PassengerMainActivity.this, PassengerRideHistoryActivity.class);
                         startActivity(i);
+                        overridePendingTransition(0,0);
                         return true;
                 }
                 return false;

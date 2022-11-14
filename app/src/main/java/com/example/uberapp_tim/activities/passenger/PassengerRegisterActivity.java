@@ -3,6 +3,7 @@ package com.example.uberapp_tim.activities.passenger;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -23,11 +24,12 @@ public class PassengerRegisterActivity extends AppCompatActivity {
         reg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(PassengerRegisterActivity.this, DriverAccountActivity.class));
+                InputMethodManager inputMethodManager = (InputMethodManager)getSystemService(INPUT_METHOD_SERVICE);
+                inputMethodManager.hideSoftInputFromWindow(view.getApplicationWindowToken(),0);
+                startActivity(new Intent(PassengerRegisterActivity.this, PassengerMainActivity.class));
             }
         });
 
-        Toast.makeText(this, "Prosao", Toast.LENGTH_SHORT).show();
     }
 
 
