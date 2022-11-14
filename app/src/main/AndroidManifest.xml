@@ -79,7 +79,7 @@
             android:windowSoftInputMode="stateVisible|adjustResize">
 
         </activity>
-        <activity android:name=".activities.RideHistoryActivity"
+        <activity android:name=".activities.driver.DriverRideHistoryActivity"
             android:exported="true"
             android:windowSoftInputMode="stateVisible|adjustResize">
 

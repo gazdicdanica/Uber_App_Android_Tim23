@@ -9,7 +9,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
@@ -19,12 +18,9 @@ import androidx.appcompat.widget.Toolbar;
 import com.example.uberapp_tim.R;
 import com.example.uberapp_tim.activities.CarActivity;
 import com.example.uberapp_tim.activities.EditActivity;
-import com.example.uberapp_tim.activities.RideHistoryActivity;
 import com.example.uberapp_tim.activities.UserLoginActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
-
-import model.users.Driver;
 
 public class DriverAccountActivity extends AppCompatActivity {
 
@@ -85,7 +81,7 @@ public class DriverAccountActivity extends AppCompatActivity {
                         overridePendingTransition(0,0);
                         return true;
                     case (R.id.action_history):
-                        i = new Intent(DriverAccountActivity.this, RideHistoryActivity.class);
+                        i = new Intent(DriverAccountActivity.this, DriverRideHistoryActivity.class);
                         startActivity(i);
                         overridePendingTransition(0,0);
                         return true;

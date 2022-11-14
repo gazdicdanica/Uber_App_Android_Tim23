@@ -10,64 +10,61 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import com.example.uberapp_tim.R;
-import com.example.uberapp_tim.activities.fragments.InboxFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 
-public class DriverInboxActivity extends AppCompatActivity {
+public class DriverRideHistoryActivity extends AppCompatActivity {
 
-    BottomNavigationView driverNav;
+    BottomNavigationView historyNav;
 
     @Override
     protected void onCreate(Bundle savedInstance){
         super.onCreate(savedInstance);
-        setContentView(R.layout.driver_inbox_activity);
+        setContentView(R.layout.ride_history_activity);
 
-        Toolbar toolbar = findViewById(R.id.toolbarDriverInbox);
+        Toolbar toolbar = findViewById(R.id.toolbarHistory);
         setSupportActionBar(toolbar);
-
         final ActionBar actionBar = getSupportActionBar();
 
-        if (actionBar != null) {
+        if(actionBar != null){
             actionBar.setDisplayShowTitleEnabled(false);
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setDisplayShowHomeEnabled(true);
             actionBar.setHomeButtonEnabled(true);
         }
 
-        driverNav = findViewById(R.id.driverInboxNav);
-        driverNav.setSelectedItemId(R.id.action_inbox);
-        driverNav.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
+        historyNav = findViewById(R.id.historyNav);
+        historyNav.setSelectedItemId(R.id.action_history);
+        historyNav.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 Intent i;
                 switch (item.getItemId()) {
 
                     case (R.id.action_main):
-                        i = new Intent(DriverInboxActivity.this, DriverMainActivity.class);
+                        i = new Intent(DriverRideHistoryActivity.this, DriverMainActivity.class);
                         startActivity(i);
                         overridePendingTransition(0,0);
                         return true;
                     case (R.id.action_account):
-                        i = new Intent(DriverInboxActivity.this, DriverAccountActivity.class);
+                        i = new Intent(DriverRideHistoryActivity.this, DriverAccountActivity.class);
                         startActivity(i);
                         overridePendingTransition(0,0);
                         return true;
                     case (R.id.action_inbox):
-                        return true;
-                    case (R.id.action_history):
-                        i = new Intent(DriverInboxActivity.this, DriverRideHistoryActivity.class);
+
+                        i = new Intent(DriverRideHistoryActivity.this, DriverInboxActivity.class);
                         startActivity(i);
                         overridePendingTransition(0,0);
+                        return true;
+                    case (R.id.action_history):
                         return true;
                 }
                 return false;
             }
         });
 
-        getSupportFragmentManager().beginTransaction()
-                .setReorderingAllowed(true).add(R.id.driverInboxContainer, InboxFragment.class, null)
-                .commit();
+
     }
 
     @Override
@@ -95,7 +92,7 @@ public class DriverInboxActivity extends AppCompatActivity {
     @Override
     protected void onResume(){
         super.onResume();
-        driverNav.setSelectedItemId(R.id.action_inbox);
+        historyNav.setSelectedItemId(R.id.action_history);
     }
 
     @Override

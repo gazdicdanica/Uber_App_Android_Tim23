@@ -1,9 +1,8 @@
-package com.example.uberapp_tim.activities;
+package com.example.uberapp_tim.activities.passenger;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
@@ -14,10 +13,13 @@ import com.example.uberapp_tim.R;
 import com.example.uberapp_tim.activities.driver.DriverAccountActivity;
 import com.example.uberapp_tim.activities.driver.DriverInboxActivity;
 import com.example.uberapp_tim.activities.driver.DriverMainActivity;
+import com.example.uberapp_tim.activities.driver.DriverRideHistoryActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 
-public class RideHistoryActivity extends AppCompatActivity {
+import model.users.Passenger;
+
+public class PassengerRideHistoryActivity extends AppCompatActivity {
 
     BottomNavigationView historyNav;
 
@@ -46,18 +48,18 @@ public class RideHistoryActivity extends AppCompatActivity {
                 switch (item.getItemId()) {
 
                     case (R.id.action_main):
-                        i = new Intent(RideHistoryActivity.this, DriverMainActivity.class);
+                        i = new Intent(PassengerRideHistoryActivity.this, PassengerMainActivity.class);
                         startActivity(i);
                         overridePendingTransition(0,0);
                         return true;
                     case (R.id.action_account):
-                        i = new Intent(RideHistoryActivity.this, DriverAccountActivity.class);
+                        i = new Intent(PassengerRideHistoryActivity.this, PassengerAccountActivity.class);
                         startActivity(i);
                         overridePendingTransition(0,0);
                         return true;
                     case (R.id.action_inbox):
 
-                        i = new Intent(RideHistoryActivity.this, DriverInboxActivity.class);
+                        i = new Intent(PassengerRideHistoryActivity.this, PassengerInboxActivity.class);
                         startActivity(i);
                         overridePendingTransition(0,0);
                         return true;
