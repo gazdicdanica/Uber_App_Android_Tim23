@@ -1,4 +1,4 @@
-package model.users;
+package com.example.uberapp_tim.model.users;
 
 import android.graphics.Bitmap;
 

@@ -1,4 +1,4 @@
-package com.example.uberapp_tim.activities.fragments;
+package com.example.uberapp_tim.fragments;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -9,10 +9,10 @@ import android.widget.ListView;
 import androidx.fragment.app.ListFragment;
 
 import com.example.uberapp_tim.R;
-import com.example.uberapp_tim.activities.adapters.MessageAdapter;
+import com.example.uberapp_tim.adapters.MessageAdapter;
 
-import model.message.Message;
-import tools.Mokap;
+import com.example.uberapp_tim.model.message.Message;
+import com.example.uberapp_tim.tools.Mokap;
 
 public class InboxFragment extends ListFragment {
 

@@ -17,10 +17,10 @@ import com.example.uberapp_tim.activities.passenger.PassengerRegisterActivity;
 
 import java.util.List;
 
-import model.users.Driver;
-import model.users.Passenger;
-import model.users.User;
-import tools.Mokap;
+import com.example.uberapp_tim.model.users.Driver;
+import com.example.uberapp_tim.model.users.Passenger;
+import com.example.uberapp_tim.model.users.User;
+import com.example.uberapp_tim.tools.Mokap;
 
 public class UserLoginActivity extends AppCompatActivity {
 

@@ -1,10 +1,10 @@
-package model;
+package com.example.uberapp_tim.model;
+
+import com.example.uberapp_tim.model.message.Message;
+import com.example.uberapp_tim.model.users.User;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import model.message.Message;
-import model.users.User;
 
 public class Chat {
     List<Message> messages;

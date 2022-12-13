@@ -1,8 +1,8 @@
-package model.message;
+package com.example.uberapp_tim.model.message;
 
 import java.time.LocalDateTime;
 
-import model.users.User;
+import com.example.uberapp_tim.model.users.User;
 
 public class Message {
     private int id;
