@@ -13,6 +13,13 @@
         android:theme="@style/Theme.UberApp_Tim"
         tools:targetApi="31">
         <activity
+            android:name=".ChatActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
             android:name=".activities.CarActivity"
             android:exported="false">
             <meta-data
@@ -21,29 +28,20 @@
         </activity>
         <activity
             android:name=".activities.passenger.PassengerAccountActivity"
-            android:exported="true">
-
-        </activity>
+            android:exported="true"></activity>
         <activity
             android:name=".activities.passenger.PassengerInboxActivity"
-            android:exported="true">
-
-        </activity>
+            android:exported="true"></activity>
         <activity
             android:name=".activities.passenger.PassengerMainActivity"
-            android:exported="true">
-
-        </activity>
+            android:exported="true"></activity>
         <activity
             android:name=".activities.passenger.PassengerRegisterActivity"
             android:exported="true"
-            android:windowSoftInputMode="stateVisible|adjustResize">
-
-        </activity>
-        <activity android:name=".activities.driver.DriverAccountActivity"
-            android:exported="true">
-
-        </activity>
+            android:windowSoftInputMode="stateVisible|adjustResize"></activity>
+        <activity
+            android:name=".activities.driver.DriverAccountActivity"
+            android:exported="true"></activity>
         <activity
             android:name=".activities.SplashActivity"
             android:exported="true">
@@ -56,41 +54,31 @@
         <activity
             android:name=".activities.UserLoginActivity"
             android:exported="true"
-            android:windowSoftInputMode="stateVisible|adjustResize">
-
-        </activity>
+            android:windowSoftInputMode="stateVisible|adjustResize"></activity>
         <activity
             android:name=".activities.driver.DriverMainActivity"
             android:exported="true"
-            android:windowSoftInputMode="stateVisible|adjustResize">
-
-        </activity>
-        <activity android:name=".activities.driver.DriverPapersActivity"
+            android:windowSoftInputMode="stateVisible|adjustResize"></activity>
+        <activity
+            android:name=".activities.driver.DriverPapersActivity"
             android:exported="true"
-            android:windowSoftInputMode="stateVisible|adjustResize">
-
-        </activity>
-
-        <activity android:name=".activities.EditActivity"
+            android:windowSoftInputMode="stateVisible|adjustResize"></activity>
+        <activity
+            android:name=".activities.EditActivity"
             android:exported="true"
-            android:windowSoftInputMode="stateVisible|adjustResize">
-
-        </activity>
-        <activity android:name=".activities.driver.DriverInboxActivity"
+            android:windowSoftInputMode="stateVisible|adjustResize"></activity>
+        <activity
+            android:name=".activities.driver.DriverInboxActivity"
             android:exported="true"
-            android:windowSoftInputMode="stateVisible|adjustResize">
-
-        </activity>
-        <activity android:name=".activities.driver.DriverRideHistoryActivity"
+            android:windowSoftInputMode="stateVisible|adjustResize"></activity>
+        <activity
+            android:name=".activities.driver.DriverRideHistoryActivity"
             android:exported="true"
-            android:windowSoftInputMode="stateVisible|adjustResize">
-
-        </activity>
-        <activity android:name=".activities.passenger.PassengerRideHistoryActivity"
+            android:windowSoftInputMode="stateVisible|adjustResize"></activity>
+        <activity
+            android:name=".activities.passenger.PassengerRideHistoryActivity"
             android:exported="true"
-            android:windowSoftInputMode="stateVisible|adjustResize">
-
-        </activity>
+            android:windowSoftInputMode="stateVisible|adjustResize"></activity>
     </application>
 
 </manifest>

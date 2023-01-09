@@ -9,7 +9,7 @@ import android.widget.ListView;
 import androidx.fragment.app.ListFragment;
 
 import com.example.uberapp_tim.R;
-import com.example.uberapp_tim.activities.adapters.MessageAdapter;
+import com.example.uberapp_tim.activities.adapters.ChatAdapter;
 
 import model.message.Message;
 import tools.Mokap;
@@ -34,7 +34,7 @@ public class InboxFragment extends ListFragment {
     public void onCreate(Bundle savedInstance){
         super.onCreate(savedInstance);
 
-        MessageAdapter adapter = new MessageAdapter(getActivity());
+        ChatAdapter adapter = new ChatAdapter(getActivity());
         setListAdapter(adapter);
     }
 }

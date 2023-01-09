@@ -30,4 +30,6 @@ public class Message {
         return this.sender;
     }
 
+    public LocalDateTime getTimeOfSending() {return this.timeOfSending;}
+
 }
