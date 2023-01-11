@@ -39,12 +39,11 @@ public class MessageAdapter extends RecyclerView.Adapter {
         if(viewType == VIEW_TYPE_SENT){
             view = LayoutInflater.from(parent.getContext()).inflate(R.layout.me_messages, parent, false);
             return new SentMessageHolder(view);
-        }else if (viewType == VIEW_TYPE_RECEIVED){
+        }else{
             view = LayoutInflater.from(parent.getContext()).inflate(R.layout.other_messages, parent, false);
             return new ReceivedMessageHolder(view);
         }
 
-        return null;
     }
 
     @Override
