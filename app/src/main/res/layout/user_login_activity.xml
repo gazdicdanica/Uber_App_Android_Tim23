@@ -20,42 +20,50 @@
             android:layout_gravity="center_horizontal"
             app:srcCompat="@drawable/airride_fococlipping_standard" />
 
-        <EditText
-            android:id="@+id/editTextTextEmailAddress"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/emailInputLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:inputType="textEmailAddress"
-            android:singleLine="true"
-            android:visibility="visible"
-            android:layout_marginBottom="10dp"
-            android:layout_marginStart="15dp"
-            android:layout_marginEnd="15dp"
-            android:layout_marginTop="10dp"
-            android:padding="10dp"
-            android:hint="@string/e_mail"
-            android:textColorHint="?attr/colorOnSecondary"
-            android:background="@drawable/transparent_edittext"
-            android:drawableStart="@drawable/ic_baseline_alternate_email_24"
-            android:drawablePadding="6dp"/>
+            app:errorEnabled="true">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/editTextTextEmailAddress"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:inputType="textEmailAddress"
+                android:singleLine="true"
+                android:visibility="visible"
+                android:layout_marginBottom="0dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="15dp"
+                android:layout_marginTop="10dp"
+                android:hint="@string/e_mail"
+                android:textColorHint="?attr/colorOnSecondary"
+                android:drawableStart="@drawable/ic_baseline_alternate_email_24"
+                android:drawablePadding="6dp"/>
+        </com.google.android.material.textfield.TextInputLayout>
 
-        <EditText
-            android:id="@+id/editTextTextPassword"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/passwordInputLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:inputType="textPassword"
-            android:visibility="visible"
-            android:layout_marginBottom="10dp"
-            android:layout_marginStart="15dp"
-            android:layout_marginEnd="15dp"
-            android:layout_marginTop="10dp"
-            android:padding="10dp"
-            android:hint="@string/password_hint"
-            android:textColorHint="?attr/colorOnSecondary"
-            android:background="@drawable/transparent_edittext"
-            android:drawableStart="@drawable/ic_round_lock_24"
-            android:drawablePadding="6dp"/>
+            app:errorEnabled="true">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/editTextTextPassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:inputType="textPassword"
+                android:visibility="visible"
+                android:layout_marginBottom="0dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="15dp"
+                android:layout_marginTop="10dp"
+                android:hint="@string/password_hint"
+                android:textColorHint="?attr/colorOnSecondary"
+                android:drawableStart="@drawable/ic_round_lock_24"
+                android:drawablePadding="6dp"/>
+        </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/button3"

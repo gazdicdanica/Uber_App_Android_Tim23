@@ -29,9 +29,9 @@ public class PassengerMainActivity extends AppCompatActivity {
 
         if (actionBar != null) {
             actionBar.setDisplayShowTitleEnabled(false);
-            actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setDisplayShowHomeEnabled(true);
-            actionBar.setHomeButtonEnabled(true);
+//            actionBar.setDisplayHomeAsUpEnabled(true);
+//            actionBar.setDisplayShowHomeEnabled(true);
+//            actionBar.setHomeButtonEnabled(true);
         }
 
         passengerNav = findViewById(R.id.passengerNav);
