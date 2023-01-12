@@ -14,10 +14,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.uberapp_tim.R;
 
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeFormatterBuilder;
 import java.util.List;
 
-import model.message.Message;
+import com.example.uberapp_tim.model.message.Message;
+
 
 public class MessageAdapter extends RecyclerView.Adapter {
     private static final int VIEW_TYPE_SENT = 1;

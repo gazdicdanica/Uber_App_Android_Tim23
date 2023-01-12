@@ -1,10 +1,10 @@
-package model.users;
+package com.example.uberapp_tim.model.users;
 
 import android.graphics.Bitmap;
 
-import java.io.Serializable;
+import com.example.uberapp_tim.model.route.Route;
 
-import model.route.Route;
+import java.io.Serializable;
 
 public class Passenger extends User implements Serializable {
 

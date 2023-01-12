@@ -7,9 +7,9 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.example.uberapp_tim.R;
+import com.example.uberapp_tim.model.message.Message;
+import com.example.uberapp_tim.tools.Mokap;
 
-import model.message.Message;
-import tools.Mokap;
 
 public class ChatAdapter extends BaseAdapter {
 

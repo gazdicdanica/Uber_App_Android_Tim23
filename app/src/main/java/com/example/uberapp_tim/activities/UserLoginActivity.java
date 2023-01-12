@@ -17,11 +17,20 @@ import com.example.uberapp_tim.activities.passenger.PassengerMainActivity;
 import com.example.uberapp_tim.activities.passenger.PassengerRegisterActivity;
 
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-import model.users.Driver;
-import model.users.Passenger;
-import model.users.User;
-import tools.Mokap;
+import com.example.uberapp_tim.dto.LoginDTO;
+import com.example.uberapp_tim.model.users.Driver;
+import com.example.uberapp_tim.model.users.Passenger;
+import com.example.uberapp_tim.model.users.User;
+import com.example.uberapp_tim.service.ServiceUtils;
+import com.example.uberapp_tim.tools.Mokap;
+
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class UserLoginActivity extends AppCompatActivity {
 
@@ -40,31 +49,23 @@ public class UserLoginActivity extends AppCompatActivity {
         logInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                User user = checkLogin();
-                if(user == null){
-                    Toast t = Toast.makeText(UserLoginActivity.this, "Wrong email or password", Toast.LENGTH_SHORT);
-                    t.show();
-                }else{
-                    try{
-                        Driver d = (Driver)user;
-                        Intent i = new Intent(UserLoginActivity.this, DriverMainActivity.class);
-                        UserLoginActivity.this.finish();
-                        InputMethodManager inputMethodManager = (InputMethodManager)getSystemService(INPUT_METHOD_SERVICE);
-                        inputMethodManager.hideSoftInputFromWindow(view.getApplicationWindowToken(),0);
-                        startActivity(i);
-                    }catch(ClassCastException e){
-                        Passenger p = (Passenger)user;
-                        Intent i = new Intent(UserLoginActivity.this, PassengerMainActivity.class);
-                        UserLoginActivity.this.finish();
-                        InputMethodManager inputMethodManager = (InputMethodManager)getSystemService(INPUT_METHOD_SERVICE);
-                        inputMethodManager.hideSoftInputFromWindow(view.getApplicationWindowToken(),0);
-                        startActivity(i);
+                LoginDTO loginDTO = getLoginData();
 
+                ServiceUtils.userService.login(loginDTO).enqueue(new Callback<ResponseBody>() {
+                    @Override
+                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                        Toast.makeText(UserLoginActivity.this, "SUCCESS!!!", Toast.LENGTH_SHORT).show();
                     }
-                }
 
+                    @Override
+                    public void onFailure(Call<ResponseBody> call, Throwable t) {
+                        Toast.makeText(UserLoginActivity.this, "Bad request", Toast.LENGTH_SHORT).show();
+                        Logger.getLogger(UserLoginActivity.class.getName()).log(Level.SEVERE, "ERROR", t);
+                    }
+                });
             }
         });
+
         Button signInButton = findViewById(R.id.buttonSignIn);
         signInButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -83,22 +84,11 @@ public class UserLoginActivity extends AppCompatActivity {
 //        });
     }
 
-    private User checkLogin(){
-        List<User> users = Mokap.getUsers();
-
+    private LoginDTO getLoginData(){
         String email = editTextEmail.getText().toString();
         String password = editTextPassword.getText().toString();
 
-        for(User u : users){
-            if(u.getEmail().equals(email)){
-                if(u.getPassword().equals(password)){
-                    return u;
-                }else{
-                    return null;
-                }
-            }
-        }
-        return null;
+        return new LoginDTO(email, password);
     }
 
     @Override

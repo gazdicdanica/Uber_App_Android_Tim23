@@ -11,8 +11,8 @@ import androidx.fragment.app.ListFragment;
 import com.example.uberapp_tim.R;
 import com.example.uberapp_tim.activities.adapters.ChatAdapter;
 
-import model.message.Message;
-import tools.Mokap;
+import com.example.uberapp_tim.model.message.Message;
+import com.example.uberapp_tim.tools.Mokap;
 
 public class InboxFragment extends ListFragment {
 
