@@ -14,18 +14,19 @@
             android:layout_height="?attr/actionBarSize"
             android:theme="@style/ToolBarTheme">
 
+            <androidx.appcompat.widget.AppCompatToggleButton
+                android:id="@+id/status_toggle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/appBar"
+                android:layout_gravity="end"
+                android:layout_marginEnd="10dp"
+                android:textOn="@string/online"
+                android:textOff="@string/offline"
+                android:checked="true"
+                />
         </androidx.appcompat.widget.Toolbar>
     </com.google.android.material.appbar.AppBarLayout>
-
-    <androidx.appcompat.widget.AppCompatToggleButton
-        android:id="@+id/status_toggle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/appBar"
-        android:layout_margin="20dp"
-        android:textOn="@string/online"
-        android:textOff="@string/offline"
-        />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/driverNav"

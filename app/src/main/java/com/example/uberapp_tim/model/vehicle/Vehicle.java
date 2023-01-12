@@ -1,7 +1,7 @@
 package com.example.uberapp_tim.model.vehicle;
 
 public class Vehicle {
-    private String id;
+    private Long id;
     private String model;
     private String registrationPlates;
     private int capacity;
@@ -10,7 +10,7 @@ public class Vehicle {
     private CarType carType;
     private float pricePerKilometer;
 
-    public Vehicle(String id, String model, String registrationPlates, int capacity,
+    public Vehicle(Long id, String model, String registrationPlates, int capacity,
                    boolean acceptBabies, boolean acceptPets, CarType carType, float pricePerKilometer) {
         this.id = id;
         this.model = model;
@@ -22,11 +22,11 @@ public class Vehicle {
         this.pricePerKilometer = pricePerKilometer;
     }
 
-    public String getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
