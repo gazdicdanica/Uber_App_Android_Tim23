@@ -1,7 +1,6 @@
-package model.users;
+package com.example.uberapp_tim.model.users;
 
 import android.graphics.Bitmap;
-import android.os.Parcelable;
 
 import java.io.Serializable;
 

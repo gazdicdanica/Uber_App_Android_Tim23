@@ -1,14 +1,31 @@
-package model.users;
+package com.example.uberapp_tim.model.users;
 
 import android.graphics.Bitmap;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
-public class User {
+import java.io.Serializable;
+
+
+public class User implements Serializable {
+    @SerializedName("id")
+    @Expose
     private int id;
+    @SerializedName("name")
+    @Expose
     private String name;
+    @SerializedName("lastName")
+    @Expose
     private String lastName;
+    @SerializedName("email")
+    @Expose
     private String email;
+    @SerializedName("phoneNumber")
+    @Expose
     private String phoneNumber;
+    @SerializedName("address")
+    @Expose
     private String address;
     private String password;
     private Bitmap profilePhoto;

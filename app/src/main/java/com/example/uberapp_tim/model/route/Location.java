@@ -1,4 +1,4 @@
-package model.route;
+package com.example.uberapp_tim.model.route;
 
 public class Location {
     private double longitude;

@@ -1,9 +1,9 @@
-package model.ride;
+package com.example.uberapp_tim.model.ride;
 
 import java.time.LocalDateTime;
 
-import model.payment.Payment;
-import model.vehicle.Vehicle;
+import com.example.uberapp_tim.model.payment.Payment;
+import com.example.uberapp_tim.model.vehicle.Vehicle;
 
 public class Ride {
     private int id;

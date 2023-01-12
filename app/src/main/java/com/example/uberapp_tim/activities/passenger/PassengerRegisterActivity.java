@@ -16,11 +16,10 @@ public class PassengerRegisterActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstance){
         super.onCreate(savedInstance);
         setContentView(R.layout.passenger_register_activity);
-        Toast.makeText(this, "RegisterActivityCreated", Toast.LENGTH_SHORT).show();
 
 
-        Button reg = findViewById(R.id.regFormCreateAccButton);
-        reg.setOnClickListener(new View.OnClickListener() {
+        Button registerBtn = findViewById(R.id.regFormCreateAccButton);
+        registerBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(PassengerRegisterActivity.this, DriverAccountActivity.class));

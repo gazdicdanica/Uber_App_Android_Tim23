@@ -9,7 +9,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
@@ -23,8 +22,6 @@ import com.example.uberapp_tim.activities.RideHistoryActivity;
 import com.example.uberapp_tim.activities.UserLoginActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
-
-import model.users.Driver;
 
 public class DriverAccountActivity extends AppCompatActivity {
 
