@@ -1,4 +1,4 @@
-package model.vehicle;
+package com.example.uberapp_tim.model.vehicle;
 
 public class Vehicle {
     private String id;

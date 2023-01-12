@@ -4,13 +4,12 @@ import android.app.Activity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.uberapp_tim.R;
 
-import model.message.Message;
-import tools.Mokap;
+import com.example.uberapp_tim.model.message.Message;
+import com.example.uberapp_tim.tools.Mokap;
 
 public class MessageAdapter extends BaseAdapter {
 

@@ -1,17 +1,14 @@
-package tools;
+package com.example.uberapp_tim.tools;
 
-import java.sql.Array;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
-import model.Chat;
-import model.message.Message;
-import model.message.MessageType;
-import model.users.Driver;
-import model.users.Passenger;
-import model.users.User;
+import com.example.uberapp_tim.model.message.Message;
+import com.example.uberapp_tim.model.message.MessageType;
+import com.example.uberapp_tim.model.users.Driver;
+import com.example.uberapp_tim.model.users.Passenger;
+import com.example.uberapp_tim.model.users.User;
 
 public class Mokap {
 

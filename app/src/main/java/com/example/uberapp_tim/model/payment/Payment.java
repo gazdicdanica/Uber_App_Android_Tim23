@@ -1,9 +1,9 @@
-package model.payment;
+package com.example.uberapp_tim.model.payment;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
-import model.users.Passenger;
+import com.example.uberapp_tim.model.users.Passenger;
 
 public class Payment {
     private int id;

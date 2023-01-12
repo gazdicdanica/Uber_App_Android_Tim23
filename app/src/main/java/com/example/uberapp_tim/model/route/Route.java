@@ -1,4 +1,4 @@
-package model.route;
+package com.example.uberapp_tim.model.route;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
