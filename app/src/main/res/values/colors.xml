@@ -12,4 +12,5 @@
     <color name="partially_light">#30000000</color>
     <color name="partially_dark">#30ffffff</color>
     <color name="orange">#f57804</color>
+    <color name="error">#BF0000</color>
 </resources>
