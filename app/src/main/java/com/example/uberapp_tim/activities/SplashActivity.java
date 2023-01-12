@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.widget.Toast;
 
 import com.example.uberapp_tim.R;
+import com.example.uberapp_tim.tools.AppTools;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -16,13 +17,19 @@ public class SplashActivity extends Activity {
     protected void onCreate(Bundle savedInstance){
         super.onCreate(savedInstance);
         setContentView(R.layout.splash);
-        new Timer().schedule(new TimerTask() {
-            @Override
-            public void run() {
-                startActivity(new Intent(SplashActivity.this, UserLoginActivity.class));
-                finish();
-            }
-        }, 3000);
+        int connection = AppTools.getConnectivityStatus(getApplicationContext());
+        if(connection == AppTools.TYPE_WIFI || connection == AppTools.TYPE_MOBILE){
+            new Timer().schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    startActivity(new Intent(SplashActivity.this, UserLoginActivity.class));
+                    finish();
+                }
+            }, 5000);
+        }else {
+
+        }
+
     }
 
     @Override
