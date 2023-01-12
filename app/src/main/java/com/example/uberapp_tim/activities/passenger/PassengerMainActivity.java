@@ -10,7 +10,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import com.example.uberapp_tim.R;
-import com.example.uberapp_tim.activities.driver.DriverRideHistoryActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 
@@ -50,11 +49,6 @@ public class PassengerMainActivity extends AppCompatActivity {
                         return true;
                     case (R.id.action_inbox):
                         i = new Intent(PassengerMainActivity.this, PassengerInboxActivity.class);
-                        startActivity(i);
-                        overridePendingTransition(0,0);
-                        return true;
-                    case (R.id.action_history):
-                        i = new Intent(PassengerMainActivity.this, PassengerRideHistoryActivity.class);
                         startActivity(i);
                         overridePendingTransition(0,0);
                         return true;

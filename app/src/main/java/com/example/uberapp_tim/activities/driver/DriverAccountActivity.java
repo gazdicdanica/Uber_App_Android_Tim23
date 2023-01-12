@@ -80,11 +80,6 @@ public class DriverAccountActivity extends AppCompatActivity {
                         startActivity(i);
                         overridePendingTransition(0,0);
                         return true;
-                    case (R.id.action_history):
-                        i = new Intent(DriverAccountActivity.this, DriverRideHistoryActivity.class);
-                        startActivity(i);
-                        overridePendingTransition(0,0);
-                        return true;
                 }
                 return false;
             }

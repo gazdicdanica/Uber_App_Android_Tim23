@@ -3,8 +3,6 @@ package com.example.uberapp_tim.activities.passenger;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.ListView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
@@ -12,7 +10,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import com.example.uberapp_tim.R;
-import com.example.uberapp_tim.activities.driver.DriverRideHistoryActivity;
 import com.example.uberapp_tim.activities.fragments.InboxFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
@@ -57,11 +54,6 @@ public class PassengerInboxActivity extends AppCompatActivity {
                         overridePendingTransition(0,0);
                         return true;
                     case (R.id.action_inbox):
-                        return true;
-                    case (R.id.action_history):
-                        i = new Intent(PassengerInboxActivity.this, PassengerRideHistoryActivity.class);
-                        startActivity(i);
-                        overridePendingTransition(0,0);
                         return true;
                 }
                 return false;
