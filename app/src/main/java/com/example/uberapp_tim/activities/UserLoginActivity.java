@@ -33,6 +33,7 @@ import com.example.uberapp_tim.model.users.Passenger;
 import com.example.uberapp_tim.model.users.User;
 import com.example.uberapp_tim.service.ServiceUtils;
 import com.example.uberapp_tim.tools.Mokap;
+import com.google.android.material.textfield.TextInputLayout;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -43,7 +44,6 @@ public class UserLoginActivity extends AppCompatActivity {
 
     EditText editTextEmail;
     EditText editTextPassword;
-
     SharedPreferences sharedPreferences;
 
 
@@ -90,18 +90,29 @@ public class UserLoginActivity extends AppCompatActivity {
         ServiceUtils.userService.login(loginDTO).enqueue(new Callback<TokensDTO>() {
             @Override
             public void onResponse(Call<TokensDTO> call, Response<TokensDTO> response) {
-                sharedPreferences = getSharedPreferences("AirRide_preferences", Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = sharedPreferences.edit();
+                if(response.code() == 200){
+                    sharedPreferences = getSharedPreferences("AirRide_preferences", Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
 
-                Log.i("Response code", response.code() + " ");
-                Log.i("Message", "User successfully logged in");
+                    Log.i("Response code", response.code() + " ");
+                    Log.i("Message", "User successfully logged in");
 
-                editor.putString("accessToken", response.body().getAccessToken());
-                editor.apply();
+                    editor.putString("accessToken", response.body().getAccessToken());
+                    editor.apply();
 
-                changeActivity();
+                    changeActivity();
 
-                Toast.makeText(UserLoginActivity.this, "SUCCESS!!!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(UserLoginActivity.this, "SUCCESS!!!", Toast.LENGTH_SHORT).show();
+                }else if(response.code() == 400){
+                    editTextEmail.setText("");
+                    editTextPassword.setText("");
+                    TextInputLayout emailLayout = (TextInputLayout) findViewById(R.id.emailInputLayout);
+                    emailLayout.setError("   ");
+                    TextInputLayout passwordLayout = (TextInputLayout) findViewById(R.id.passwordInputLayout);
+                    passwordLayout.setError(getString(R.string.login_error));
+                    editTextEmail.requestFocus();
+                }
+
             }
 
             @Override
@@ -145,6 +156,8 @@ public class UserLoginActivity extends AppCompatActivity {
     @Override
     protected void onResume(){
         super.onResume();
+        editTextEmail.setText("");
+        editTextPassword.setText("");
     }
 
     @Override
