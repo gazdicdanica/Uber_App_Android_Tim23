@@ -51,9 +51,9 @@ public class DriverMainActivity extends AppCompatActivity {
 
         if (actionBar != null) {
             actionBar.setDisplayShowTitleEnabled(false);
-            actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setDisplayShowHomeEnabled(true);
-            actionBar.setHomeButtonEnabled(true);
+//            actionBar.setDisplayHomeAsUpEnabled(true);
+//            actionBar.setDisplayShowHomeEnabled(true);
+//            actionBar.setHomeButtonEnabled(true);
         }
 
         BottomNavigationView driverNav = findViewById(R.id.driverNav);
@@ -139,10 +139,6 @@ public class DriverMainActivity extends AppCompatActivity {
 
             }
         });
-    }
-
-    private void startShift(){
-
     }
 
     @Override

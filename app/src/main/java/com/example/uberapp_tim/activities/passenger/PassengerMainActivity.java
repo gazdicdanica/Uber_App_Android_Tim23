@@ -28,10 +28,8 @@ public class PassengerMainActivity extends AppCompatActivity {
         final ActionBar actionBar = getSupportActionBar();
 
         if (actionBar != null) {
-            actionBar.setDisplayShowTitleEnabled(false);
-//            actionBar.setDisplayHomeAsUpEnabled(true);
-//            actionBar.setDisplayShowHomeEnabled(true);
-//            actionBar.setHomeButtonEnabled(true);
+            actionBar.setDisplayShowTitleEnabled(true);
+            actionBar.setTitle("AirRide");
         }
 
         passengerNav = findViewById(R.id.passengerNav);
