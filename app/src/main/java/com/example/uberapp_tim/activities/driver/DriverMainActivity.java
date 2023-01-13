@@ -25,14 +25,20 @@ import com.example.uberapp_tim.tools.FragmentTransition;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 
+import java.net.URI;
+import java.net.URISyntaxException;
+
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import tech.gusavila92.websocketclient.WebSocketClient;
 
 public class DriverMainActivity extends AppCompatActivity {
 
     Long id;
+
+    WebSocketClient webSocketClient;
 
     @Override
     protected void onCreate(Bundle savedInstance){
@@ -141,6 +147,57 @@ public class DriverMainActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    private void createWebSocketClient(){
+        URI uri = null;
+        try {
+            uri = new URI("http://192.168.0.21:8080/socket");
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+        webSocketClient = new WebSocketClient(uri) {
+            @Override
+            public void onOpen() {
+                Log.i("WebSocket", "Session is starting");
+            }
+
+            @Override
+            public void onTextReceived(String message) {
+                Log.i("WebSocket", "Message received");
+
+            }
+
+            @Override
+            public void onBinaryReceived(byte[] data) {
+
+            }
+
+            @Override
+            public void onPingReceived(byte[] data) {
+
+            }
+
+            @Override
+            public void onPongReceived(byte[] data) {
+
+            }
+
+            @Override
+            public void onException(Exception e) {
+
+            }
+
+            @Override
+            public void onCloseReceived() {
+
+            }
+        };
+
+        webSocketClient.setConnectTimeout(10000);
+        webSocketClient.setReadTimeout(60000);
+        webSocketClient.enableAutomaticReconnection(5000);
+        webSocketClient.connect();
     }
 
     private static String CHANNEL_ID = "Driver Ride Channel";
