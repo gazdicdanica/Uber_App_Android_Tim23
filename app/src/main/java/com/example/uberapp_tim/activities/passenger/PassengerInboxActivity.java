@@ -11,10 +11,7 @@ import androidx.appcompat.widget.Toolbar;
 
 import com.example.uberapp_tim.R;
 import com.example.uberapp_tim.activities.RideHistoryActivity;
-import com.example.uberapp_tim.activities.driver.DriverAccountActivity;
-import com.example.uberapp_tim.activities.driver.DriverInboxActivity;
-import com.example.uberapp_tim.activities.driver.DriverMainActivity;
-import com.example.uberapp_tim.activities.fragments.InboxFragment;
+import com.example.uberapp_tim.fragments.InboxFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 
