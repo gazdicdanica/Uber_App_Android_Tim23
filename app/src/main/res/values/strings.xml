@@ -33,4 +33,6 @@
     <string name="history_activity">History</string>
     <string name="logout">Log out</string>
     <string name="login_error">The username or password you entered is incorrect</string>
+    <string name="ride_channel">Ride notification channel</string>
+    <string name="new_ride_notification">RIDE_NOTIFICATION</string>
 </resources>

@@ -1,5 +1,7 @@
 package com.example.uberapp_tim.activities.driver;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -18,7 +20,7 @@ import androidx.appcompat.widget.Toolbar;
 import com.example.uberapp_tim.R;
 import com.example.uberapp_tim.activities.RideHistoryActivity;
 import com.example.uberapp_tim.fragments.MapFragment;
-import com.example.uberapp_tim.service.ServiceUtils;
+import com.example.uberapp_tim.connection.ServiceUtils;
 import com.example.uberapp_tim.tools.FragmentTransition;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
@@ -139,6 +141,21 @@ public class DriverMainActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    private static String CHANNEL_ID = "Driver Ride Channel";
+
+    private void createNotificationChannel(){
+        CharSequence name = "Ride notification channel";
+        String description = "Accept/decline new ride";
+        int importance = NotificationManager.IMPORTANCE_HIGH;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
+            channel.setDescription(description);
+
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
     }
 
     @Override

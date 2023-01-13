@@ -1,4 +1,4 @@
-package com.example.uberapp_tim.service;
+package com.example.uberapp_tim.connection;
 
 import java.util.concurrent.TimeUnit;
 
