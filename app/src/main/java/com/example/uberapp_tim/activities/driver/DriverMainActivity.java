@@ -14,6 +14,8 @@ import androidx.appcompat.widget.Toolbar;
 
 import com.example.uberapp_tim.R;
 import com.example.uberapp_tim.activities.RideHistoryActivity;
+import com.example.uberapp_tim.fragments.MapFragment;
+import com.example.uberapp_tim.tools.FragmentTransition;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 
@@ -25,6 +27,10 @@ public class DriverMainActivity extends AppCompatActivity {
 
         Toolbar toolbar = findViewById(R.id.toolbarDriverMain);
         setSupportActionBar(toolbar);
+
+        FragmentTransition.to(MapFragment.newInstance(), this, false);
+
+
 
         final ActionBar actionBar = getSupportActionBar();
 
@@ -104,6 +110,7 @@ public class DriverMainActivity extends AppCompatActivity {
     @Override
     protected void onResume(){
         super.onResume();
+        FragmentTransition.to(MapFragment.newInstance(), this, false);
         BottomNavigationView nav = findViewById(R.id.driverNav);
         nav.getMenu().getItem(0).setChecked(true);
     }
