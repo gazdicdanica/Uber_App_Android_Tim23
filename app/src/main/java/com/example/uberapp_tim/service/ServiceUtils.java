@@ -32,4 +32,6 @@ public class ServiceUtils {
 
     public static UserService userService = retrofit.create(UserService.class);
 
+    public static DriverService driverService = retrofit.create(DriverService.class);
+
 }

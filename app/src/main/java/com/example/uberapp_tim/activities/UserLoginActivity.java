@@ -132,6 +132,10 @@ public class UserLoginActivity extends AppCompatActivity {
             ArrayList<String> claim = jwt.getClaim("role").asObject(ArrayList.class);
             assert claim != null;
             String role = claim.get(0);
+
+            String id = jwt.getClaim("id").asString();
+
+            sharedPreferences.edit().putString("id", id).apply();
             sharedPreferences.edit().putString("role", role).apply();
             if(role.equals("passenger")){
                 startActivity(new Intent(UserLoginActivity.this, PassengerMainActivity.class));

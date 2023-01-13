@@ -1,12 +1,22 @@
 package com.example.uberapp_tim.model.route;
 
 public class Location {
+    private Long id;
     private double longitude;
     private double latitude;
 
-    public Location(double longitude, double latitude) {
+    public Location(Long id, double longitude, double latitude) {
+        this.id = id;
         this.longitude = longitude;
         this.latitude = latitude;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public double getLongitude() {

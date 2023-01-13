@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 public class Route {
-    private int id;
+    private Long id;
     private LocalDateTime startTime;
     private LocalDateTime endTime;
     private float distance;
@@ -14,7 +14,7 @@ public class Route {
     private Location endLocation;
     private ArrayList<Location> stops;
 
-    public Route(int id, LocalDateTime startTime, LocalDateTime endTime, float distance,
+    public Route(Long id, LocalDateTime startTime, LocalDateTime endTime, float distance,
                  double estimatedTime, float estimatedPrice, Location startLocation,
                  Location endLocation, ArrayList<Location> stops) {
         this.id = id;

@@ -11,7 +11,7 @@ import java.io.Serializable;
 public class User implements Serializable {
     @SerializedName("id")
     @Expose
-    private int id;
+    private Long id;
     @SerializedName("name")
     @Expose
     private String name;
@@ -31,7 +31,7 @@ public class User implements Serializable {
     private Bitmap profilePhoto;
     private boolean blocked;
 
-    public User(int id, String name, String lastName,String email, String phoneNumber,
+    public User(Long id, String name, String lastName,String email, String phoneNumber,
                 String address, String password, Bitmap profilePhoto, Boolean blocked){
         this.id = id;
         this.name = name;
@@ -44,11 +44,11 @@ public class User implements Serializable {
         this.blocked = blocked;
     }
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
