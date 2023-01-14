@@ -1,5 +1,6 @@
 package com.example.uberapp_tim.receiver;
 
+import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -8,18 +9,23 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
 import com.example.uberapp_tim.R;
+import com.example.uberapp_tim.activities.driver.DriverMainActivity;
 
 public class NotificationReceiver extends BroadcastReceiver {
 
-    private static String CHANNEL_ID = "Driver Ride Channel";
+    NotificationManager notificationManager;
+
+    private static final int NOTIFICATION_ID = 1;
 
     @Override
     public void onReceive(Context context, Intent intent){
-        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID);
+//        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
+//        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, );
+        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
-//        if(intent.getAction().equals(R.string.new_ride_notification)){
-//
-//        }
+
+        if(intent.getAction().equals(DriverMainActivity.NEW_RIDE)){
+            String result = intent.getExtras().getString("result");
+        }
     }
 }

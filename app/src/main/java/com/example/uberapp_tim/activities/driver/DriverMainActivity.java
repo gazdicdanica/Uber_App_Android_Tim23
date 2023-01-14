@@ -1,7 +1,7 @@
 package com.example.uberapp_tim.activities.driver;
 
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
+
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -19,34 +19,39 @@ import androidx.appcompat.widget.Toolbar;
 
 import com.example.uberapp_tim.R;
 import com.example.uberapp_tim.activities.RideHistoryActivity;
+import com.example.uberapp_tim.connection.WebSocket;
 import com.example.uberapp_tim.fragments.MapFragment;
 import com.example.uberapp_tim.connection.ServiceUtils;
 import com.example.uberapp_tim.tools.FragmentTransition;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 
-import java.net.URI;
-import java.net.URISyntaxException;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import tech.gusavila92.websocketclient.WebSocketClient;
 
 public class DriverMainActivity extends AppCompatActivity {
 
-    Long id;
+    public static final String NEW_RIDE = "NEW_RIDE";
 
-    WebSocketClient webSocketClient;
+    private Long id;
 
+    public static WebSocket webSocket;
+
+    @SuppressLint("CheckResult")
     @Override
     protected void onCreate(Bundle savedInstance){
         super.onCreate(savedInstance);
 
+        webSocket = new WebSocket();
+        webSocket.stompClient.topic("/ride").subscribe(topicMessage -> {
+            Log.wtf("LongOperation", topicMessage.getPayload());
+        });
+
         String id = getSharedPreferences("AirRide_preferences", Context.MODE_PRIVATE).getString("id", null);
         this.id = Long.valueOf(id);
-        Log.d("id", this.id.toString());
 
         setContentView(R.layout.driver_main);
 
@@ -59,9 +64,6 @@ public class DriverMainActivity extends AppCompatActivity {
 
         if (actionBar != null) {
             actionBar.setDisplayShowTitleEnabled(false);
-//            actionBar.setDisplayHomeAsUpEnabled(true);
-//            actionBar.setDisplayShowHomeEnabled(true);
-//            actionBar.setHomeButtonEnabled(true);
         }
 
         BottomNavigationView driverNav = findViewById(R.id.driverNav);
@@ -147,72 +149,6 @@ public class DriverMainActivity extends AppCompatActivity {
 
             }
         });
-    }
-
-    private void createWebSocketClient(){
-        URI uri = null;
-        try {
-            uri = new URI("http://192.168.0.21:8080/socket");
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        }
-        webSocketClient = new WebSocketClient(uri) {
-            @Override
-            public void onOpen() {
-                Log.i("WebSocket", "Session is starting");
-            }
-
-            @Override
-            public void onTextReceived(String message) {
-                Log.i("WebSocket", "Message received");
-
-            }
-
-            @Override
-            public void onBinaryReceived(byte[] data) {
-
-            }
-
-            @Override
-            public void onPingReceived(byte[] data) {
-
-            }
-
-            @Override
-            public void onPongReceived(byte[] data) {
-
-            }
-
-            @Override
-            public void onException(Exception e) {
-
-            }
-
-            @Override
-            public void onCloseReceived() {
-
-            }
-        };
-
-        webSocketClient.setConnectTimeout(10000);
-        webSocketClient.setReadTimeout(60000);
-        webSocketClient.enableAutomaticReconnection(5000);
-        webSocketClient.connect();
-    }
-
-    private static String CHANNEL_ID = "Driver Ride Channel";
-
-    private void createNotificationChannel(){
-        CharSequence name = "Ride notification channel";
-        String description = "Accept/decline new ride";
-        int importance = NotificationManager.IMPORTANCE_HIGH;
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
-            channel.setDescription(description);
-
-            NotificationManager notificationManager = getSystemService(NotificationManager.class);
-            notificationManager.createNotificationChannel(channel);
-        }
     }
 
     @Override
