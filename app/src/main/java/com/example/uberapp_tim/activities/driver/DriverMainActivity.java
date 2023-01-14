@@ -20,12 +20,24 @@ import androidx.appcompat.widget.Toolbar;
 import com.example.uberapp_tim.R;
 import com.example.uberapp_tim.activities.RideHistoryActivity;
 import com.example.uberapp_tim.connection.WebSocket;
+import com.example.uberapp_tim.dto.RideDTO;
 import com.example.uberapp_tim.fragments.MapFragment;
 import com.example.uberapp_tim.connection.ServiceUtils;
+import com.example.uberapp_tim.model.ride.Ride;
 import com.example.uberapp_tim.tools.FragmentTransition;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParseException;
 
+
+import java.lang.reflect.Type;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -47,7 +59,23 @@ public class DriverMainActivity extends AppCompatActivity {
 
         webSocket = new WebSocket();
         webSocket.stompClient.topic("/ride").subscribe(topicMessage -> {
+
             Log.wtf("LongOperation", topicMessage.getPayload());
+            String rideMessage = topicMessage.getPayload();
+            Gson g = null;
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                g = new GsonBuilder().registerTypeAdapter(LocalDateTime.class, new JsonDeserializer<LocalDateTime>() {
+                    @Override
+                    public LocalDateTime deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+                        DateTimeFormatter format = DateTimeFormatter.ofPattern("yyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+                        return LocalDateTime.parse(json.getAsJsonPrimitive().getAsString(), format);
+                    }
+                }).create();
+            }
+            RideDTO ride = g.fromJson(rideMessage, RideDTO.class);
+            if(ride.getDriver().getId() == DriverMainActivity.this.id){
+                // send notification
+            }
         });
 
         String id = getSharedPreferences("AirRide_preferences", Context.MODE_PRIVATE).getString("id", null);
