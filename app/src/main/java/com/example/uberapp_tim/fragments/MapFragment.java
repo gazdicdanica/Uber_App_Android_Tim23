@@ -1,12 +1,14 @@
 package com.example.uberapp_tim.fragments;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.graphics.Camera;
 import android.location.Criteria;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -18,13 +20,16 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.uberapp_tim.R;
+import com.example.uberapp_tim.activities.passenger.PassengerMainActivity;
 import com.example.uberapp_tim.dialogs.LocationDialog;
+import com.example.uberapp_tim.service.FragmentToActivity;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -35,17 +40,27 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.material.textfield.TextInputEditText;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MapFragment extends Fragment implements LocationListener, OnMapReadyCallback {
 
     public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
 
+    private Integer numberOfMarkers = 0;
     private LocationManager locationManager;
     private String provider;
     private SupportMapFragment mapFragment;
     private AlertDialog dialog;
     private Marker home;
     private GoogleMap map;
+
+
+    private PassengerMainActivity activity;
+
+    private FragmentToActivity mCallback;
 
     public static MapFragment newInstance() {
         MapFragment mpf = new MapFragment();
@@ -56,6 +71,17 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        try {
+            mCallback = (FragmentToActivity) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString()
+                    + " must implement FragmentToActivity");
+        }
     }
 
     private void showLocationDialog() {
@@ -188,7 +214,18 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup vg, Bundle data) {
         setHasOptionsMenu(true);
-        return inflater.inflate(R.layout.map_layout, vg, false);
+
+        View v =  inflater.inflate(R.layout.map_layout, vg, false);
+
+        activity=(PassengerMainActivity) getActivity();
+
+        return v;
+    }
+
+    @Override
+    public void onDetach() {
+        mCallback = null;
+        super.onDetach();
     }
 
     @SuppressWarnings("MissingPermission")
@@ -202,6 +239,7 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
     @SuppressWarnings("MissingPermission")
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
+
         map = googleMap;
         Location location = null;
 
@@ -220,26 +258,41 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
                 }
             }
         }
+        if(numberOfMarkers == 0) {
+            String currLocation = "start,"+activity.getAddressFromLocation(new LatLng(location.getLatitude(), location.getLongitude())).split(",")[0];
+            mCallback.communicate(currLocation);
+        }
+
         map.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(LatLng latLng) {
-                map.addMarker(new MarkerOptions()
-                        .title("YOUR_POSITON")
-                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED))
-                        .position(latLng));
-                home.setFlat(true);
+                if (numberOfMarkers < 2) {
+                    map.addMarker(new MarkerOptions()
+                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED))
+                            .position(latLng));
+                    if (numberOfMarkers == 0) {
+                        Log.println(Log.ASSERT,"AAAA", activity.getAddressFromLocation(latLng));
+                        String end = activity.getAddressFromLocation(latLng).split(",")[0];
+                        mCallback.communicate("finish," + end);
+                    } else {
+                        String start = activity.getAddressFromLocation(latLng).split(",")[0];
+                        mCallback.communicate("start,"+start);
+                    }
+                    numberOfMarkers++;
+                    home.setFlat(true);
 
-                CameraPosition cameraPosition = new CameraPosition.Builder()
-                        .target(latLng).zoom(14).build();
+                    CameraPosition cameraPosition = new CameraPosition.Builder()
+                            .target(latLng).zoom(14).build();
 
-                map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                    map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                }
             }
         });
 
         map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
-                Toast.makeText(getActivity(), marker.getTitle(), Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getActivity(), marker.getTitle(), Toast.LENGTH_SHORT).show();
                 return false;
             }
         });
@@ -252,6 +305,8 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
 
         if (location != null) {
             addMarker(location);
+
         }
     }
+
 }

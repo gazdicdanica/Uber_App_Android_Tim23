@@ -4,6 +4,7 @@
 
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
@@ -37,20 +38,20 @@
         </activity>
         <activity
             android:name=".activities.passenger.PassengerAccountActivity"
-            android:exported="true"></activity>
+            android:exported="true"/>
         <activity
             android:name=".activities.passenger.PassengerInboxActivity"
-            android:exported="true"></activity>
+            android:exported="true"/>
         <activity
             android:name=".activities.passenger.PassengerMainActivity"
-            android:exported="true"></activity>
+            android:exported="true"/>
         <activity
             android:name=".activities.passenger.PassengerRegisterActivity"
             android:exported="true"
-            android:windowSoftInputMode="stateVisible|adjustResize"></activity>
+            android:windowSoftInputMode="stateVisible|adjustResize"/>
         <activity
             android:name=".activities.driver.DriverAccountActivity"
-            android:exported="true"></activity>
+            android:exported="true"/>
         <activity
             android:name=".activities.SplashActivity"
             android:exported="true">
@@ -63,25 +64,25 @@
         <activity
             android:name=".activities.UserLoginActivity"
             android:exported="true"
-            android:windowSoftInputMode="stateVisible|adjustResize"></activity>
+            android:windowSoftInputMode="stateVisible|adjustResize"/>
         <activity
             android:name=".activities.driver.DriverMainActivity"
-            android:exported="true"></activity>
+            android:exported="true"/>
         <activity
             android:name=".activities.driver.DriverPapersActivity"
-            android:exported="true"></activity>
+            android:exported="true"/>
         <activity
             android:name=".activities.EditActivity"
             android:exported="true"
-            android:windowSoftInputMode="stateVisible|adjustResize"></activity>
+            android:windowSoftInputMode="stateVisible|adjustResize"/>
         <activity
             android:name=".activities.driver.DriverInboxActivity"
             android:exported="true"
-            android:windowSoftInputMode="stateVisible|adjustResize"></activity>
+            android:windowSoftInputMode="stateVisible|adjustResize"/>
         <activity
             android:name=".activities.RideHistoryActivity"
             android:exported="true"
-            android:windowSoftInputMode="stateVisible|adjustResize"></activity>
+            android:windowSoftInputMode="stateVisible|adjustResize"/>
 
         <meta-data
             android:name="com.google.android.gms.version"

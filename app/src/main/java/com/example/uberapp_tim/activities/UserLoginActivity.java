@@ -128,6 +128,7 @@ public class UserLoginActivity extends AppCompatActivity {
 
             sharedPreferences.edit().putString("id", id).apply();
             sharedPreferences.edit().putString("role", role).apply();
+            sharedPreferences.edit().putString("email", editTextEmail.getText().toString()).apply();
             if(role.equals("passenger")){
                 startActivity(new Intent(UserLoginActivity.this, PassengerMainActivity.class));
             }else{
