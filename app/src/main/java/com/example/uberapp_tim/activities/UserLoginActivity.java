@@ -93,7 +93,6 @@ public class UserLoginActivity extends AppCompatActivity {
 
                     changeActivity();
 
-                    Toast.makeText(UserLoginActivity.this, "SUCCESS!!!", Toast.LENGTH_SHORT).show();
                 }else if(response.code() == 400){
                     editTextEmail.setText("");
                     editTextPassword.setText("");

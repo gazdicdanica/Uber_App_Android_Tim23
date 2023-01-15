@@ -5,11 +5,11 @@ import java.util.ArrayList;
 
 public class Route {
     private Long id;
-    private float distance;
+    private double distance;
     private Location departure;
     private Location destination;
 
-    public Route(Long id, float distance, Location startLocation, Location endLocation) {
+    public Route(Long id, double distance, Location startLocation, Location endLocation) {
         this.id = id;
         this.distance = distance;
         this.departure = startLocation;
@@ -24,7 +24,7 @@ public class Route {
         this.id = id;
     }
 
-    public float getDistance() {
+    public double getDistance() {
         return distance;
     }
 
