@@ -56,8 +56,8 @@ public class DriverInboxActivity extends AppCompatActivity {
                         return true;
                     case (R.id.action_inbox):
                         return true;
-                    case (R.id.action_history):
-                        i = new Intent(DriverInboxActivity.this, RideHistoryActivity.class);
+                    case (R.id.action_reports):
+                        i = new Intent(DriverInboxActivity.this, DriverReportsActivity.class);
                         startActivity(i);
                         overridePendingTransition(0,0);
                         return true;

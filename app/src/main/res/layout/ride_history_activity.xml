@@ -23,7 +23,7 @@
         android:id="@+id/historyNav"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        app:menu="@menu/menu_navigation"
+        app:menu="@menu/passenger_menu_navigation"
         app:labelVisibilityMode="labeled"
         android:layout_alignParentBottom="true"/>
 

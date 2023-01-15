@@ -30,7 +30,8 @@
     <string name="max_people">Max People Capacity</string>
     <string name="online">Online</string>
     <string name="offline">Offline</string>
-    <string name="history_activity">History</string>
+    <string name="favorites_activity">Favorites</string>
+    <string name="reports_activity">Reports</string>
     <string name="logout">Log out</string>
     <string name="login_error">The username or password you entered is incorrect</string>
     <string name="ride_channel">Ride notification channel</string>

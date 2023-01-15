@@ -56,10 +56,13 @@ public class PassengerInboxActivity extends AppCompatActivity {
                         return true;
                     case (R.id.action_inbox):
                         return true;
-                    case (R.id.action_history):
-                        i = new Intent(PassengerInboxActivity.this, RideHistoryActivity.class);
+                    case (R.id.action_reports):
+                        i = new Intent(PassengerInboxActivity.this, PassengerReportsActivity.class);
                         startActivity(i);
                         overridePendingTransition(0,0);
+                        return true;
+                    case (R.id.action_favorites):
+                        // TODO favorites activity
                         return true;
                 }
                 return false;

@@ -50,9 +50,12 @@ public class PassengerMainActivity extends AppCompatActivity {
                         i = new Intent(PassengerMainActivity.this, PassengerInboxActivity.class);
                         startActivity(i);
                         return true;
-                    case (R.id.action_history):
-                        i = new Intent(PassengerMainActivity.this, RideHistoryActivity.class);
+                    case (R.id.action_reports):
+                        i = new Intent(PassengerMainActivity.this, PassengerReportsActivity.class);
                         startActivity(i);
+                        return true;
+                    case (R.id.action_favorites):
+                        // TODO favorites activity
                         return true;
                 }
                 return false;
