@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
+import android.graphics.Camera;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
@@ -24,6 +25,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.example.uberapp_tim.R;
 import com.example.uberapp_tim.dialogs.LocationDialog;
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -137,12 +139,10 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
                         Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
 
                     locationManager.requestLocationUpdates(provider, 2000, 0, this);
-                    Toast.makeText(getContext(), "FineLocation", Toast.LENGTH_SHORT).show();
                 } else if(ContextCompat.checkSelfPermission(getContext(),
                         Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
 
                     locationManager.requestLocationUpdates(provider, 2000, 0, this);
-                    Toast.makeText(getContext(), "CoarseLocation", Toast.LENGTH_SHORT).show();
                 }
             }
         }
@@ -165,6 +165,13 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
         home = map.addMarker(new MarkerOptions()
                 .title("Your Position")
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)).position(loc));
+
+        CameraPosition cameraPosition = new CameraPosition.Builder()
+                .target(new LatLng(location.getLatitude(), location.getLongitude()))
+                .zoom(15)
+                .bearing(location.getBearing()).build();
+        CameraUpdate update = CameraUpdateFactory.newCameraPosition(cameraPosition);
+        map.animateCamera(update);
         home.setFlat(true);
 
     }

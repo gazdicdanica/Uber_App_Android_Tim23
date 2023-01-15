@@ -33,4 +33,9 @@
     <string name="history_activity">History</string>
     <string name="logout">Log out</string>
     <string name="login_error">The username or password you entered is incorrect</string>
+    <string name="ride_channel">Ride notification channel</string>
+    <string name="new_ride_notification">RIDE_NOTIFICATION</string>
+    <string name="driver_ride_dialog_title">Accept ride?</string>
+    <string name="dialog_accept">Accept</string>
+    <string name="dialog_decline">Decline</string>
 </resources>

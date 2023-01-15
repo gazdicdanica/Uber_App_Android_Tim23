@@ -9,7 +9,7 @@ import android.widget.ListView;
 import androidx.fragment.app.ListFragment;
 
 import com.example.uberapp_tim.R;
-import com.example.uberapp_tim.activities.adapters.MessageAdapter;
+import com.example.uberapp_tim.adapters.MessageAdapter;
 
 import com.example.uberapp_tim.model.message.Message;
 import com.example.uberapp_tim.tools.Mokap;

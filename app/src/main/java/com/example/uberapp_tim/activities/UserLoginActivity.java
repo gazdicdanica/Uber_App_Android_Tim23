@@ -8,7 +8,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -19,23 +18,15 @@ import com.example.uberapp_tim.activities.driver.DriverMainActivity;
 import com.example.uberapp_tim.activities.passenger.PassengerMainActivity;
 import com.example.uberapp_tim.activities.passenger.PassengerRegisterActivity;
 
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.example.uberapp_tim.dto.LoginDTO;
 import com.example.uberapp_tim.dto.TokensDTO;
-import com.example.uberapp_tim.model.users.Driver;
-import com.example.uberapp_tim.model.users.Passenger;
-import com.example.uberapp_tim.model.users.User;
-import com.example.uberapp_tim.service.ServiceUtils;
-import com.example.uberapp_tim.tools.Mokap;
+import com.example.uberapp_tim.connection.ServiceUtils;
 import com.google.android.material.textfield.TextInputLayout;
 
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -102,7 +93,6 @@ public class UserLoginActivity extends AppCompatActivity {
 
                     changeActivity();
 
-                    Toast.makeText(UserLoginActivity.this, "SUCCESS!!!", Toast.LENGTH_SHORT).show();
                 }else if(response.code() == 400){
                     editTextEmail.setText("");
                     editTextPassword.setText("");

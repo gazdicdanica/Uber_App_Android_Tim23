@@ -4,11 +4,13 @@ public class Location {
     private Long id;
     private double longitude;
     private double latitude;
+    private String address;
 
-    public Location(Long id, double longitude, double latitude) {
+    public Location(Long id, double longitude, double latitude, String address) {
         this.id = id;
         this.longitude = longitude;
         this.latitude = latitude;
+        this.address = address;
     }
 
     public Long getId() {
@@ -33,5 +35,13 @@ public class Location {
 
     public void setLatitude(double latitude) {
         this.latitude = latitude;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 }
