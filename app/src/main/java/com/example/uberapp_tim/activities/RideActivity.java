@@ -4,11 +4,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.InputType;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -17,6 +21,8 @@ import com.example.uberapp_tim.activities.driver.DriverMainActivity;
 import com.example.uberapp_tim.connection.ServiceUtils;
 import com.example.uberapp_tim.dto.RideDTO;
 import com.example.uberapp_tim.fragments.RideFragment;
+import com.example.uberapp_tim.model.message.Panic;
+import com.example.uberapp_tim.model.ride.Rejection;
 import com.example.uberapp_tim.model.route.Location;
 import com.example.uberapp_tim.service.ActivityToFragment;
 import com.example.uberapp_tim.service.FragmentToActivity;
@@ -110,6 +116,43 @@ public class RideActivity extends AppCompatActivity implements FragmentToActivit
                     }
                 });
 
+            }
+        });
+
+        panicBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                android.app.AlertDialog.Builder builder = new AlertDialog.Builder(RideActivity.this);
+                builder.setTitle("Please enter a reason");
+                final EditText input = new EditText(RideActivity.this);
+                input.setInputType(InputType.TYPE_CLASS_TEXT);
+                input.setPadding(30,30,30,30);
+                builder.setView(input);
+
+                builder.setPositiveButton("Submit", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        String reason = input.getText().toString();
+                        Panic panic = new Panic();
+                        panic.setReason(reason);
+
+                        ServiceUtils.rideService.panicRide(rideId, panic).enqueue(new Callback<ResponseBody>() {
+                            @Override
+                            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                                Toast.makeText(RideActivity.this, "Panic was sent", Toast.LENGTH_SHORT).show();
+                                Intent main = new Intent(RideActivity.this, DriverMainActivity.class);
+                                main.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
+                                startActivity(main);
+                            }
+
+                            @Override
+                            public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+                            }
+                        });
+                    }
+                });
+                builder.create().show();
             }
         });
 
