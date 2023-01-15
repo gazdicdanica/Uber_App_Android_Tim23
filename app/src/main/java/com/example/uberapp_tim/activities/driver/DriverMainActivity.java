@@ -34,6 +34,7 @@ import com.example.uberapp_tim.connection.WebSocket;
 import com.example.uberapp_tim.dto.RideDTO;
 import com.example.uberapp_tim.fragments.MapFragment;
 import com.example.uberapp_tim.connection.ServiceUtils;
+import com.example.uberapp_tim.model.ride.Rejection;
 import com.example.uberapp_tim.receiver.NotificationReceiver;
 import com.example.uberapp_tim.service.NotificationService;
 import com.example.uberapp_tim.tools.FragmentTransition;
@@ -263,7 +264,21 @@ public class DriverMainActivity extends AppCompatActivity {
         builder.setPositiveButton("Submit", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
+                String reason = input.getText().toString();
+                Rejection rejection = new Rejection();
+                rejection.setReason(reason);
 
+                ServiceUtils.rideService.cancelRide(ride.getId(), rejection).enqueue(new Callback<ResponseBody>() {
+                    @Override
+                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                        Toast.makeText(DriverMainActivity.this, "Ride canceled", Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+                    }
+                });
             }
         });
         builder.create().show();
