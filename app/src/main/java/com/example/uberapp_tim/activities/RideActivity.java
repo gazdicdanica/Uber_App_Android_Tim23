@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.uberapp_tim.R;
+import com.example.uberapp_tim.activities.driver.DriverMainActivity;
 import com.example.uberapp_tim.connection.ServiceUtils;
 import com.example.uberapp_tim.dto.RideDTO;
 import com.example.uberapp_tim.fragments.RideFragment;
@@ -73,9 +75,40 @@ public class RideActivity extends AppCompatActivity implements FragmentToActivit
         startRideBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startRideBtn.setVisibility(View.GONE);
-                endRideBtn.setVisibility(View.VISIBLE);
-                panicBtn.setVisibility(View.VISIBLE);
+
+                ServiceUtils.rideService.startRide(rideId).enqueue(new Callback<ResponseBody>() {
+                    @Override
+                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                        startRideBtn.setVisibility(View.GONE);
+                        endRideBtn.setVisibility(View.VISIBLE);
+                        panicBtn.setVisibility(View.VISIBLE);
+                    }
+
+                    @Override
+                    public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+                    }
+                });
+
+            }
+        });
+
+        endRideBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ServiceUtils.rideService.endRide(rideId).enqueue(new Callback<ResponseBody>() {
+                    @Override
+                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                        Intent main = new Intent(RideActivity.this, DriverMainActivity.class);
+                        main.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(main);
+                    }
+
+                    @Override
+                    public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+                    }
+                });
 
             }
         });

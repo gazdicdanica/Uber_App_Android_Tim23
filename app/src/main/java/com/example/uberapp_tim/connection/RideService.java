@@ -21,4 +21,10 @@ public interface RideService {
 
     @PUT("ride/{id}/accept")
     Call<ResponseBody> acceptRide(@Path("id") Long id);
+
+    @PUT("ride/{id}/start")
+    Call<ResponseBody> startRide(@Path("id")Long id);
+
+    @PUT("ride/{id}/end")
+    Call<ResponseBody> endRide(@Path("id")Long id);
 }
