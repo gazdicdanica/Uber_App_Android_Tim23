@@ -5,27 +5,46 @@ import java.util.ArrayList;
 
 public class Route {
     private Long id;
-    private LocalDateTime startTime;
-    private LocalDateTime endTime;
     private float distance;
-    private double estimatedTime;   // Za sada stavljeno u sekundama, promeniti po potrebi
-    private float estimatedPrice;
-    private Location startLocation;
-    private Location endLocation;
-    private ArrayList<Location> stops;
+    private Location departure;
+    private Location destination;
 
-    public Route(Long id, LocalDateTime startTime, LocalDateTime endTime, float distance,
-                 double estimatedTime, float estimatedPrice, Location startLocation,
-                 Location endLocation, ArrayList<Location> stops) {
+    public Route(Long id, float distance, Location startLocation, Location endLocation) {
         this.id = id;
-        this.startTime = startTime;
-        this.endTime = endTime;
         this.distance = distance;
-        this.estimatedTime = estimatedTime;
-        this.estimatedPrice = estimatedPrice;
-        this.startLocation = startLocation;
-        this.endLocation = endLocation;
-        this.stops = stops;
+        this.departure = startLocation;
+        this.destination = endLocation;
     }
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public float getDistance() {
+        return distance;
+    }
+
+    public void setDistance(float distance) {
+        this.distance = distance;
+    }
+
+    public Location getDeparture() {
+        return departure;
+    }
+
+    public void setDeparture(Location departure) {
+        this.departure = departure;
+    }
+
+    public Location getDestination() {
+        return destination;
+    }
+
+    public void setDestination(Location destination) {
+        this.destination = destination;
+    }
 }

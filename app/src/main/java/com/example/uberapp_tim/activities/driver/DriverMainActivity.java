@@ -2,16 +2,29 @@ package com.example.uberapp_tim.activities.driver;
 
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.Window;
+import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -24,8 +37,12 @@ import com.example.uberapp_tim.dto.RideDTO;
 import com.example.uberapp_tim.fragments.MapFragment;
 import com.example.uberapp_tim.connection.ServiceUtils;
 import com.example.uberapp_tim.model.ride.Ride;
+import com.example.uberapp_tim.receiver.NotificationReceiver;
+import com.example.uberapp_tim.service.NotificationService;
 import com.example.uberapp_tim.tools.FragmentTransition;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.button.MaterialButton;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -38,6 +55,7 @@ import com.google.gson.JsonParseException;
 import java.lang.reflect.Type;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Objects;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -51,18 +69,27 @@ public class DriverMainActivity extends AppCompatActivity {
     private Long id;
 
     public static WebSocket webSocket;
+    public static NotificationReceiver notificationReceiver;
+    public static NotificationService notificationService;
+    private PendingIntent pendingIntent;
+    public static RideDTO ride;
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @SuppressLint("CheckResult")
     @Override
     protected void onCreate(Bundle savedInstance){
         super.onCreate(savedInstance);
 
+        createNotificationChannel("DriverNotification", "New ride notifications", "driver");
+
         webSocket = new WebSocket();
         webSocket.stompClient.topic("/ride").subscribe(topicMessage -> {
 
-            Log.wtf("LongOperation", topicMessage.getPayload());
             String rideMessage = topicMessage.getPayload();
             Gson g = null;
+
+            Log.wtf("message", rideMessage);
+
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
                 g = new GsonBuilder().registerTypeAdapter(LocalDateTime.class, new JsonDeserializer<LocalDateTime>() {
                     @Override
@@ -72,9 +99,17 @@ public class DriverMainActivity extends AppCompatActivity {
                     }
                 }).create();
             }
-            RideDTO ride = g.fromJson(rideMessage, RideDTO.class);
-            if(ride.getDriver().getId() == DriverMainActivity.this.id){
-                // send notification
+            ride = g.fromJson(rideMessage, RideDTO.class);
+
+            if(Objects.equals(ride.getDriver().getId(), id)){
+                runOnUiThread(new Runnable()
+                {
+                    @Override
+                    public void run()
+                    {
+                        showDialog();
+                    }
+                });
             }
         });
 
@@ -169,7 +204,7 @@ public class DriverMainActivity extends AppCompatActivity {
         ServiceUtils.driverService.startShift(DriverMainActivity.this.id).enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-
+                Toast.makeText(DriverMainActivity.this, "Online", Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -177,6 +212,46 @@ public class DriverMainActivity extends AppCompatActivity {
 
             }
         });
+
+    }
+
+    public void showDialog(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(DriverMainActivity.this);
+        LayoutInflater inflater = DriverMainActivity.this.getLayoutInflater();
+
+        View dialogView = inflater.inflate(R.layout.driver_new_ride_dialog, null);
+
+        final EditText startLocation = dialogView.findViewById(R.id.start_location_dialog);
+        final EditText endLocation = dialogView.findViewById(R.id.end_location_dialog);
+
+        startLocation.setText(ride.getLocations().get(0).getDeparture().getAddress());
+        endLocation.setText(ride.getLocations().get(0).getDestination().getAddress());
+
+        builder.setView(dialogView);
+        builder.setPositiveButton(R.string.dialog_accept, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+            }
+        });
+
+        builder.setNegativeButton(R.string.dialog_decline, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+            }
+        });
+
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
+
+    public void setUpReceiver(){
+        notificationReceiver = new NotificationReceiver();
+
+        Intent intent = new Intent(this, NotificationService.class);
+        //add extra ride
+        pendingIntent = PendingIntent.getService(this, 0, intent, 0);
     }
 
     @Override
@@ -224,4 +299,15 @@ public class DriverMainActivity extends AppCompatActivity {
         super.onDestroy();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public void createNotificationChannel(String channelName, String channelDescription, String channelId){
+        int importance = NotificationManager.IMPORTANCE_HIGH;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel(channelId, channelName, importance);
+            channel.setDescription(channelDescription);
+
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
+    }
 }

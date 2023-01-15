@@ -27,7 +27,8 @@
 
         <receiver android:name=".receiver.NotificationReceiver"
             android:enabled="true"
-            android:exported="true"/>
+            android:exported="true">
+        </receiver>
         <activity
             android:name=".activities.CarActivity"
             android:exported="false">
