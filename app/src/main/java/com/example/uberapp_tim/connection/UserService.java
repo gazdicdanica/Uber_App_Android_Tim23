@@ -1,11 +1,9 @@
-package com.example.uberapp_tim.service;
+package com.example.uberapp_tim.connection;
 
 import com.example.uberapp_tim.dto.LoginDTO;
 import com.example.uberapp_tim.dto.TokensDTO;
 
-import okhttp3.ResponseBody;
 import retrofit2.Call;
-import retrofit2.Response;
 import retrofit2.http.Body;
 import retrofit2.http.POST;
 

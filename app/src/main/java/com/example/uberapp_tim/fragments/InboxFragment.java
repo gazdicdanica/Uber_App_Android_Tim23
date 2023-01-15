@@ -1,4 +1,4 @@
-package com.example.uberapp_tim.activities.fragments;
+package com.example.uberapp_tim.fragments;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -9,7 +9,9 @@ import android.widget.ListView;
 import androidx.fragment.app.ListFragment;
 
 import com.example.uberapp_tim.R;
-import com.example.uberapp_tim.activities.adapters.ChatAdapter;
+
+import com.example.uberapp_tim.adapters.ChatAdapter;
+import com.example.uberapp_tim.adapters.MessageAdapter;
 
 import com.example.uberapp_tim.model.message.Message;
 import com.example.uberapp_tim.tools.Mokap;

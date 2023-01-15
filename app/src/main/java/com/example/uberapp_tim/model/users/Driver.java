@@ -9,7 +9,7 @@ public class Driver extends User implements Serializable {
     private Bitmap registration;
     private boolean isActive;
 
-    public Driver(int id, String name, String lastName,String email, String phoneNumber,
+    public Driver(Long id, String name, String lastName,String email, String phoneNumber,
                   String address, String password, Bitmap profilePhoto, boolean blocked,
                   Bitmap driverLicence, Bitmap registration, boolean isActive){
 

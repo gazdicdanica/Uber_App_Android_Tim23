@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.os.Bundle;
 
 import com.example.uberapp_tim.R;
-import com.example.uberapp_tim.activities.adapters.MessageAdapter;
+import com.example.uberapp_tim.adapters.MessageAdapter;
 
 import java.util.ArrayList;
 

@@ -31,7 +31,17 @@
     <string name="max_people">Max People Capacity</string>
     <string name="online">Online</string>
     <string name="offline">Offline</string>
+    <string name="reports_activity">Reports</string>
     <string name="logout">Log out</string>
     <string name="chat_hint">Message..</string>
     <string name="login_error">The username or password you entered is incorrect</string>
+    <string name="ride_channel">Ride notification channel</string>
+    <string name="new_ride_notification">RIDE_NOTIFICATION</string>
+    <string name="driver_ride_dialog_title">Accept ride?</string>
+    <string name="dialog_accept">Accept</string>
+    <string name="dialog_decline">Decline</string>
+    <string name="start_ride">Start ride</string>
+    <string name="end_ride">End ride</string>
+    <string name="panic">PANIC</string>
+    <string name="date_picker">Pick a date</string>
 </resources>

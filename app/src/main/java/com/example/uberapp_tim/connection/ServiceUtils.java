@@ -1,4 +1,4 @@
-package com.example.uberapp_tim.service;
+package com.example.uberapp_tim.connection;
 
 import java.util.concurrent.TimeUnit;
 
@@ -31,5 +31,9 @@ public class ServiceUtils {
     public static PassengerService passengerService = retrofit.create(PassengerService.class);
 
     public static UserService userService = retrofit.create(UserService.class);
+
+    public static DriverService driverService = retrofit.create(DriverService.class);
+
+    public static RideService rideService = retrofit.create(RideService.class);
 
 }

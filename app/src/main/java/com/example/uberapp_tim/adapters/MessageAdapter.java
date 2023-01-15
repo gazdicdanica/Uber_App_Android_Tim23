@@ -1,4 +1,4 @@
-package com.example.uberapp_tim.activities.adapters;
+package com.example.uberapp_tim.adapters;
 
 import android.content.Context;
 import android.os.Build;

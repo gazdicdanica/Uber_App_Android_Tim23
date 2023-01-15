@@ -7,21 +7,21 @@
         android:icon="@drawable/ic_baseline_home_white_24"
         app:showAsAction="always" />
 
-    <item android:id="@+id/action_favorites"
-        android:title="@string/favorites_activity"
-        android:orderInCategory="200"
-        android:icon="@drawable/ic_baseline_favorite_white_24"
+    <item android:id="@+id/action_reports"
+        android:title="@string/reports_activity"
+        android:orderInCategory="300"
+        android:icon="@drawable/ic_baseline_area_chart_24"
         app:showAsAction="always"/>
 
     <item android:id="@+id/action_inbox"
         android:title="@string/inbox_activity"
-        android:orderInCategory="300"
+        android:orderInCategory="400"
         android:icon="@drawable/ic_baseline_message_white_24"
         app:showAsAction="always"/>
 
     <item android:id="@+id/action_account"
         android:title="@string/account_activitY"
-        android:orderInCategory="400"
+        android:orderInCategory="500"
         android:icon="@drawable/ic_baseline_person_white_24"
         app:showAsAction="always"/>
 </menu>

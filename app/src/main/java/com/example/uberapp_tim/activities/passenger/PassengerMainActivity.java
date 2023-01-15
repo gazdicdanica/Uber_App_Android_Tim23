@@ -27,10 +27,8 @@ public class PassengerMainActivity extends AppCompatActivity {
         final ActionBar actionBar = getSupportActionBar();
 
         if (actionBar != null) {
-            actionBar.setDisplayShowTitleEnabled(false);
-//            actionBar.setDisplayHomeAsUpEnabled(true);
-//            actionBar.setDisplayShowHomeEnabled(true);
-//            actionBar.setHomeButtonEnabled(true);
+            actionBar.setDisplayShowTitleEnabled(true);
+            actionBar.setTitle("AirRide");
         }
 
         passengerNav = findViewById(R.id.passengerNav);
@@ -50,7 +48,10 @@ public class PassengerMainActivity extends AppCompatActivity {
                     case (R.id.action_inbox):
                         i = new Intent(PassengerMainActivity.this, PassengerInboxActivity.class);
                         startActivity(i);
-                        overridePendingTransition(0,0);
+                        return true;
+                    case (R.id.action_reports):
+                        i = new Intent(PassengerMainActivity.this, PassengerReportsActivity.class);
+                        startActivity(i);
                         return true;
                 }
                 return false;
