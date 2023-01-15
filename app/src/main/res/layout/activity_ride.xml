@@ -37,6 +37,28 @@
                     android:visibility="gone"/>
         </androidx.appcompat.widget.Toolbar>
     </com.google.android.material.appbar.AppBarLayout>
+    <LinearLayout
+        android:id="@+id/ride_parametersLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/appBar"
+        android:orientation="horizontal"
+        android:backgroundTint="@color/white">
+
+        <TextView
+            android:id="@+id/countdown_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="30sp"
+            android:layout_margin="10dp"/>
+        <TextView
+            android:id="@+id/countdown_distance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:layout_margin="10dp"
+            />
+    </LinearLayout>
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/message_btn_ride"
         android:layout_width="wrap_content"
@@ -51,7 +73,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        app:layout_constraintTop_toBottomOf="@+id/appBar"
+        app:layout_constraintTop_toBottomOf="@+id/ride_parametersLayout"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_margin="15dp"
         android:backgroundTint="@color/error"
