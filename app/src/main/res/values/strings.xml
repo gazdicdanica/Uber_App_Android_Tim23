@@ -38,4 +38,7 @@
     <string name="driver_ride_dialog_title">Accept ride?</string>
     <string name="dialog_accept">Accept</string>
     <string name="dialog_decline">Decline</string>
+    <string name="start_ride">Start ride</string>
+    <string name="end_ride">End ride</string>
+    <string name="panic">PANIC</string>
 </resources>

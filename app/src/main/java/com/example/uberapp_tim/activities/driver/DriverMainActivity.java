@@ -29,6 +29,7 @@ import androidx.appcompat.widget.Toolbar;
 
 
 import com.example.uberapp_tim.R;
+import com.example.uberapp_tim.activities.RideActivity;
 import com.example.uberapp_tim.activities.RideHistoryActivity;
 import com.example.uberapp_tim.connection.WebSocket;
 import com.example.uberapp_tim.dto.RideDTO;
@@ -246,7 +247,10 @@ public class DriverMainActivity extends AppCompatActivity {
         builder.setPositiveButton(R.string.dialog_accept, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-
+                Intent rideScreen = new Intent(DriverMainActivity.this, RideActivity.class);
+                rideScreen.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
+                rideScreen.putExtra("id", ride.getId());
+                startActivity(rideScreen);
             }
         });
         AlertDialog alertDialog = builder.create();
