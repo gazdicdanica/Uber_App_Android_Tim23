@@ -40,7 +40,19 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParseException;
 
+import java.io.IOException;
+import java.lang.reflect.Type;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -76,6 +88,43 @@ public class RideFragment extends Fragment implements LocationListener, OnMapRea
         Bundle res = activity.getIdBundle();
         id = res.getLong("id");
 
+        ServiceUtils.rideService.getRide(id).enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+
+                if(response.code() == 200){
+                    try {
+                        String rideMessage = response.body().string();
+
+                        Gson g = null;
+
+                        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                            g = new GsonBuilder().registerTypeAdapter(LocalDateTime.class, new JsonDeserializer<LocalDateTime>() {
+                                @Override
+                                public LocalDateTime deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+                                    DateTimeFormatter format = DateTimeFormatter.ofPattern("yyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+                                    return LocalDateTime.parse(json.getAsJsonPrimitive().getAsString(), format);
+                                }
+                            }).create();
+                        }
+                        ride = g.fromJson(rideMessage, RideDTO.class);
+
+                        if(map != null){
+                            addRedMarker(ride.getLocations().get(0).getDeparture(), "Departure");
+                            addRedMarker(ride.getLocations().get(0).getDestination(), "Destination");
+                        }
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                t.printStackTrace();
+            }
+        });
     }
 
     private void showLocationDialog() {
@@ -219,6 +268,19 @@ public class RideFragment extends Fragment implements LocationListener, OnMapRea
         locationManager.removeUpdates(this);
     }
 
+    public void addRedMarker(com.example.uberapp_tim.model.route.Location location, String title){
+        LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+        map.addMarker(new MarkerOptions()
+                        .title(title)
+                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED))
+                .position(latLng));
+        home.setFlat(true);
+        CameraPosition cameraPosition = new CameraPosition.Builder()
+                .target(latLng).zoom(14).build();
+
+        map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+    }
+
     @SuppressLint("MissingPermission")
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap){
@@ -243,6 +305,11 @@ public class RideFragment extends Fragment implements LocationListener, OnMapRea
         if (location != null) {
             addMarker(location);
         }
+
+        if(ride != null){
+            addRedMarker(ride.getLocations().get(0).getDeparture(), "Departure");
+            addRedMarker(ride.getLocations().get(0).getDestination(), "Destination");
+        }
     }
 
     @Override
@@ -252,8 +319,6 @@ public class RideFragment extends Fragment implements LocationListener, OnMapRea
     }
 
     @Override
-    public void connect(Long id){
-        this.id = id;
-        Log.d("CAOOOOOOOOOOOOOOOOOOOOO", "CAOOOOOOOOOOOOOOOOOOOOOOOOOO");
+    public void sendRide(RideDTO ride){
     }
 }

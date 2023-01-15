@@ -2,10 +2,13 @@ package com.example.uberapp_tim.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.uberapp_tim.R;
@@ -16,12 +19,17 @@ import com.example.uberapp_tim.model.route.Location;
 import com.example.uberapp_tim.service.ActivityToFragment;
 import com.example.uberapp_tim.service.FragmentToActivity;
 import com.example.uberapp_tim.tools.FragmentTransition;
+import com.google.android.material.button.MaterialButton;
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
+
+import org.w3c.dom.Text;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -37,55 +45,38 @@ public class RideActivity extends AppCompatActivity implements FragmentToActivit
 
     Long rideId;
     RideDTO ride;
-    ActivityToFragment aTof;
+
+    MaterialButton startRideBtn;
+    MaterialButton endRideBtn;
+    FloatingActionButton messageBtn;
+    ExtendedFloatingActionButton panicBtn;
+    TextView countdownTV;
+    TextView kmTV;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         rideId = getIntent().getLongExtra("id", 0);
-        if(rideId == 0){
-            return;
-        }
-
-        Log.d("RIDE ID EXTRAS", String.valueOf(rideId));
 
         setContentView(R.layout.activity_ride);
 
-        ServiceUtils.rideService.getRide(rideId).enqueue(new Callback<ResponseBody>() {
+        startRideBtn = findViewById(R.id.start_ride_btn);
+        endRideBtn = findViewById(R.id.end_ride_btn);
+        messageBtn = findViewById(R.id.message_btn_ride);
+        panicBtn = findViewById(R.id.panic_btn);
+        countdownTV = findViewById(R.id.countdown_time);
+        kmTV = findViewById(R.id.countdown_distance);
+
+
+        startRideBtn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+            public void onClick(View view) {
+                startRideBtn.setVisibility(View.GONE);
+                endRideBtn.setVisibility(View.VISIBLE);
+                panicBtn.setVisibility(View.VISIBLE);
 
-                Log.d("CODE", String.valueOf(response.code()));
-                if(response.code() == 200){
-                    try {
-                        String rideMessage = response.body().string();
-
-                        Gson g = null;
-
-                        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-                            g = new GsonBuilder().registerTypeAdapter(LocalDateTime.class, new JsonDeserializer<LocalDateTime>() {
-                                @Override
-                                public LocalDateTime deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-                                    DateTimeFormatter format = DateTimeFormatter.ofPattern("yyy-MM-dd'T'HH:mm:ss.SSS'Z'");
-                                    return LocalDateTime.parse(json.getAsJsonPrimitive().getAsString(), format);
-                                }
-                            }).create();
-                        }
-                        ride = g.fromJson(rideMessage, RideDTO.class);
-                        Log.d(" id " , String.valueOf(ride.getId()));
-
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                Toast.makeText(RideActivity.this, "Fail", Toast.LENGTH_SHORT).show();
-
-                t.printStackTrace();
             }
         });
 
@@ -98,6 +89,7 @@ public class RideActivity extends AppCompatActivity implements FragmentToActivit
         bundle.putLong("id", rideId);
         return bundle;
     }
+
 
     @Override
     public void communicate(String msg) {

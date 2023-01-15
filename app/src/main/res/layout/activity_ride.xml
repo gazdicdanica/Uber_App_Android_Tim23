@@ -24,12 +24,14 @@
             android:layout_height="?attr/actionBarSize"
             android:theme="@style/ToolBarTheme">
                 <com.google.android.material.button.MaterialButton
+                    android:id="@+id/start_ride_btn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="end"
                     android:text="@string/start_ride"
                     />
                 <com.google.android.material.button.MaterialButton
+                    android:id="@+id/end_ride_btn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="end"
@@ -43,7 +45,8 @@
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/appBar"
         android:orientation="horizontal"
-        android:backgroundTint="@color/white">
+        android:backgroundTint="@color/white"
+        android:background="@color/white">
 
         <TextView
             android:id="@+id/countdown_time"
@@ -80,6 +83,7 @@
         android:text="@string/panic"
         app:icon="@drawable/ic_baseline_error_outline_24"
         android:visibility="gone"
+        android:id="@+id/panic_btn"
         />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
