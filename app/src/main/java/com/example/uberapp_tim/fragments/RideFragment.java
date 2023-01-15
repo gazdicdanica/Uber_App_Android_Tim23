@@ -30,7 +30,6 @@ import com.example.uberapp_tim.dialogs.LocationDialog;
 import com.example.uberapp_tim.dto.RideDTO;
 import com.example.uberapp_tim.service.ActivityToFragment;
 import com.example.uberapp_tim.service.FragmentToActivity;
-import com.example.uberapp_tim.tools.FragmentTransition;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -59,13 +58,13 @@ public class RideFragment extends Fragment implements LocationListener, OnMapRea
     private com.example.uberapp_tim.model.route.Location destination;
     private com.example.uberapp_tim.model.route.Location departure;
     private RideDTO ride;
+    private Long id;
 
     private FragmentToActivity mCallback;
 
     public static RideFragment newInstance(){
-        RideFragment rideFragment = new RideFragment();
-
-        return  rideFragment;
+        RideFragment f = new RideFragment();
+        return f;
     }
 
     @Override
@@ -73,24 +72,10 @@ public class RideFragment extends Fragment implements LocationListener, OnMapRea
         super.onCreate(savedInstanceState);
         locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
 
-        Log.wtf("fragment", String.valueOf(getArguments().getLong("id")));
+        RideActivity activity = (RideActivity)getActivity();
+        Bundle res = activity.getIdBundle();
+        id = res.getLong("id");
 
-//        ServiceUtils.rideService.getRide(getArguments().getLong("id")).enqueue(new Callback<RideDTO>() {
-//            @Override
-//            public void onResponse(Call<RideDTO> call, Response<RideDTO> response) {
-//                Log.wtf("CODE", String.valueOf(response.code()));
-//                if(response.code() == 200){
-//                    ride = response.body();
-//                    Log.wtf("RIDE ID RESPONSE", String.valueOf(ride.getId()));
-//
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<RideDTO> call, Throwable t) {
-//
-//            }
-//        });
     }
 
     private void showLocationDialog() {
@@ -267,21 +252,8 @@ public class RideFragment extends Fragment implements LocationListener, OnMapRea
     }
 
     @Override
-    public void sendDestination(com.example.uberapp_tim.model.route.Location location) {
-        destination = location;
-//        Location l = new Location("");
-//        l.setLatitude(location.getLatitude());
-//        l.setLongitude(location.getLongitude());
-//        addMarker(l);
-    }
-
-    @Override
-    public void sendDeparture(com.example.uberapp_tim.model.route.Location location) {
-        departure = location;
-        Location l = new Location("");
-        l.setLatitude(location.getLatitude());
-        l.setLongitude(location.getLongitude());
-        addMarker(l);
-        Log.d("Departure", l.toString());
+    public void connect(Long id){
+        this.id = id;
+        Log.d("CAOOOOOOOOOOOOOOOOOOOOO", "CAOOOOOOOOOOOOOOOOOOOOOOOOOO");
     }
 }

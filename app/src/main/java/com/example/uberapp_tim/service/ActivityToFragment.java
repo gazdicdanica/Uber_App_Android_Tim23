@@ -4,6 +4,6 @@ import com.example.uberapp_tim.model.route.Location;
 
 public interface ActivityToFragment {
 
-    void sendDestination(Location location);
-    void sendDeparture(Location location);
+    void connect(Long id);
+
 }

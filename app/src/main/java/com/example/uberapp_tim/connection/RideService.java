@@ -17,7 +17,7 @@ public interface RideService {
     Call<ResponseBody> cancelRide(@Path("id")Long id, @Body Rejection rejection);
 
     @GET("ride/{id}")
-    Call<RideDTO> getRide(@Path("id")Long id);
+    Call<ResponseBody> getRide(@Path("id")Long id);
 
     @PUT("ride/{id}/accept")
     Call<ResponseBody> acceptRide(@Path("id") Long id);
