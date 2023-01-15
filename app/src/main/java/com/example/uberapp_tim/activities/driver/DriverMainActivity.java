@@ -29,6 +29,7 @@ import androidx.appcompat.widget.Toolbar;
 
 
 import com.example.uberapp_tim.R;
+import com.example.uberapp_tim.activities.RideActivity;
 import com.example.uberapp_tim.activities.RideHistoryActivity;
 import com.example.uberapp_tim.connection.WebSocket;
 import com.example.uberapp_tim.dto.RideDTO;
@@ -82,8 +83,6 @@ public class DriverMainActivity extends AppCompatActivity {
 
             String rideMessage = topicMessage.getPayload();
             Gson g = null;
-
-            Log.wtf("message", rideMessage);
 
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
                 g = new GsonBuilder().registerTypeAdapter(LocalDateTime.class, new JsonDeserializer<LocalDateTime>() {
@@ -246,7 +245,22 @@ public class DriverMainActivity extends AppCompatActivity {
         builder.setPositiveButton(R.string.dialog_accept, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
+                ServiceUtils.rideService.acceptRide(ride.getId()).enqueue(new Callback<ResponseBody>() {
+                    @Override
+                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                        if(response.code() == 200){
+                            Intent rideScreen = new Intent(DriverMainActivity.this, RideActivity.class);
+                            rideScreen.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
+                            rideScreen.putExtra("id", ride.getId());
+                            startActivity(rideScreen);
+                        }
+                    }
 
+                    @Override
+                    public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+                    }
+                });
             }
         });
         AlertDialog alertDialog = builder.create();

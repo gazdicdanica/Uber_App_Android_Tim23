@@ -7,7 +7,8 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
-    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -19,16 +20,24 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.UberApp_Tim"
         tools:targetApi="31">
+        <activity
+            android:name=".activities.RideActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
 
         <service
             android:name=".service.NotificationService"
             android:enabled="true"
-            android:exported="true"/>
+            android:exported="true" />
 
-        <receiver android:name=".receiver.NotificationReceiver"
+        <receiver
+            android:name=".receiver.NotificationReceiver"
             android:enabled="true"
-            android:exported="true">
-        </receiver>
+            android:exported="true"></receiver>
+
         <activity
             android:name=".activities.CarActivity"
             android:exported="false">
@@ -38,20 +47,20 @@
         </activity>
         <activity
             android:name=".activities.passenger.PassengerAccountActivity"
-            android:exported="true"></activity>
+            android:exported="true" />
         <activity
             android:name=".activities.passenger.PassengerInboxActivity"
-            android:exported="true"></activity>
+            android:exported="true" />
         <activity
             android:name=".activities.passenger.PassengerMainActivity"
-            android:exported="true"></activity>
+            android:exported="true" />
         <activity
             android:name=".activities.passenger.PassengerRegisterActivity"
             android:exported="true"
-            android:windowSoftInputMode="stateVisible|adjustResize"></activity>
+            android:windowSoftInputMode="stateVisible|adjustResize" />
         <activity
             android:name=".activities.driver.DriverAccountActivity"
-            android:exported="true"></activity>
+            android:exported="true" />
         <activity
             android:name=".activities.SplashActivity"
             android:exported="true">
@@ -64,25 +73,25 @@
         <activity
             android:name=".activities.UserLoginActivity"
             android:exported="true"
-            android:windowSoftInputMode="stateVisible|adjustResize"></activity>
+            android:windowSoftInputMode="stateVisible|adjustResize" />
         <activity
             android:name=".activities.driver.DriverMainActivity"
-            android:exported="true"></activity>
+            android:exported="true" />
         <activity
             android:name=".activities.driver.DriverPapersActivity"
-            android:exported="true"></activity>
+            android:exported="true" />
         <activity
             android:name=".activities.EditActivity"
             android:exported="true"
-            android:windowSoftInputMode="stateVisible|adjustResize"></activity>
+            android:windowSoftInputMode="stateVisible|adjustResize" />
         <activity
             android:name=".activities.driver.DriverInboxActivity"
             android:exported="true"
-            android:windowSoftInputMode="stateVisible|adjustResize"></activity>
+            android:windowSoftInputMode="stateVisible|adjustResize" />
         <activity
             android:name=".activities.RideHistoryActivity"
             android:exported="true"
-            android:windowSoftInputMode="stateVisible|adjustResize"></activity>
+            android:windowSoftInputMode="stateVisible|adjustResize" />
 
         <meta-data
             android:name="com.google.android.gms.version"
