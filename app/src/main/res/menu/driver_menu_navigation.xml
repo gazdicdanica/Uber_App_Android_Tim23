@@ -7,10 +7,10 @@
         android:icon="@drawable/ic_baseline_home_white_24"
         app:showAsAction="always" />
 
-    <item android:id="@+id/action_history"
-        android:title="@string/history_activity"
+    <item android:id="@+id/action_reports"
+        android:title="@string/reports_activity"
         android:orderInCategory="200"
-        android:icon="@drawable/ic_baseline_history_24"
+        android:icon="@drawable/ic_baseline_area_chart_24"
         app:showAsAction="always"/>
 
     <item android:id="@+id/action_inbox"

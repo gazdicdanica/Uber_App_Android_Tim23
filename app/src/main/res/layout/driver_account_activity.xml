@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -132,13 +133,14 @@
                         android:id="@+id/user_phone"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="phone"
-                        android:layout_marginEnd="20dp"
-                        android:focusable="false"
                         android:layout_marginStart="20dp"
+                        android:layout_marginEnd="20dp"
                         android:drawableEnd="@drawable/ic_baseline_arrow_forward_18"
+                        android:drawablePadding="7dp"
                         android:drawableTint="?attr/colorOnBackground"
-                        android:drawablePadding="7dp"/>
+                        android:focusable="false"
+                        android:inputType="phone"
+                        tools:ignore="SpeakableTextPresentCheck" />
 
                     <androidx.appcompat.widget.AppCompatTextView
                         android:layout_width="match_parent"
@@ -219,7 +221,7 @@
         android:id="@+id/driverAccNav"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        app:menu="@menu/menu_navigation"
+        app:menu="@menu/driver_menu_navigation"
         app:labelVisibilityMode="labeled"/>
 
 </LinearLayout>
