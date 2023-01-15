@@ -27,6 +27,10 @@
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
+        <activity android:name=".activities.passenger.PassengerReportsActivity"
+            android:exported="false">
+            
+        </activity>
         <activity
             android:name=".activities.RideActivity"
             android:exported="false">

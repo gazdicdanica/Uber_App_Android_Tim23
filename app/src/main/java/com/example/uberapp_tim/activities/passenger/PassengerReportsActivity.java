@@ -21,7 +21,7 @@ public class PassengerReportsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.passenger_reports);
 
-        BarChart barChart = findViewById(R.id.rideNum_barchart);
+        BarChart barChart = findViewById(R.id.passenger_barchart);
 
         ArrayList<BarEntry> rides = new ArrayList<>();
         rides.add(new BarEntry(2013, 240));
