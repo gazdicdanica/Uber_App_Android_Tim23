@@ -2,6 +2,7 @@ package com.example.uberapp_tim.activities;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -23,6 +24,14 @@ public class SplashActivity extends Activity {
     protected void onCreate(Bundle savedInstance){
         super.onCreate(savedInstance);
         setContentView(R.layout.splash);
+
+        try{
+            String accessToken = getSharedPreferences("AirRide_preferences", Context.MODE_PRIVATE).getString("accessToken", "");
+
+        }catch(NullPointerException ex){
+            ex.printStackTrace();
+        }
+
         new Timer().schedule(new TimerTask() {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override

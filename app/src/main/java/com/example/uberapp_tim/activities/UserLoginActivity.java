@@ -7,6 +7,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -81,6 +82,7 @@ public class UserLoginActivity extends AppCompatActivity {
         LoginDTO loginDTO = new LoginDTO(email, password);
 
         ServiceUtils.userService.login(loginDTO).enqueue(new Callback<TokensDTO>() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onResponse(Call<TokensDTO> call, Response<TokensDTO> response) {
                 if(response.code() == 200){
@@ -95,7 +97,6 @@ public class UserLoginActivity extends AppCompatActivity {
 
                     changeActivity();
 
-                    Toast.makeText(UserLoginActivity.this, "SUCCESS!!!", Toast.LENGTH_SHORT).show();
                 }else if(response.code() == 400){
                     editTextEmail.setText("");
                     editTextPassword.setText("");
@@ -132,6 +133,7 @@ public class UserLoginActivity extends AppCompatActivity {
             sharedPreferences.edit().putString("id", id).apply();
             sharedPreferences.edit().putString("role", role).apply();
             sharedPreferences.edit().putString("email", editTextEmail.getText().toString()).apply();
+            Log.d("LOGIN", getSharedPreferences("AirRide_preferences", Context.MODE_PRIVATE).getString("id", null));
             if(role.equals("passenger")){
                 startActivity(new Intent(UserLoginActivity.this, PassengerMainActivity.class));
             }else{

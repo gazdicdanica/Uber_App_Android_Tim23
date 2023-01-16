@@ -1,7 +1,6 @@
 package com.example.uberapp_tim.model.route;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 
 public class Route {
     private Long id;
@@ -10,8 +9,22 @@ public class Route {
     private float distance;
     private double estimatedTime;
     private float estimatedPrice;
-    private Location startLocation;
-    private Location endLocation;
+    private Location departure;
+    private Location destination;
+
+    public Route(Long id, LocalDateTime startTime, LocalDateTime endTime, float distance,
+                 double estimatedTime, float estimatedPrice, Location departure, Location destination) {
+        this.id = id;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.distance = distance;
+        this.estimatedTime = estimatedTime;
+        this.estimatedPrice = estimatedPrice;
+        this.departure = departure;
+        this.destination = destination;
+    }
+
+    public Route() {}
 
     @Override
     public String toString() {
@@ -21,22 +34,9 @@ public class Route {
                 ", distance=" + distance +
                 ", estimatedTime=" + estimatedTime +
                 ", estimatedPrice=" + estimatedPrice +
-                ", startLocation=" + startLocation +
-                ", endLocation=" + endLocation +
+                ", startLocation=" + departure +
+                ", endLocation=" + destination +
                 '}';
-    }
-
-    public Route(Long id, LocalDateTime startTime, LocalDateTime endTime, float distance,
-                 double estimatedTime, float estimatedPrice, Location startLocation,
-                 Location endLocation) {
-        this.id = id;
-        this.startTime = startTime;
-        this.endTime = endTime;
-        this.distance = distance;
-        this.estimatedTime = estimatedTime;
-        this.estimatedPrice = estimatedPrice;
-        this.startLocation = startLocation;
-        this.endLocation = endLocation;
     }
 
     public Long getId() {
@@ -87,21 +87,19 @@ public class Route {
         this.estimatedPrice = estimatedPrice;
     }
 
-    public Location getStartLocation() {
-        return startLocation;
+    public Location getDeparture() {
+        return departure;
     }
 
-    public void setStartLocation(Location startLocation) {
-        this.startLocation = startLocation;
+    public void setDeparture(Location departure) {
+        this.departure = departure;
     }
 
-    public Location getEndLocation() {
-        return endLocation;
+    public Location getDestination() {
+        return destination;
     }
 
-    public void setEndLocation(Location endLocation) {
-        this.endLocation = endLocation;
+    public void setDestination(Location destination) {
+        this.destination = destination;
     }
-
-    public Route() {}
 }

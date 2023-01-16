@@ -5,13 +5,10 @@
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/chat_icon"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:layout_alignParentStart="true"
-        android:layout_marginStart="5dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginEnd="5dp"
-        android:layout_marginBottom="5dp"
+        android:layout_margin="7dp"
         android:src="@drawable/man" />
 
     <TextView
@@ -23,6 +20,7 @@
         android:layout_alignParentTop="true"
         android:layout_toEndOf="@+id/chat_icon"
         android:padding="5dp"
+        android:text="Danica Gazidc"
         android:textColor="?attr/colorOnBackground"/>
 
     <TextView
@@ -31,5 +29,9 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/chat_name"
         android:layout_toEndOf="@+id/chat_icon"
-        android:padding="5dp"/>
+        android:text="cao"
+        android:paddingLeft="5dp"
+        android:paddingBottom="5dp"
+        android:paddingTop="0dp"
+        />
 </RelativeLayout>

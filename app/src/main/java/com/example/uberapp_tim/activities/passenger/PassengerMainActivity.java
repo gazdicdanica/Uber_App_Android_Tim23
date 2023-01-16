@@ -23,7 +23,6 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.uberapp_tim.R;
-import com.example.uberapp_tim.activities.RideHistoryActivity;
 import com.example.uberapp_tim.dto.RideRequestDTO;
 import com.example.uberapp_tim.dto.UserShortDTO;
 import com.example.uberapp_tim.fragments.DrawRouteFragment;
@@ -124,18 +123,18 @@ public class PassengerMainActivity extends AppCompatActivity implements View.OnC
                 switch (item.getItemId()) {
 
                     case (R.id.action_main):
-                        i = new Intent(PassengerMainActivity.this, PassengerMainActivity.class);
                         return true;
                     case (R.id.action_account):
                         i = new Intent(PassengerMainActivity.this, PassengerAccountActivity.class);
                         startActivity(i);
+                        overridePendingTransition(0,0);
                         return true;
                     case (R.id.action_inbox):
                         i = new Intent(PassengerMainActivity.this, PassengerInboxActivity.class);
                         startActivity(i);
                         return true;
-                    case (R.id.action_history):
-                        i = new Intent(PassengerMainActivity.this, RideHistoryActivity.class);
+                    case (R.id.action_reports):
+                        i = new Intent(PassengerMainActivity.this, PassengerReportsActivity.class);
                         startActivity(i);
                         return true;
                 }
@@ -191,6 +190,11 @@ public class PassengerMainActivity extends AppCompatActivity implements View.OnC
         } else {
             f = latLng;
         }
+    }
+
+    @Override
+    public void communicate(Long value) {
+
     }
 
     @Override
@@ -291,8 +295,8 @@ public class PassengerMainActivity extends AppCompatActivity implements View.OnC
     }
 
     private void createRoute() {
-        route.setStartLocation(startLocation);
-        route.setEndLocation(endLocation);
+        route.setDeparture(startLocation);
+        route.setDestination(endLocation);
         route.setEstimatedPrice(estimatePrice());
         route.setEstimatedTime(duration);
         route.setDistance(distance);

@@ -11,4 +11,5 @@ public interface FragmentToActivity {
     void sendFinishLocation(Location location);
     void sendRideData(float distance, Duration duration);
     void saveLatLng(String where, LatLng latLng);
+    void communicate(Long value);
 }

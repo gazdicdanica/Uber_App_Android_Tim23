@@ -33,3 +33,4 @@ public class UserShortDTO {
         this.email = email;
     }
 }
+
