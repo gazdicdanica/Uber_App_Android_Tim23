@@ -31,13 +31,16 @@ import com.example.uberapp_tim.R;
 
 import com.example.uberapp_tim.connection.WebSocket;
 import com.example.uberapp_tim.dto.RideDTO;
-import com.example.uberapp_tim.fragments.MapFragment;
+import com.example.uberapp_tim.fragments.DriverMapFragment;
 import com.example.uberapp_tim.connection.ServiceUtils;
 import com.example.uberapp_tim.model.ride.Rejection;
+import com.example.uberapp_tim.model.route.Location;
 import com.example.uberapp_tim.receiver.NotificationReceiver;
+import com.example.uberapp_tim.service.FragmentToActivity;
 import com.example.uberapp_tim.service.NotificationService;
 import com.example.uberapp_tim.tools.FragmentTransition;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.gson.Gson;
@@ -46,6 +49,7 @@ import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
+import com.google.maps.model.Duration;
 
 
 import java.lang.reflect.Type;
@@ -57,7 +61,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class DriverMainActivity extends AppCompatActivity {
+public class DriverMainActivity extends AppCompatActivity{
 
     public static final String NEW_RIDE = "NEW_RIDE";
 
@@ -69,7 +73,6 @@ public class DriverMainActivity extends AppCompatActivity {
     private PendingIntent pendingIntent;
     public static RideDTO ride;
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
     @SuppressLint("CheckResult")
     @Override
     protected void onCreate(Bundle savedInstance){
@@ -114,7 +117,7 @@ public class DriverMainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbarDriverMain);
         setSupportActionBar(toolbar);
 
-        FragmentTransition.to(MapFragment.newInstance(), this, false);
+        FragmentTransition.to(DriverMapFragment.newInstance(), this, false);
 
         final ActionBar actionBar = getSupportActionBar();
 
@@ -321,7 +324,7 @@ public class DriverMainActivity extends AppCompatActivity {
     @Override
     protected void onResume(){
         super.onResume();
-        FragmentTransition.to(MapFragment.newInstance(), this, false);
+        FragmentTransition.to(DriverMapFragment.newInstance(), this, false);
         BottomNavigationView nav = findViewById(R.id.driverNav);
         nav.getMenu().getItem(0).setChecked(true);
     }

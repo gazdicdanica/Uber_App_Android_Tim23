@@ -23,9 +23,11 @@ import com.example.uberapp_tim.model.message.Panic;
 import com.example.uberapp_tim.model.route.Location;
 import com.example.uberapp_tim.service.FragmentToActivity;
 import com.example.uberapp_tim.tools.FragmentTransition;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.maps.model.Duration;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -148,8 +150,8 @@ public class DriverRideActivity extends AppCompatActivity implements FragmentToA
             }
         });
 
-//        Fragment fragment = RideFragment.newInstance();
-//        FragmentTransition.to(fragment, DriverRideActivity.this, false);
+        Fragment fragment = RideFragment.newInstance();
+        FragmentTransition.to(fragment, DriverRideActivity.this, false);
     }
 
     public Bundle getIdBundle(){
@@ -158,6 +160,31 @@ public class DriverRideActivity extends AppCompatActivity implements FragmentToA
         return bundle;
     }
 
+
+    @Override
+    public void communicate(String msg) {
+
+    }
+
+    @Override
+    public void sendStartLocation(Location location) {
+
+    }
+
+    @Override
+    public void sendFinishLocation(Location location) {
+
+    }
+
+    @Override
+    public void sendRideData(float distance, Duration duration) {
+
+    }
+
+    @Override
+    public void saveLatLng(String where, LatLng latLng) {
+
+    }
 
     @Override
     public void communicate(Long value) {

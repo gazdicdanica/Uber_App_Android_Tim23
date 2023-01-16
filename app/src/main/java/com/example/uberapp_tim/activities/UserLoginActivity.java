@@ -3,6 +3,7 @@ package com.example.uberapp_tim.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -11,6 +12,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.auth0.android.jwt.JWT;
@@ -80,6 +82,7 @@ public class UserLoginActivity extends AppCompatActivity {
         LoginDTO loginDTO = new LoginDTO(email, password);
 
         ServiceUtils.userService.login(loginDTO).enqueue(new Callback<TokensDTO>() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onResponse(Call<TokensDTO> call, Response<TokensDTO> response) {
                 if(response.code() == 200){
@@ -115,6 +118,7 @@ public class UserLoginActivity extends AppCompatActivity {
         });
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     private void changeActivity(){
         String token = sharedPreferences.getString("accessToken", null);
         if(token != null){
@@ -128,6 +132,7 @@ public class UserLoginActivity extends AppCompatActivity {
 
             sharedPreferences.edit().putString("id", id).apply();
             sharedPreferences.edit().putString("role", role).apply();
+            sharedPreferences.edit().putString("email", editTextEmail.getText().toString()).apply();
             Log.d("LOGIN", getSharedPreferences("AirRide_preferences", Context.MODE_PRIVATE).getString("id", null));
             if(role.equals("passenger")){
                 startActivity(new Intent(UserLoginActivity.this, PassengerMainActivity.class));

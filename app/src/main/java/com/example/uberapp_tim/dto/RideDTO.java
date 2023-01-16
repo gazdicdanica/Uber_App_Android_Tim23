@@ -1,7 +1,5 @@
 package com.example.uberapp_tim.dto;
 
-import android.os.Parcelable;
-
 import com.example.uberapp_tim.model.ride.Rejection;
 import com.example.uberapp_tim.model.ride.RideStatus;
 import com.example.uberapp_tim.model.route.Route;
@@ -11,7 +9,8 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
-public class RideDTO implements Serializable{
+
+public class RideDTO implements Serializable {
 
     private Long id;
     private LocalDateTime startTime;

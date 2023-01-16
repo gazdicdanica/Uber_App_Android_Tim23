@@ -47,8 +47,8 @@
             android:layout_below="@+id/profile_pic"
             android:layout_centerHorizontal="true"
             app:drawableEndCompat="@drawable/ic_baseline_edit_18"
-            android:drawablePadding="10dp"
-            />
+            android:drawablePadding="10dp">
+        </TextView>
     </RelativeLayout>
     <LinearLayout
         android:layout_width="match_parent"
@@ -67,17 +67,22 @@
             android:drawablePadding="7dp"
             android:drawableTint="?attr/colorOnBackground"/>
 
-        <EditText
-            android:id="@+id/user_email"
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="textEmailAddress"
-            android:layout_marginEnd="20dp"
-            android:layout_marginStart="20dp"
-            android:focusable="false"
-            android:drawableEnd="@drawable/ic_baseline_arrow_forward_18"
-            android:drawablePadding="5dp"
-            android:drawableTint="?attr/colorOnBackground"/>
+            android:layout_height="wrap_content">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/user_email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textEmailAddress"
+                android:layout_marginEnd="20dp"
+                android:layout_marginStart="20dp"
+                android:focusable="false"
+                android:drawableEnd="@drawable/ic_baseline_arrow_forward_18"
+                android:drawablePadding="5dp"
+                android:drawableTint="?attr/colorOnBackground">
+            </com.google.android.material.textfield.TextInputEditText>
+        </com.google.android.material.textfield.TextInputLayout>
 
         <androidx.appcompat.widget.AppCompatTextView
             android:layout_width="match_parent"
@@ -90,17 +95,21 @@
             android:drawablePadding="7dp"
             android:drawableTint="?attr/colorOnBackground"/>
 
-        <EditText
-            android:id="@+id/user_address"
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="text"
-            android:layout_marginEnd="20dp"
-            android:layout_marginStart="20dp"
-            android:focusable="false"
-            android:drawableEnd="@drawable/ic_baseline_arrow_forward_18"
-            android:drawablePadding="5dp"
-            android:drawableTint="?attr/colorOnBackground"/>
+            android:layout_height="wrap_content">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/user_address"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text"
+                android:layout_marginEnd="20dp"
+                android:layout_marginStart="20dp"
+                android:focusable="false"
+                android:drawableEnd="@drawable/ic_baseline_arrow_forward_18"
+                android:drawablePadding="5dp"
+                android:drawableTint="?attr/colorOnBackground"/>
+        </com.google.android.material.textfield.TextInputLayout>
 
         <androidx.appcompat.widget.AppCompatTextView
             android:layout_width="match_parent"
@@ -113,17 +122,21 @@
             android:drawablePadding="7dp"
             android:drawableTint="?attr/colorOnBackground"/>
 
-        <EditText
-            android:id="@+id/user_phone"
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="phone"
-            android:layout_marginEnd="20dp"
-            android:layout_marginStart="20dp"
-            android:focusable="false"
-            android:drawableEnd="@drawable/ic_baseline_arrow_forward_18"
-            android:drawablePadding="5dp"
-            android:drawableTint="?attr/colorOnBackground"/>
+            android:layout_height="wrap_content">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/user_phone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="phone"
+                android:layout_marginEnd="20dp"
+                android:layout_marginStart="20dp"
+                android:focusable="false"
+                android:drawableEnd="@drawable/ic_baseline_arrow_forward_18"
+                android:drawablePadding="5dp"
+                android:drawableTint="?attr/colorOnBackground"/>
+        </com.google.android.material.textfield.TextInputLayout>
 
         <androidx.appcompat.widget.AppCompatTextView
             android:layout_width="match_parent"
@@ -136,17 +149,21 @@
             android:drawablePadding="7dp"
             android:drawableTint="?attr/colorOnBackground"/>
 
-        <EditText
-            android:id="@+id/user_password"
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="textPassword"
-            android:layout_marginEnd="20dp"
-            android:layout_marginStart="20dp"
-            android:focusable="false"
-            android:drawableEnd="@drawable/ic_baseline_arrow_forward_18"
-            android:drawablePadding="5dp"
-            android:drawableTint="?attr/colorOnBackground"/>
+            android:layout_height="wrap_content">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/user_password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPassword"
+                android:layout_marginEnd="20dp"
+                android:layout_marginStart="20dp"
+                android:focusable="false"
+                android:drawableEnd="@drawable/ic_baseline_arrow_forward_18"
+                android:drawablePadding="5dp"
+                android:drawableTint="?attr/colorOnBackground"/>
+        </com.google.android.material.textfield.TextInputLayout>
 
 
 

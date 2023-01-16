@@ -37,6 +37,25 @@
     <string name="login_error">The username or password you entered is incorrect</string>
     <string name="ride_channel">Ride notification channel</string>
     <string name="new_ride_notification">RIDE_NOTIFICATION</string>
+    <string name="where_to">Where To</string>
+    <string name="go_now">Go Now</string>
+    <string name="pick_time">Pick Time</string>
+    <string name="current_location">Current Location</string>
+    <string name="time">Time</string>
+    <string name="pets">Pets</string>
+    <string name="clear_data">Clear Data</string>
+    <string name="clear">Clear</string>
+    <string name="no_pets">No Pets</string>
+    <string name="babies">Babies</string>
+    <string name="no_babies">No Babies</string>
+    <string name="air_ride">AirRide</string>
+    <string name="distance">Distance:</string>
+    <string name="price">Price:</string>
+    <string-array name="carTypes">
+        <item>Standard</item>
+        <item>Luxury</item>
+        <item>Van</item>
+    </string-array>
     <string name="driver_ride_dialog_title">Accept ride?</string>
     <string name="dialog_accept">Accept</string>
     <string name="dialog_decline">Decline</string>
@@ -44,4 +63,5 @@
     <string name="end_ride">End ride</string>
     <string name="panic">PANIC</string>
     <string name="date_picker">Pick a date</string>
+>>>>>>> 4190a098ec56c0dea8c7402ff34861381c838d82
 </resources>
