@@ -15,7 +15,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
@@ -24,11 +23,10 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.uberapp_tim.R;
-import com.example.uberapp_tim.activities.RideActivity;
+import com.example.uberapp_tim.activities.driver.DriverRideActivity;
 import com.example.uberapp_tim.connection.ServiceUtils;
 import com.example.uberapp_tim.dialogs.LocationDialog;
 import com.example.uberapp_tim.dto.RideDTO;
-import com.example.uberapp_tim.service.ActivityToFragment;
 import com.example.uberapp_tim.service.FragmentToActivity;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -57,7 +55,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class RideFragment extends Fragment implements LocationListener, OnMapReadyCallback, ActivityToFragment {
+public class RideFragment extends Fragment implements LocationListener, OnMapReadyCallback {
 
     public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
 
@@ -84,7 +82,7 @@ public class RideFragment extends Fragment implements LocationListener, OnMapRea
         super.onCreate(savedInstanceState);
         locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
 
-        RideActivity activity = (RideActivity)getActivity();
+        DriverRideActivity activity = (DriverRideActivity)getActivity();
         Bundle res = activity.getIdBundle();
         id = res.getLong("id");
 
@@ -108,6 +106,8 @@ public class RideFragment extends Fragment implements LocationListener, OnMapRea
                             }).create();
                         }
                         ride = g.fromJson(rideMessage, RideDTO.class);
+
+                        mCallback.communicate(ride.getPassengers().get(0).getId());
 
                         if(map != null){
                             addRedMarker(ride.getLocations().get(0).getDeparture(), "Departure");
@@ -319,6 +319,13 @@ public class RideFragment extends Fragment implements LocationListener, OnMapRea
     }
 
     @Override
-    public void sendRide(RideDTO ride){
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        try {
+            mCallback = (FragmentToActivity) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString()
+                    + " must implement FragmentToActivity");
+        }
     }
 }

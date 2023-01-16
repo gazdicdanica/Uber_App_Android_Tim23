@@ -2,6 +2,7 @@ package com.example.uberapp_tim.adapters;
 
 import android.content.Context;
 import android.os.Build;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +16,9 @@ import com.example.uberapp_tim.R;
 
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Objects;
 
+import com.example.uberapp_tim.dto.MessageDTO;
 import com.example.uberapp_tim.model.message.Message;
 
 
@@ -24,9 +27,9 @@ public class MessageAdapter extends RecyclerView.Adapter {
     private static final int VIEW_TYPE_RECEIVED = 2;
 
     private Context mContext;
-    private List<Message> mMessageList;
+    private List<MessageDTO> mMessageList;
 
-    public MessageAdapter(Context context, List<Message> messages){
+    public MessageAdapter(Context context, List<MessageDTO> messages){
         mContext = context;
         mMessageList = messages;
     }
@@ -48,7 +51,7 @@ public class MessageAdapter extends RecyclerView.Adapter {
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        Message message = (Message) mMessageList.get(position);
+        MessageDTO message = (MessageDTO) mMessageList.get(position);
 
         switch (holder.getItemViewType()){
             case VIEW_TYPE_SENT:
@@ -67,10 +70,13 @@ public class MessageAdapter extends RecyclerView.Adapter {
 
     @Override
     public int getItemViewType(int position){
-        Message message = (Message) mMessageList.get(position);
+        MessageDTO message = (MessageDTO) mMessageList.get(position);
 
         // TODO resolve logged in user
-        if (message.getSender().getId() == 1){
+        String idStr = mContext.getSharedPreferences("AirRide_preferences", Context.MODE_PRIVATE).getString("id", null);
+        Long id = Long.parseLong(idStr);
+        Log.d("SENT_ID", idStr);
+        if (Objects.equals(message.getSender(), id)){
             return VIEW_TYPE_SENT;
         }else{
             return VIEW_TYPE_RECEIVED;
@@ -91,14 +97,14 @@ public class MessageAdapter extends RecyclerView.Adapter {
             dateTxt = (TextView) itemView.findViewById(R.id.text_date_other);
         }
 
-        void bind(Message message){
-            messageTxt.setText(message.getMsgText());
+        void bind(MessageDTO message){
+            messageTxt.setText(message.getMessage());
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 timeTxt.setText(message.getTimeOfSending().format(DateTimeFormatter.ofPattern("HH:mm")));
                 dateTxt.setText(message.getTimeOfSending().format(DateTimeFormatter.ofPattern("dd.MM.yyyy.")));
             }
-            String fullName = message.getSender().getName() + " " + message.getSender().getLastName();
-            nameTxt.setText(fullName);
+//            String fullName = message.getSender().getName() + " " + message.getSender().getLastName();
+//            nameTxt.setText(fullName);
 
             // TODO set image
         }
@@ -112,10 +118,11 @@ public class MessageAdapter extends RecyclerView.Adapter {
 
             messageTxt = (TextView) itemView.findViewById(R.id.text_message_me);
             timeTxt = (TextView) itemView.findViewById(R.id.text_timestamp_me);
+            dateTxt = (TextView) itemView.findViewById(R.id.text_date_me);
         }
 
-        void bind(Message message) {
-            messageTxt.setText(message.getMsgText());
+        void bind(MessageDTO message) {
+            messageTxt.setText(message.getMessage());
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 timeTxt.setText(message.getTimeOfSending().format(DateTimeFormatter.ofPattern("HH:mm")));

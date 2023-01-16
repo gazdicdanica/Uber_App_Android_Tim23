@@ -1,13 +1,11 @@
-package com.example.uberapp_tim.activities;
+package com.example.uberapp_tim.activities.driver;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.InputType;
 import android.util.Log;
@@ -17,42 +15,27 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.uberapp_tim.R;
-import com.example.uberapp_tim.activities.driver.DriverMainActivity;
+import com.example.uberapp_tim.activities.ChatActivity;
 import com.example.uberapp_tim.connection.ServiceUtils;
 import com.example.uberapp_tim.dto.RideDTO;
 import com.example.uberapp_tim.fragments.RideFragment;
 import com.example.uberapp_tim.model.message.Panic;
-import com.example.uberapp_tim.model.ride.Rejection;
 import com.example.uberapp_tim.model.route.Location;
-import com.example.uberapp_tim.service.ActivityToFragment;
 import com.example.uberapp_tim.service.FragmentToActivity;
 import com.example.uberapp_tim.tools.FragmentTransition;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonDeserializer;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParseException;
-
-import org.w3c.dom.Text;
-
-import java.io.IOException;
-import java.lang.reflect.Type;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class RideActivity extends AppCompatActivity implements FragmentToActivity {
+public class DriverRideActivity extends AppCompatActivity implements FragmentToActivity {
 
     Long rideId;
-    RideDTO ride;
+    Long passengerId;
 
     MaterialButton startRideBtn;
     MaterialButton endRideBtn;
@@ -60,7 +43,6 @@ public class RideActivity extends AppCompatActivity implements FragmentToActivit
     ExtendedFloatingActionButton panicBtn;
     TextView countdownTV;
     TextView kmTV;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,7 +87,7 @@ public class RideActivity extends AppCompatActivity implements FragmentToActivit
                 ServiceUtils.rideService.endRide(rideId).enqueue(new Callback<ResponseBody>() {
                     @Override
                     public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                        Intent main = new Intent(RideActivity.this, DriverMainActivity.class);
+                        Intent main = new Intent(DriverRideActivity.this, DriverMainActivity.class);
                         main.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
                         startActivity(main);
                     }
@@ -122,9 +104,9 @@ public class RideActivity extends AppCompatActivity implements FragmentToActivit
         panicBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                android.app.AlertDialog.Builder builder = new AlertDialog.Builder(RideActivity.this);
+                android.app.AlertDialog.Builder builder = new AlertDialog.Builder(DriverRideActivity.this);
                 builder.setTitle("Please enter a reason");
-                final EditText input = new EditText(RideActivity.this);
+                final EditText input = new EditText(DriverRideActivity.this);
                 input.setInputType(InputType.TYPE_CLASS_TEXT);
                 input.setPadding(30,30,30,30);
                 builder.setView(input);
@@ -139,8 +121,8 @@ public class RideActivity extends AppCompatActivity implements FragmentToActivit
                         ServiceUtils.rideService.panicRide(rideId, panic).enqueue(new Callback<ResponseBody>() {
                             @Override
                             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                                Toast.makeText(RideActivity.this, "Panic was sent", Toast.LENGTH_SHORT).show();
-                                Intent main = new Intent(RideActivity.this, DriverMainActivity.class);
+                                Toast.makeText(DriverRideActivity.this, "Panic was sent", Toast.LENGTH_SHORT).show();
+                                Intent main = new Intent(DriverRideActivity.this, DriverMainActivity.class);
                                 main.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
                                 startActivity(main);
                             }
@@ -156,8 +138,18 @@ public class RideActivity extends AppCompatActivity implements FragmentToActivit
             }
         });
 
-        Fragment fragment = RideFragment.newInstance();
-        FragmentTransition.to(fragment, RideActivity.this, false);
+        messageBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent chatIntent = new Intent(DriverRideActivity.this, ChatActivity.class);
+                chatIntent.putExtra("rideId", rideId);
+                chatIntent.putExtra("userId", passengerId);
+                startActivity(chatIntent);
+            }
+        });
+
+//        Fragment fragment = RideFragment.newInstance();
+//        FragmentTransition.to(fragment, DriverRideActivity.this, false);
     }
 
     public Bundle getIdBundle(){
@@ -168,17 +160,7 @@ public class RideActivity extends AppCompatActivity implements FragmentToActivit
 
 
     @Override
-    public void communicate(String msg) {
-
-    }
-
-    @Override
-    public void sendStartLocation(Location location) {
-
-    }
-
-    @Override
-    public void sendFinishLocation(Location location) {
-
+    public void communicate(Long value) {
+        passengerId = value;
     }
 }
