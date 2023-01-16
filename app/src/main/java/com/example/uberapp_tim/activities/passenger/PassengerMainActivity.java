@@ -3,6 +3,7 @@ package com.example.uberapp_tim.activities.passenger;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Build;
@@ -15,6 +16,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TimePicker;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import androidx.annotation.NonNull;
@@ -23,10 +25,15 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.uberapp_tim.R;
+import com.example.uberapp_tim.activities.driver.DriverMainActivity;
+import com.example.uberapp_tim.activities.driver.DriverRideActivity;
+import com.example.uberapp_tim.connection.ServiceUtils;
 import com.example.uberapp_tim.dto.RideRequestDTO;
 import com.example.uberapp_tim.dto.UserShortDTO;
 import com.example.uberapp_tim.fragments.DrawRouteFragment;
 import com.example.uberapp_tim.fragments.MapFragment;
+import com.example.uberapp_tim.fragments.RideFragment;
+import com.example.uberapp_tim.model.ride.Ride;
 import com.example.uberapp_tim.model.route.Location;
 import com.example.uberapp_tim.model.route.Route;
 import com.example.uberapp_tim.model.vehicle.CarType;
@@ -37,17 +44,29 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParseException;
 import com.google.maps.model.Duration;
 
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.text.DecimalFormat;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
 import at.markushi.ui.CircleButton;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 
 @RequiresApi(api = Build.VERSION_CODES.O)
@@ -248,11 +267,42 @@ public class PassengerMainActivity extends AppCompatActivity implements View.OnC
         } else if (view == requestRide) {
             if (start != null && finish != null) {
                 if (isClicked) {
+                    requestRide.setEnabled(false);
                     createRide();
                     createRoute();
                     this.rideDTO.addRoute(route);
-                    Log.i("Ispis" ,""+rideDTO.toString());
-                    //TODO CALL BACK
+                    ServiceUtils.rideService.createRide(this.rideDTO).enqueue(new Callback<ResponseBody>() {
+                        @Override
+                        public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                            Toast.makeText(PassengerMainActivity.this, "Waiting For Driver", Toast.LENGTH_SHORT).show();
+                            Gson g = null;
+                            try {
+                                String json = response.body().string();
+                                g = new GsonBuilder().registerTypeAdapter(LocalDateTime.class, new JsonDeserializer<LocalDateTime>() {
+
+                                    @Override
+                                    public LocalDateTime deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+                                        DateTimeFormatter format = DateTimeFormatter.ofPattern("yyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+                                        return LocalDateTime.parse(json.getAsJsonPrimitive().getAsString(), format);
+                                    }
+                                }).create();
+                                Ride ride = g.fromJson(json, Ride.class);
+                                start.setVisibility(View.GONE);
+                                finish.setVisibility(View.GONE);
+                                Toast.makeText(PassengerMainActivity.this, "RIDE_ID "+ride.getId(), Toast.LENGTH_SHORT).show();
+                                requestRide.setColor(Color.RED);
+                                requestRide.setImageResource(0);
+                                requestRide.setBackgroundResource(R.drawable.ic_baseline_error_outline_24);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<ResponseBody> call, Throwable t) {
+                            Toast.makeText(PassengerMainActivity.this, "Greska 569", Toast.LENGTH_SHORT).show();
+                        }
+                    });
                 }
                 isClicked = true;
                 btnTimePicker.setVisibility(View.GONE);
@@ -295,19 +345,21 @@ public class PassengerMainActivity extends AppCompatActivity implements View.OnC
     }
 
     private void createRoute() {
+        startLocation.setAddress(startLoc);
+        endLocation.setAddress(finishLoc);
         route.setDeparture(startLocation);
         route.setDestination(endLocation);
-        route.setEstimatedPrice(estimatePrice());
-        route.setEstimatedTime(duration);
+        rideDTO.setEstimatedPrice(estimatePrice());
+        rideDTO.setEstimatedTime(duration);
         route.setDistance(distance);
         if ((hour1 != 0) && (minute1 != 0)){
-            route.setStartTime(LocalDateTime.now());
+            rideDTO.setStartTime(LocalDateTime.now());
         } else {
             LocalDateTime time = LocalDateTime.now();
             time.plusMinutes(calcTimeForRideAppoint());
-            route.setStartTime(time);
+            rideDTO.setStartTime(time);
         }
-        route.setEndTime(route.getStartTime().plusMinutes((long) duration));
+        rideDTO.setEndTime(rideDTO.getStartTime().plusMinutes((long) duration));
 
     }
 

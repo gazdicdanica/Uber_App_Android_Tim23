@@ -1,6 +1,7 @@
 package com.example.uberapp_tim.connection;
 
 import com.example.uberapp_tim.dto.RideDTO;
+import com.example.uberapp_tim.dto.RideRequestDTO;
 import com.example.uberapp_tim.model.message.Panic;
 import com.example.uberapp_tim.model.ride.Rejection;
 
@@ -31,4 +32,7 @@ public interface RideService {
 
     @PUT("ride/{id}/panic")
     Call<ResponseBody> panicRide(@Path("id")Long id, @Body Panic panic);
+
+    @POST("ride")
+    Call<ResponseBody> createRide(@Body RideRequestDTO request);
 }

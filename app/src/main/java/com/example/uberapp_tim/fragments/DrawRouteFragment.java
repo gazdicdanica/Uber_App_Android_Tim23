@@ -135,7 +135,6 @@ public class DrawRouteFragment extends Fragment implements OnMapReadyCallback {
         try {
             DirectionsResult res = req.await();
             resolveRespData(res);
-            Toast.makeText(activity, "Next", Toast.LENGTH_SHORT).show();
             if (res.routes != null && res.routes.length > 0) {
                 DirectionsRoute route = res.routes[0];
                 if (route.legs !=null) {
@@ -195,8 +194,6 @@ public class DrawRouteFragment extends Fragment implements OnMapReadyCallback {
 
         DirectionsLeg leg = legs[0];
         duration = leg.duration;
-        Toast.makeText(activity, "IN", Toast.LENGTH_SHORT).show();
         mCallback.sendRideData(distance, duration);
-        Toast.makeText(activity, "IN_NEXT", Toast.LENGTH_SHORT).show();
     }
 }
