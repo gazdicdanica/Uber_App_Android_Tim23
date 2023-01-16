@@ -6,6 +6,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -51,6 +53,7 @@ public class ChatActivity extends AppCompatActivity {
     private Long user1id;
     private Long user2id;
 
+    private Handler mHandler;
 
 
     @Override
@@ -104,38 +107,65 @@ public class ChatActivity extends AppCompatActivity {
         user2id = getIntent().getLongExtra("userId", 0);
         rideId = getIntent().getLongExtra("rideId", 0);
 
-        ServiceUtils.userService.getMessagesForUsersByRide(user2id, user1id, rideId).enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                try {
-                    String message = response.body().string();
-                    Gson g = null;
 
-                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-                        g = new GsonBuilder().registerTypeAdapter(LocalDateTime.class, new JsonDeserializer<LocalDateTime>() {
-                            @Override
-                            public LocalDateTime deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-                                DateTimeFormatter format = DateTimeFormatter.ofPattern("yyy-MM-dd'T'HH:mm:ss.SSS'Z'");
-                                return LocalDateTime.parse(json.getAsJsonPrimitive().getAsString(), format);
-                            }
-                        }).create();
-                    }
-
-                    Type listType = new TypeToken<ArrayList<MessageDTO>>(){}.getType();
-                    messages = g.fromJson(message, listType);
-                    mMessageRecycler.setAdapter(new MessageAdapter(ChatActivity.this, messages));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-
-            }
-        });
+        mHandler = new Handler(Looper.getMainLooper());
+        startRepeat();
 
         mMessageRecycler = (RecyclerView) findViewById(R.id.recycler);
         mMessageRecycler.setLayoutManager(new LinearLayoutManager(this));
+    }
+
+    Runnable mStatusCheker = new Runnable() {
+        @Override
+        public void run() {
+            ServiceUtils.userService.getMessagesForUsersByRide(user2id, user1id, rideId).enqueue(new Callback<ResponseBody>() {
+                @Override
+                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                    try {
+                        String message = response.body().string();
+                        Gson g = null;
+
+                        Toast.makeText(ChatActivity.this, "update", Toast.LENGTH_SHORT).show();
+
+                        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                            g = new GsonBuilder().registerTypeAdapter(LocalDateTime.class, new JsonDeserializer<LocalDateTime>() {
+                                @Override
+                                public LocalDateTime deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+                                    DateTimeFormatter format = DateTimeFormatter.ofPattern("yyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+                                    return LocalDateTime.parse(json.getAsJsonPrimitive().getAsString(), format);
+                                }
+                            }).create();
+                        }
+
+                        Type listType = new TypeToken<ArrayList<MessageDTO>>(){}.getType();
+                        messages = g.fromJson(message, listType);
+                        mMessageRecycler.setAdapter(new MessageAdapter(ChatActivity.this, messages));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+                }
+            });
+
+        }
+    };
+
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+        stopRepeat();
+    }
+
+    public void startRepeat(){
+        mStatusCheker.run();
+        mHandler.postDelayed(mStatusCheker, 5000);
+    }
+
+    public void stopRepeat(){
+        mHandler.removeCallbacks(mStatusCheker);
     }
 }
