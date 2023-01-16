@@ -47,6 +47,8 @@
     <string name="babies">Babies</string>
     <string name="no_babies">No Babies</string>
     <string name="air_ride">AirRide</string>
+    <string name="distance">Distance:</string>
+    <string name="price">Price:</string>
     <string-array name="carTypes">
         <item>Standard</item>
         <item>Luxury</item>

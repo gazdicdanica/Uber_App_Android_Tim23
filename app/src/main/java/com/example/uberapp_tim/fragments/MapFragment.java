@@ -12,6 +12,7 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,6 +21,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -45,6 +47,8 @@ import com.google.android.material.textfield.TextInputEditText;
 import java.util.ArrayList;
 import java.util.List;
 
+
+@RequiresApi(api = Build.VERSION_CODES.O)
 public class MapFragment extends Fragment implements LocationListener, OnMapReadyCallback {
 
     public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
@@ -56,6 +60,7 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
     private AlertDialog dialog;
     private Marker home;
     private GoogleMap map;
+    private boolean isStart=false, isFinish=false;
 
 
     private PassengerMainActivity activity;
@@ -164,11 +169,11 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
                 if(ContextCompat.checkSelfPermission(requireContext(),
                         Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
 
-                    locationManager.requestLocationUpdates(provider, 2000, 0, this);
+                    locationManager.requestLocationUpdates(provider, 1000, 0, this);
                 } else if(ContextCompat.checkSelfPermission(getContext(),
                         Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
 
-                    locationManager.requestLocationUpdates(provider, 2000, 0, this);
+                    locationManager.requestLocationUpdates(provider, 1000, 0, this);
                 }
             }
         }
@@ -259,8 +264,9 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
             }
         }
         if(numberOfMarkers == 0) {
-            String currLocation = "start,"+activity.getAddressFromLocation(new LatLng(location.getLatitude(), location.getLongitude())).split(",")[0];
-            mCallback.communicate(currLocation);
+//            String currLocation = "start,"+activity.getAddressFromLocation(new LatLng(location.getLatitude(), location.getLongitude())).split(",")[0];
+//            mCallback.communicate(currLocation);
+//            mCallback.sendStartLocation(new com.example.uberapp_tim.model.route.Location(location));
         }
 
         map.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
@@ -269,14 +275,20 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
                 if (numberOfMarkers < 2) {
                     map.addMarker(new MarkerOptions()
                             .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED))
-                            .position(latLng));
-                    if (numberOfMarkers == 0) {
+                            .position(latLng).title(resolveName()));
+                    if ((numberOfMarkers == 0 && !isFinish) || (numberOfMarkers==1 && !isFinish)) {
                         Log.println(Log.ASSERT,"AAAA", activity.getAddressFromLocation(latLng));
-                        String end = activity.getAddressFromLocation(latLng).split(",")[0];
+                        String end = activity.getAddressFromLocation(latLng);
+                        mCallback.saveLatLng("f", latLng);
+                        isFinish = true;
                         mCallback.communicate("finish," + end);
-                    } else {
-                        String start = activity.getAddressFromLocation(latLng).split(",")[0];
+                        mCallback.sendFinishLocation(new com.example.uberapp_tim.model.route.Location(latLng.longitude, latLng.latitude));
+                    } else if (numberOfMarkers == 1 && !isStart){
+                        isStart = true;
+                        String start = activity.getAddressFromLocation(latLng);
+                        mCallback.saveLatLng("s", latLng);
                         mCallback.communicate("start,"+start);
+                        mCallback.sendStartLocation(new com.example.uberapp_tim.model.route.Location(latLng.longitude, latLng.latitude));
                     }
                     numberOfMarkers++;
                     home.setFlat(true);
@@ -292,7 +304,15 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
         map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
-//                Toast.makeText(getActivity(), marker.getTitle(), Toast.LENGTH_SHORT).show();
+                if (marker.getTitle().equals("Start")){
+                    mCallback.communicate("start, ");
+                    isStart = false;
+                } else if(marker.getTitle().equals("Finish")){
+                    mCallback.communicate("finish, ");
+                    isFinish = false;
+                }
+                if (numberOfMarkers != 0){ numberOfMarkers --; }
+                marker.remove();
                 return false;
             }
         });
@@ -309,4 +329,13 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
         }
     }
 
+    private String resolveName() {
+        if ((numberOfMarkers == 0 && !isFinish && !isStart) ||
+                (numberOfMarkers == 1 && !isFinish && isStart)) {
+            return "Finish";
+        } else if (numberOfMarkers == 1 && isFinish && !isStart) {
+            return "Start";
+        }
+        return "";
+    }
 }

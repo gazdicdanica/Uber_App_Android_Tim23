@@ -9,6 +9,14 @@ public class UserShortDTO {
         this.email = email;
     }
 
+    @Override
+    public String toString() {
+        return "UserShortDTO{" +
+                "id=" + id +
+                ", email='" + email + '\'' +
+                '}';
+    }
+
     public Long getId() {
         return id;
     }

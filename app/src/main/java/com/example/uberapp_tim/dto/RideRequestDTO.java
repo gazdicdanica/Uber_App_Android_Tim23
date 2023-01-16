@@ -3,16 +3,29 @@ package com.example.uberapp_tim.dto;
 import com.example.uberapp_tim.model.route.Route;
 import com.example.uberapp_tim.model.vehicle.CarType;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RideRequestDTO {
+public class RideRequestDTO implements Serializable {
     private List<Route> locations = new ArrayList<>();
     private List<UserShortDTO> passengers = new ArrayList<>();
     private CarType vehicleType;
     private int delayInMinutes;
     private boolean babyTransport;
     private boolean petTransport;
+
+    @Override
+    public String toString() {
+        return "RideRequestDTO{" +
+                "locations=" + locations.get(0) +
+                ", passengers=" + passengers.get(0) +
+                ", vehicleType=" + vehicleType.toString() +
+                ", delayInMinutes=" + delayInMinutes +
+                ", babyTransport=" + babyTransport +
+                ", petTransport=" + petTransport +
+                '}';
+    }
 
     public RideRequestDTO() {}
 
@@ -25,6 +38,8 @@ public class RideRequestDTO {
         this.babyTransport = babyTransport;
         this.petTransport = petTransport;
     }
+
+    public void addRoute(Route route) { this.locations.add(route); }
 
     public void addUser(UserShortDTO user) {
         this.passengers.add(user);

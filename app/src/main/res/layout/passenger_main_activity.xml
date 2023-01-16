@@ -5,72 +5,12 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
-    <fragment
-        android:id="@+id/map_fragment_passenger"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:name="com.example.uberapp_tim.fragments.MapFragment"
-        tools:layout="@layout/map_layout"
-        />
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/startLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:boxCornerRadiusBottomStart="25dp"
-        app:boxCornerRadiusBottomEnd="25dp"
-        app:boxCornerRadiusTopStart="25dp"
-        app:boxCornerRadiusTopEnd="25dp"
-        app:boxStrokeWidth="0dp"
-        app:boxStrokeWidthFocused="0dp">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/startLocation"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="25dp"
-            android:layout_marginEnd="25dp"
-            android:layout_marginTop="5dp"
-            android:hint="@string/current_location"/>
-
-    </com.google.android.material.textfield.TextInputLayout>
-
-
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:layout_below="@+id/startLayout"
-        android:layout_width="match_parent"
-        android:id="@+id/whereToLayout"
-        android:layout_height="wrap_content"
-        app:boxCornerRadiusBottomStart="25dp"
-        app:boxCornerRadiusBottomEnd="25dp"
-        app:boxCornerRadiusTopStart="25dp"
-        app:boxCornerRadiusTopEnd="25dp"
-        app:boxStrokeWidth="0dp"
-        app:boxStrokeWidthFocused="0dp"
-        >
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/whereTo"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="25dp"
-            android:layout_marginEnd="25dp"
-            android:layout_marginTop="4dp"
-            android:hint="@string/where_to"/>
-    </com.google.android.material.textfield.TextInputLayout>
-
     <RelativeLayout
-        android:id="@+id/relative1"
-        android:layout_marginTop="5dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/whereToLayout"
-        android:orientation="horizontal"
-        android:layout_marginStart="25dp"
-        android:layout_marginEnd="25dp"
-        >
+        android:layout_height="match_parent"
+        android:elevation="10dp">
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/timeLayout"
+            android:id="@+id/startLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:boxCornerRadiusBottomStart="25dp"
@@ -81,124 +21,227 @@
             app:boxStrokeWidthFocused="0dp">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/timePickerId"
+                android:id="@+id/startLocation"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/time"
-                android:enabled="false"/>
+                android:layout_marginStart="25dp"
+                android:layout_marginEnd="25dp"
+                android:layout_marginTop="5dp"
+                android:hint="@string/current_location"/>
 
         </com.google.android.material.textfield.TextInputLayout>
 
-        <Button
-            android:id="@+id/btnTimePicker"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/pick_time"
-            android:layout_alignRight="@+id/timeLayout"
-            android:layout_centerVertical="true"
-            android:layout_marginEnd="20dp"
-            android:textAllCaps="false">
-        </Button>
-
-    </RelativeLayout>
-    <RelativeLayout
-        android:id="@+id/relative2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/relative1">
-        <LinearLayout
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_below="@+id/startLayout"
             android:layout_width="match_parent"
+            android:id="@+id/whereToLayout"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginEnd="25dp"
-            android:layout_marginStart="25dp"
-            android:weightSum="10">
-
-            <ToggleButton
-                android:id="@+id/petsInRide"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:textOn="@string/pets"
-                android:textOff="@string/no_pets"
-                android:textAllCaps="false"
-                />
-            <ToggleButton
-                android:id="@+id/babiesInRide"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:textOn="@string/babies"
-                android:textOff="@string/no_babies"
-                android:textAllCaps="false"
-                />
-
-
-            <Spinner
-                android:layout_marginTop="5dp"
-                android:layout_marginBottom="5dp"
-                android:id="@+id/carType"
-                android:spinnerMode="dropdown"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:background="@color/gray"
-                android:gravity="center"
-                android:popupBackground="@color/dark_gray"
-                android:layout_weight="7"
-                android:dropDownHeight="40dp"
-                android:textAlignment="center"
-                />
-
-        </LinearLayout>
-
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:id="@+id/relative3"
-        android:layout_above="@id/passengerNav"
-        android:layout_height="wrap_content">
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:orientation="horizontal"
-            android:layout_height="wrap_content"
-            android:weightSum="2">
-
-            <LinearLayout
+            app:boxCornerRadiusBottomStart="25dp"
+            app:boxCornerRadiusBottomEnd="25dp"
+            app:boxCornerRadiusTopStart="25dp"
+            app:boxCornerRadiusTopEnd="25dp"
+            app:boxStrokeWidth="0dp"
+            app:boxStrokeWidthFocused="0dp"
+            >
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/whereTo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"/>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:orientation="horizontal"
+                android:layout_marginStart="25dp"
                 android:layout_marginEnd="25dp"
-                android:layout_marginBottom="25dp"
-                android:layout_weight="1">
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"
-                    />
-                <at.markushi.ui.CircleButton
-                    android:id="@+id/requestRide"
-                    android:layout_width="100dip"
-                    android:layout_height="100dip"
-                    app:cb_color="@color/orange"
-                    android:src="@drawable/ic_baseline_arrow_forward_18_big"
-                    app:cb_pressedRingWidth="9dip" />
-            </LinearLayout>
-        </LinearLayout>
+                android:layout_marginTop="4dp"
+                android:hint="@string/where_to"/>
+        </com.google.android.material.textfield.TextInputLayout>
+            <RelativeLayout
+                android:id="@+id/timeTxt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/whereToLayout"
+                android:gravity="center">
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:id="@+id/timeTxtLyt"
+                    android:layout_height="wrap_content"
+                    app:boxCornerRadiusBottomStart="25dp"
+                    app:boxCornerRadiusBottomEnd="25dp"
+                    app:boxCornerRadiusTopStart="25dp"
+                    app:boxCornerRadiusTopEnd="25dp"
+                    app:boxStrokeWidth="0dp"
+                    app:boxStrokeWidthFocused="0dp"
+                    >
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/time"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="25dp"
+                        android:layout_marginEnd="25dp"
+                        android:layout_marginTop="4dp"
+                        android:hint="@string/time"/>
+                </com.google.android.material.textfield.TextInputLayout>
+                <LinearLayout
+                    android:id="@+id/id2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginEnd="25dp"
+                    android:layout_marginTop="8dp">
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"/>
+                    <Button
+                        android:id="@+id/btnTimePicker"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/pick_time"
+                        android:layout_marginEnd="20dp"
+                        android:textAllCaps="false"
+                        android:layout_marginStart="5dp">
+                    </Button>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/id1"
+                    android:orientation="horizontal"
+                    android:layout_marginStart="25dp"
+                    android:layout_marginEnd="25dp">
 
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="0dp"
+                        android:id="@+id/priceLay"
+                        android:layout_height="fill_parent"
+                        app:boxCornerRadiusBottomStart="25dp"
+                        app:boxCornerRadiusBottomEnd="25dp"
+                        app:boxCornerRadiusTopStart="25dp"
+                        app:boxCornerRadiusTopEnd="25dp"
+                        app:boxStrokeWidth="0dp"
+                        android:visibility="gone"
+                        app:boxStrokeWidthFocused="0dp"
+                        android:layout_weight="1"
+                        >
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/price"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:visibility="gone"
+                            android:hint="@string/price"/>
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="0dp"
+                        android:id="@+id/distLayout"
+                        android:layout_height="fill_parent"
+                        app:boxCornerRadiusBottomStart="25dp"
+                        app:boxCornerRadiusBottomEnd="25dp"
+                        app:boxCornerRadiusTopStart="25dp"
+                        app:boxCornerRadiusTopEnd="25dp"
+                        app:boxStrokeWidth="0dp"
+                        android:visibility="gone"
+                        app:boxStrokeWidthFocused="0dp"
+                        android:layout_weight="1"
+                        >
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/distance"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:visibility="gone"
+                            android:hint="@string/distance"/>
+                    </com.google.android.material.textfield.TextInputLayout>
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:id="@+id/timeLayout"
+                        android:layout_height="fill_parent"
+                        app:boxCornerRadiusBottomStart="25dp"
+                        app:boxCornerRadiusBottomEnd="25dp"
+                        app:boxCornerRadiusTopStart="25dp"
+                        app:boxCornerRadiusTopEnd="25dp"
+                        app:boxStrokeWidth="0dp"
+                        android:visibility="gone"
+                        app:boxStrokeWidthFocused="0dp"
+                        >
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/timeTctLayout"
+                            android:visibility="gone"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:hint="@string/time"/>
+                    </com.google.android.material.textfield.TextInputLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_marginTop="10dp"
+                    android:layout_below="@+id/id2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginEnd="25dp"
+                    android:layout_marginStart="25dp"
+                    android:weightSum="10">
+
+                    <ToggleButton
+                        android:id="@+id/petsInRide"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textOn="@string/pets"
+                        android:textOff="@string/no_pets"
+                        android:textAllCaps="false"
+                        />
+                    <ToggleButton
+                        android:id="@+id/babiesInRide"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textOn="@string/babies"
+                        android:textOff="@string/no_babies"
+                        android:textAllCaps="false"
+                        />
+
+
+                    <Spinner
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="5dp"
+                        android:id="@+id/carType"
+                        android:spinnerMode="dropdown"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:background="@color/gray"
+                        android:gravity="center"
+                        android:popupBackground="@color/dark_gray"
+                        android:layout_weight="7"
+                        android:dropDownHeight="120dp"
+                        android:textAlignment="center"
+                        />
+
+                </LinearLayout>
+
+            </RelativeLayout>
+
+        <at.markushi.ui.CircleButton
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="35dp"
+            android:layout_marginBottom="60dp"
+            android:layout_alignParentBottom="true"
+            android:id="@+id/requestRide"
+            android:layout_width="70dip"
+            android:layout_height="70dip"
+            app:cb_color="@color/orange"
+            android:src="@drawable/ic_baseline_arrow_forward_18_big"
+            app:cb_pressedRingWidth="9dip"
+            />
+        </RelativeLayout>
+
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/passengerNav"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            app:menu="@menu/menu_navigation"
+            app:labelVisibilityMode="labeled"/>
 
     </RelativeLayout>
-
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/passengerNav"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        app:menu="@menu/menu_navigation"
-        app:labelVisibilityMode="labeled"/>
-</RelativeLayout>

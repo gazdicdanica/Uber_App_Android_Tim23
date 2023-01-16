@@ -13,33 +13,35 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.CompoundButton;
-import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TimePicker;
-import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 
 import com.example.uberapp_tim.R;
 import com.example.uberapp_tim.activities.RideHistoryActivity;
-import com.example.uberapp_tim.dto.RideDTO;
 import com.example.uberapp_tim.dto.RideRequestDTO;
 import com.example.uberapp_tim.dto.UserShortDTO;
+import com.example.uberapp_tim.fragments.DrawRouteFragment;
+import com.example.uberapp_tim.fragments.MapFragment;
+import com.example.uberapp_tim.model.route.Location;
+import com.example.uberapp_tim.model.route.Route;
 import com.example.uberapp_tim.model.vehicle.CarType;
 import com.example.uberapp_tim.service.FragmentToActivity;
+import com.example.uberapp_tim.tools.FragmentTransition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
+import com.google.maps.model.Duration;
 
 import java.io.IOException;
-import java.time.Duration;
-import java.time.LocalDate;
+import java.text.DecimalFormat;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Calendar;
@@ -48,12 +50,19 @@ import java.util.Locale;
 
 import at.markushi.ui.CircleButton;
 
+
+@RequiresApi(api = Build.VERSION_CODES.O)
 public class PassengerMainActivity extends AppCompatActivity implements View.OnClickListener, FragmentToActivity, AdapterView.OnItemSelectedListener {
 
+    private static final DecimalFormat dfSharp = new DecimalFormat("#.##");
+    private Route route = new Route();
     BottomNavigationView passengerNav;
     Button btnTimePicker;
-    TextInputEditText txtTime;
+    TextInputLayout ly1, ly2, l3;
+    TextInputEditText txtTime, distanceTxt, estimateTxt, priceTxt;
     private int hour, minute;
+    LocalDateTime startTime;
+    LocalDateTime endTime;
     TextInputEditText start;
     TextInputEditText finish;
     ToggleButton pets;
@@ -61,8 +70,16 @@ public class PassengerMainActivity extends AppCompatActivity implements View.OnC
     Spinner carType;
     String carTypeSelected = "STANDARD";
     CircleButton requestRide;
-    private int hour1, minute1;
-
+    private int hour1=0, minute1=0;
+    private com.example.uberapp_tim.model.route.Location startLocation = null;
+    private com.example.uberapp_tim.model.route.Location endLocation = null;
+    private float distance=0;
+    private int delta=0;
+    private double duration;
+    private boolean isClicked = false;
+    String startLoc="", finishLoc="";
+    LatLng s, f;
+    String timeData="";
 
     private RideRequestDTO rideDTO = new RideRequestDTO();
 
@@ -71,28 +88,32 @@ public class PassengerMainActivity extends AppCompatActivity implements View.OnC
         super.onCreate(savedInstance);
         setContentView(R.layout.passenger_main_activity);
 
-        btnTimePicker = (Button) findViewById(R.id.btnTimePicker);
+        btnTimePicker = findViewById(R.id.btnTimePicker);
         btnTimePicker.setOnClickListener(this);
         requestRide = findViewById(R.id.requestRide);
         requestRide.setOnClickListener(this);
 
-        txtTime = (TextInputEditText) findViewById(R.id.timePickerId);
-        start = (TextInputEditText) findViewById(R.id.startLocation);
-        finish = (TextInputEditText) findViewById(R.id.whereTo);
+        ly1 = findViewById(R.id.distLayout);
+        ly2 = findViewById(R.id.timeLayout);
+        l3 = findViewById(R.id.priceLay);
+        priceTxt = findViewById(R.id.price);
+        txtTime = findViewById(R.id.time);
+        distanceTxt = findViewById(R.id.distance);
+        estimateTxt = findViewById(R.id.timeTctLayout);
+        start = findViewById(R.id.startLocation);
+        finish = findViewById(R.id.whereTo);
 
         carType = findViewById(R.id.carType);
-        carType.setAdapter(new ArrayAdapter<CarType>(this, android.R.layout.simple_spinner_item, CarType.values()));
-
+        carType.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, CarType.values()));
 
         final ActionBar actionBar = getSupportActionBar();
 
         if (actionBar != null) {
             actionBar.setDisplayShowTitleEnabled(true);
-            actionBar.setTitle("AirRide");
         }
 
-        babies = (ToggleButton) findViewById(R.id.babiesInRide);
-        pets = (ToggleButton) findViewById(R.id.petsInRide);
+        babies = findViewById(R.id.babiesInRide);
+        pets = findViewById(R.id.petsInRide);
 
 
         passengerNav = findViewById(R.id.passengerNav);
@@ -124,29 +145,52 @@ public class PassengerMainActivity extends AppCompatActivity implements View.OnC
 
     }
 
-
     @Override
     public void communicate(String s) {
         String id = s.split(",")[0];
         String val = s.split(",")[1];
         if (id.equals("start")) {
-            start.setText(val);
+            startLoc = val;
+            start.setText(val.split(",")[0]);
         } else if (id.equals("finish")) {
-            finish.setText(val);
+            finishLoc = val;
+            finish.setText(val.split(",")[0]);
         }
     }
 
+    @Override
+    public void sendStartLocation(com.example.uberapp_tim.model.route.Location location) {
+        startLocation = location;
+    }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch(item.getItemId()){
-            case(android.R.id.home):
-                this.finish();
-                overridePendingTransition(0,0);
-                return true;
-        }
+    public void sendFinishLocation(Location location) {
+        endLocation = location;
+    }
 
-        return super.onOptionsItemSelected(item);
+    @Override
+    public void sendRideData(float distance, Duration duration) {
+        timeData = duration.humanReadable;
+        this.duration = (double) duration.inSeconds/60;
+        this.distance = distance;
+
+        String txt = timeData+"";
+        estimateTxt.setText(txt);
+
+        txt = dfSharp.format(this.distance)+"km";
+        distanceTxt.setText(txt);
+
+        txt = dfSharp.format(estimatePrice())+"RSD";
+        priceTxt.setText(txt);
+    }
+
+    @Override
+    public void saveLatLng(String where, LatLng latLng) {
+        if (where.equals("s")) {
+            s = latLng;
+        } else {
+            f = latLng;
+        }
     }
 
     @Override
@@ -162,6 +206,7 @@ public class PassengerMainActivity extends AppCompatActivity implements View.OnC
     @Override
     protected void onResume(){
         super.onResume();
+        FragmentTransition.to(MapFragment.newInstance(), this, false);
         passengerNav.setSelectedItemId(R.id.action_main);
     }
 
@@ -192,28 +237,96 @@ public class PassengerMainActivity extends AppCompatActivity implements View.OnC
                     minute = c.get(Calendar.MINUTE);
                     hour1 = hourOfDay;
                     minute1 = minuteOfDay;
-                    txtTime.setText(hourOfDay + ":" + minuteOfDay);
+                    String txt = hourOfDay + ":" + minuteOfDay;
+                    txtTime.setText(txt);
                 }}, hour, minute, true);
             timePickerDialog.show();
         } else if (view == requestRide) {
-            this.rideDTO.setBabyTransport(babies.isChecked());
-            this.rideDTO.setPetTransport(pets.isChecked());
-            this.rideDTO.setVehicleType(resolveCarType());
-            this.rideDTO.setDelayInMinutes(calcTimeForRideAppoint());
-            rideDTO.addUser(new UserShortDTO(
-                    Long.valueOf(getSharedPreferences("AirRide_preferences", Context.MODE_PRIVATE).getString("id", null)),
-                    getSharedPreferences("AirRide_preferences", Context.MODE_PRIVATE).getString("email", null)
-            ));
+            if (start != null && finish != null) {
+                if (isClicked) {
+                    createRide();
+                    createRoute();
+                    this.rideDTO.addRoute(route);
+                    Log.i("Ispis" ,""+rideDTO.toString());
+                    //TODO CALL BACK
+                }
+                isClicked = true;
+                btnTimePicker.setVisibility(View.GONE);
+                babies.setVisibility(View.GONE);
+                pets.setVisibility(View.GONE);
+                carType.setVisibility(View.GONE);
+                txtTime.setVisibility(View.GONE);
+
+                ly1.setVisibility(View.VISIBLE);
+                ly2.setVisibility(View.VISIBLE);
+                l3.setVisibility(View.VISIBLE);
+                estimateTxt.setVisibility(View.VISIBLE);
+                estimateTxt.setEnabled(false);
+                distanceTxt.setVisibility(View.VISIBLE);
+                distanceTxt.setEnabled(false);
+                priceTxt.setVisibility(View.VISIBLE);
+                priceTxt.setEnabled(false);
+
+                FragmentTransition.to(DrawRouteFragment.newInstance(), this, false);
+            }
         }
     }
+
+    public Bundle rideBundle(){
+        Bundle bundle = new Bundle();
+        bundle.putParcelable("start", this.s);
+        bundle.putParcelable("finish", this.f);
+        return bundle;
+
+    }
+
+    private void createRide() {
+        this.rideDTO.setBabyTransport(babies.isChecked());
+        this.rideDTO.setPetTransport(pets.isChecked());
+        this.rideDTO.setVehicleType(resolveCarType());
+        this.rideDTO.setDelayInMinutes(calcTimeForRideAppoint());
+        this.rideDTO.addUser(new UserShortDTO(
+                Long.valueOf(getSharedPreferences("AirRide_preferences", Context.MODE_PRIVATE).getString("id", null)),
+                getSharedPreferences("AirRide_preferences", Context.MODE_PRIVATE).getString("email", null)));
+    }
+
+    private void createRoute() {
+        route.setStartLocation(startLocation);
+        route.setEndLocation(endLocation);
+        route.setEstimatedPrice(estimatePrice());
+        route.setEstimatedTime(duration);
+        route.setDistance(distance);
+        if ((hour1 != 0) && (minute1 != 0)){
+            route.setStartTime(LocalDateTime.now());
+        } else {
+            LocalDateTime time = LocalDateTime.now();
+            time.plusMinutes(calcTimeForRideAppoint());
+            route.setStartTime(time);
+        }
+        route.setEndTime(route.getStartTime().plusMinutes((long) duration));
+
+    }
+
+    private float estimatePrice() {
+        if (carTypeSelected.equals("STANDARD")) {
+            return 300 + 120*distance;
+        } else if (carTypeSelected.equals("LUXURY")) {
+            return 500 + 120*distance;
+        } else {
+            return 400 + 12*distance;
+        }
+    }
+
 
     public int calcTimeForRideAppoint(){
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             LocalTime timeNow = LocalTime.now();
             int deltaH, deltaM;
-            deltaH = Math.abs(hour1 - timeNow.getHour());
-            deltaM = Math.abs(minute1 - timeNow.getMinute());
-            return (int) deltaH*60 + deltaM;
+            if (hour1 != 0 && minute1 != 0) {
+                deltaH = Math.abs(hour1 - timeNow.getHour());
+                deltaM = Math.abs(minute1 - timeNow.getMinute());
+                return deltaH * 60 + deltaM;
+            }
         }
         return 0;
     }
@@ -227,10 +340,11 @@ public class PassengerMainActivity extends AppCompatActivity implements View.OnC
         }
         return type;
     }
+
     public LatLng getLocationFromAddress(String strAddress) {
         Geocoder geocoder = new Geocoder(this);
         List<Address> addresses;
-        LatLng p1 = null;
+        LatLng p1;
         try {
             addresses = geocoder.getFromLocationName(strAddress, 1);
             if (addresses == null) {
@@ -240,7 +354,7 @@ public class PassengerMainActivity extends AppCompatActivity implements View.OnC
             location.getLatitude();
             location.getLongitude();
 
-            p1 = new LatLng((double) (location.getLatitude() * 1E6), (double) (location.getLongitude() * 1E6));
+            p1 = new LatLng((location.getLatitude() * 1E6), (location.getLongitude() * 1E6));
             return p1;
         } catch (IOException e) {
             e.printStackTrace();
@@ -255,8 +369,8 @@ public class PassengerMainActivity extends AppCompatActivity implements View.OnC
             List<Address> addresses = geocoder.getFromLocation(location.latitude, location.longitude, 1);
             if(addresses != null){
                 Address returned = addresses.get(0);
-
                 address = returned.getAddressLine(0);
+                Log.println(Log.ASSERT, "ADRESAAA", ""+address);
             } else {
                 address = "No Address Found";
             }
@@ -275,4 +389,5 @@ public class PassengerMainActivity extends AppCompatActivity implements View.OnC
     public void onNothingSelected(AdapterView<?> adapterView) {
 
     }
+
 }

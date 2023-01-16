@@ -1,10 +1,12 @@
 package com.example.uberapp_tim.activities.passenger;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -39,6 +41,7 @@ public class PassengerInboxActivity extends AppCompatActivity {
         passengerNav = findViewById(R.id.passengerInboxNav);
         passengerNav.setSelectedItemId(R.id.action_inbox);
         passengerNav.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 Intent i;

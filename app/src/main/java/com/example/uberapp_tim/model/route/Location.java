@@ -11,6 +11,16 @@ public class Location {
         this.latitude = latitude;
     }
 
+    public Location(android.location.Location l){
+        this.longitude = l.getLongitude();
+        this.latitude = l.getLatitude();
+    }
+
+    public Location(double longitude, double latitude) {
+        this.latitude = latitude;
+        this.longitude = longitude;
+    }
+
     public Long getId() {
         return id;
     }
