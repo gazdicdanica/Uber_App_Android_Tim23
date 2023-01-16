@@ -12,6 +12,7 @@ import androidx.appcompat.widget.Toolbar;
 import com.example.uberapp_tim.R;
 import com.example.uberapp_tim.activities.RideHistoryActivity;
 import com.example.uberapp_tim.fragments.InboxFragment;
+
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 
@@ -56,11 +57,7 @@ public class DriverInboxActivity extends AppCompatActivity {
                         return true;
                     case (R.id.action_inbox):
                         return true;
-                    case (R.id.action_reports):
-                        i = new Intent(DriverInboxActivity.this, DriverReportsActivity.class);
-                        startActivity(i);
-                        overridePendingTransition(0,0);
-                        return true;
+
                 }
                 return false;
             }

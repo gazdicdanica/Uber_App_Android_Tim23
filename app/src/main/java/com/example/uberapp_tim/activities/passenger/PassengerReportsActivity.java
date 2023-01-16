@@ -105,9 +105,6 @@ public class PassengerReportsActivity extends AppCompatActivity {
                         return true;
                     case (R.id.action_reports):
                         return true;
-                    case (R.id.action_favorites):
-                        // TODO favorites activity
-                        return true;
                 }
                 return false;
             }

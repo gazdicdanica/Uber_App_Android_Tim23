@@ -10,7 +10,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import com.example.uberapp_tim.R;
-import com.example.uberapp_tim.activities.RideHistoryActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 
@@ -40,11 +39,11 @@ public class PassengerMainActivity extends AppCompatActivity {
                 switch (item.getItemId()) {
 
                     case (R.id.action_main):
-                        i = new Intent(PassengerMainActivity.this, PassengerMainActivity.class);
                         return true;
                     case (R.id.action_account):
                         i = new Intent(PassengerMainActivity.this, PassengerAccountActivity.class);
                         startActivity(i);
+                        overridePendingTransition(0,0);
                         return true;
                     case (R.id.action_inbox):
                         i = new Intent(PassengerMainActivity.this, PassengerInboxActivity.class);
@@ -53,9 +52,6 @@ public class PassengerMainActivity extends AppCompatActivity {
                     case (R.id.action_reports):
                         i = new Intent(PassengerMainActivity.this, PassengerReportsActivity.class);
                         startActivity(i);
-                        return true;
-                    case (R.id.action_favorites):
-                        // TODO favorites activity
                         return true;
                 }
                 return false;

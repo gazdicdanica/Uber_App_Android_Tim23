@@ -12,5 +12,7 @@
     <color name="partially_light">#30000000</color>
     <color name="partially_dark">#30ffffff</color>
     <color name="orange">#f57804</color>
+    <color name="chat_details">#C0C0C0</color>
+    <color name="other_chathead">#eef1f6</color>
     <color name="error">#BF0000</color>
 </resources>

@@ -12,7 +12,6 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.InputType;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -29,8 +28,7 @@ import androidx.appcompat.widget.Toolbar;
 
 
 import com.example.uberapp_tim.R;
-import com.example.uberapp_tim.activities.RideActivity;
-import com.example.uberapp_tim.activities.RideHistoryActivity;
+
 import com.example.uberapp_tim.connection.WebSocket;
 import com.example.uberapp_tim.dto.RideDTO;
 import com.example.uberapp_tim.fragments.MapFragment;
@@ -39,6 +37,7 @@ import com.example.uberapp_tim.model.ride.Rejection;
 import com.example.uberapp_tim.receiver.NotificationReceiver;
 import com.example.uberapp_tim.service.NotificationService;
 import com.example.uberapp_tim.tools.FragmentTransition;
+
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.gson.Gson;
@@ -141,11 +140,6 @@ public class DriverMainActivity extends AppCompatActivity {
                         overridePendingTransition(0,0);
                         return true;
                     case (R.id.action_inbox):
-                        i = new Intent(DriverMainActivity.this, DriverReportsActivity.class);
-                        startActivity(i);
-                        overridePendingTransition(0,0);
-                        return true;
-
                 }
                 return false;
             }
@@ -245,7 +239,7 @@ public class DriverMainActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                         if(response.code() == 200){
-                            Intent rideScreen = new Intent(DriverMainActivity.this, RideActivity.class);
+                            Intent rideScreen = new Intent(DriverMainActivity.this, DriverRideActivity.class);
                             rideScreen.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
                             rideScreen.putExtra("id", ride.getId());
                             startActivity(rideScreen);

@@ -27,12 +27,13 @@
     <string name="main_activity">Main</string>
     <string name="inbox_activity">Inbox</string>
     <string name="account_activitY">Account</string>
+    <string name="favorites_activity">Favorites</string>
     <string name="max_people">Max People Capacity</string>
     <string name="online">Online</string>
     <string name="offline">Offline</string>
-    <string name="favorites_activity">Favorites</string>
     <string name="reports_activity">Reports</string>
     <string name="logout">Log out</string>
+    <string name="chat_hint">Message..</string>
     <string name="login_error">The username or password you entered is incorrect</string>
     <string name="ride_channel">Ride notification channel</string>
     <string name="new_ride_notification">RIDE_NOTIFICATION</string>
