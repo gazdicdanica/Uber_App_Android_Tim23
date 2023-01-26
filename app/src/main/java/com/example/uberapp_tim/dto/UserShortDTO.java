@@ -9,6 +9,10 @@ public class UserShortDTO {
         this.email = email;
     }
 
+    public UserShortDTO(String email) {
+        this.email = email;
+    }
+
     @Override
     public String toString() {
         return "UserShortDTO{" +

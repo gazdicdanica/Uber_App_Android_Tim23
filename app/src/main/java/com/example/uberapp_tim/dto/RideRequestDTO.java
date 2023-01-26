@@ -3,7 +3,6 @@ package com.example.uberapp_tim.dto;
 import com.example.uberapp_tim.model.route.Route;
 import com.example.uberapp_tim.model.vehicle.CarType;
 
-import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +16,7 @@ public class RideRequestDTO {
     private LocalDateTime endTime;
     private double estimatedTime;
     private float estimatedPrice;
-    private int delayInMinutes;
+    private String scheduledTime;
     private boolean babyTransport;
     private boolean petTransport;
 
@@ -38,7 +37,7 @@ public class RideRequestDTO {
                 ", endTime=" + endTime +
                 ", estimatedTime=" + estimatedTime +
                 ", estimatedPrice=" + estimatedPrice +
-                ", delayInMinutes=" + delayInMinutes +
+                ", delayInMinutes=" + scheduledTime +
                 ", babyTransport=" + babyTransport +
                 ", petTransport=" + petTransport +
                 '}';
@@ -55,7 +54,9 @@ public class RideRequestDTO {
     public RideRequestDTO() {
     }
 
-    public RideRequestDTO(List<Route> locations, List<UserShortDTO> passengers, CarType vehicleType, LocalDateTime startTime, LocalDateTime endTime, double estimatedTime, float estimatedPrice, int delayInMinutes, boolean babyTransport, boolean petTransport) {
+    public RideRequestDTO(List<Route> locations, List<UserShortDTO> passengers, CarType vehicleType,
+                          LocalDateTime startTime, LocalDateTime endTime, double estimatedTime,
+                          float estimatedPrice, String scheduledTime, boolean babyTransport, boolean petTransport) {
         this.locations = locations;
         this.passengers = passengers;
         this.vehicleType = vehicleType;
@@ -63,7 +64,7 @@ public class RideRequestDTO {
         this.endTime = endTime;
         this.estimatedTime = estimatedTime;
         this.estimatedPrice = estimatedPrice;
-        this.delayInMinutes = delayInMinutes;
+        this.scheduledTime = scheduledTime;
         this.babyTransport = babyTransport;
         this.petTransport = petTransport;
     }
@@ -124,12 +125,12 @@ public class RideRequestDTO {
         this.estimatedPrice = estimatedPrice;
     }
 
-    public int getDelayInMinutes() {
-        return delayInMinutes;
+    public String getScheduledTime() {
+        return scheduledTime;
     }
 
-    public void setDelayInMinutes(int delayInMinutes) {
-        this.delayInMinutes = delayInMinutes;
+    public void setScheduledTime(String scheduledTime) {
+        this.scheduledTime = scheduledTime;
     }
 
     public boolean isBabyTransport() {
