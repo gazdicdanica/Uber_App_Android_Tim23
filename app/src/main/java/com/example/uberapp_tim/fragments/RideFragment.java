@@ -2,9 +2,11 @@ package com.example.uberapp_tim.fragments;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Criteria;
@@ -12,11 +14,14 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.text.InputType;
 import android.text.Layout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
@@ -26,10 +31,12 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.example.uberapp_tim.BuildConfig;
 import com.example.uberapp_tim.R;
+import com.example.uberapp_tim.activities.driver.DriverMainActivity;
 import com.example.uberapp_tim.activities.driver.DriverRideActivity;
 import com.example.uberapp_tim.connection.ServiceUtils;
 import com.example.uberapp_tim.dialogs.LocationDialog;
 import com.example.uberapp_tim.dto.RideDTO;
+import com.example.uberapp_tim.model.message.Panic;
 import com.example.uberapp_tim.service.FragmentToActivity;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -41,7 +48,9 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.android.material.button.MaterialButton;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonDeserializationContext;
@@ -85,6 +94,9 @@ public class RideFragment extends Fragment implements LocationListener, OnMapRea
     private RideDTO ride;
     private Long id;
 
+    private Marker endMarker;
+    private Polyline activeRoute;
+
     private FragmentToActivity mCallback;
 
     public static RideFragment newInstance(){
@@ -97,7 +109,7 @@ public class RideFragment extends Fragment implements LocationListener, OnMapRea
         super.onCreate(savedInstanceState);
         locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
 
-        DriverRideActivity activity = (DriverRideActivity)getActivity();
+        activity = (DriverRideActivity)getActivity();
         Bundle res = activity.getIdBundle();
         id = res.getLong("id");
     }
@@ -169,7 +181,6 @@ public class RideFragment extends Fragment implements LocationListener, OnMapRea
     }
 
     private void addMarker(Location location) {
-        Log.d(" BLUE MAKER " , " ");
         LatLng loc = new LatLng(location.getLatitude(), location.getLongitude());
 
         if(home != null) {
@@ -210,7 +221,7 @@ public class RideFragment extends Fragment implements LocationListener, OnMapRea
     public void addRedMarker(com.example.uberapp_tim.model.route.Location location, String title){
         Log.d("RED MARKER", " ");
         LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-        map.addMarker(new MarkerOptions()
+        endMarker = map.addMarker(new MarkerOptions()
                         .title(title)
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED))
                 .position(latLng));
@@ -222,8 +233,6 @@ public class RideFragment extends Fragment implements LocationListener, OnMapRea
     }
 
     public void drawRoute(){
-        destination = ride.getLocations().get(0).getDeparture();
-        addRedMarker(destination, "Departure");
         List<LatLng> path = new ArrayList<>();
         GeoApiContext context = new GeoApiContext.Builder()
                 .apiKey(BuildConfig.MAPS_API_KEY).build();
@@ -232,29 +241,21 @@ public class RideFragment extends Fragment implements LocationListener, OnMapRea
                 context,
                 departure.getLatitude()+","+ departure.getLongitude(),
                 destination.getLatitude()+","+ destination.getLongitude());
-        Log.d("DOSAO DO OVDE", String.valueOf(departure.getLatitude()) + String.valueOf(destination.getLongitude()));
         try {
             DirectionsResult res = req.await();
-            Log.d("RESSSSSSSSS", String.valueOf(res));
             if (res.routes != null && res.routes.length > 0) {
-                Log.d("USAO1", String.valueOf(res.routes));
                 DirectionsRoute route = res.routes[0];
                 if (route.legs !=null) {
-                    Log.d("USAO2", String.valueOf(route.legs));
                     for(int i=0; i<route.legs.length; i++) {
                         DirectionsLeg leg = route.legs[i];
                         if (leg.steps != null) {
-                            Log.d("USAO3", String.valueOf(leg.steps));
                             for (int j=0; j<leg.steps.length;j++){
                                 DirectionsStep step = leg.steps[j];
                                 if (step.steps != null && step.steps.length >0) {
-                                    Log.d("USAO4", String.valueOf(step.steps));
                                     for (int k=0; k<step.steps.length;k++){
                                         DirectionsStep step1 = step.steps[k];
                                         EncodedPolyline points1 = step1.polyline;
-                                        Log.d("POINTS1", points1.toString());
                                         if (points1 != null) {
-                                            Log.d("USAO", "");
                                             //Decode polyline and add points to list of route coordinates
                                             List<com.google.maps.model.LatLng> coords1 = points1.decodePath();
                                             for (com.google.maps.model.LatLng coord1 : coords1) {
@@ -263,15 +264,12 @@ public class RideFragment extends Fragment implements LocationListener, OnMapRea
                                         }
                                     }
                                 } else {
-                                    Log.d("DOSAO", " else ");
                                     EncodedPolyline points = step.polyline;
                                     if (points != null) {
-                                        Log.d(" DOSAO1", " points != null");
                                         //Decode polyline and add points to list of route coordinates
                                         List<com.google.maps.model.LatLng> coords = points.decodePath();
                                         for (com.google.maps.model.LatLng coord : coords) {
                                             path.add(new LatLng(coord.lat, coord.lng));
-                                            Log.i(" PAATH", String.valueOf(path));
                                         }
                                     }
                                 }
@@ -286,9 +284,8 @@ public class RideFragment extends Fragment implements LocationListener, OnMapRea
             e.printStackTrace();
         }
         if (path.size() > 0) {
-            Log.d(" PATH ", " > 0");
             PolylineOptions opts = new PolylineOptions().addAll(path).color(Color.parseColor("#f57804")).width(5);
-            map.addPolyline(opts);
+            activeRoute = map.addPolyline(opts);
         }
         map.getUiSettings().setZoomControlsEnabled(true);
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(departure.getLatitude(), departure.getLongitude()), 15));
@@ -343,8 +340,6 @@ public class RideFragment extends Fragment implements LocationListener, OnMapRea
                             }).create();
                         }
                         ride = g.fromJson(rideMessage, RideDTO.class);
-//                        destination = ride.getLocations().get(0).getDestination();
-//                        departure = ride.getLocations().get(0).getDeparture();
                         destination = ride.getLocations().get(0).getDeparture();
                         addRedMarker(destination, "Departure");
                         drawRoute();
@@ -378,4 +373,110 @@ public class RideFragment extends Fragment implements LocationListener, OnMapRea
                     + " must implement FragmentToActivity");
         }
     }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        MaterialButton startRideBtn = activity.findViewById(R.id.start_ride_btn);
+        MaterialButton endRideBtn = activity.findViewById(R.id.end_ride_btn);
+        MaterialButton panicBtn = activity.findViewById(R.id.panic_btn);
+
+        startRideBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String jwt = activity.getSharedPreferences("AirRide_preferences", Context.MODE_PRIVATE).getString("accessToken", "");
+                ServiceUtils.rideService.startRide("Bearer " + jwt, ride.getId()).enqueue(new Callback<ResponseBody>() {
+                    @Override
+                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+
+                        departure = ride.getLocations().get(0).getDeparture();
+                        destination = ride.getLocations().get(0).getDestination();
+
+                        home.remove();
+                        endMarker.remove();
+                        activeRoute.remove();
+
+                        Location current = new Location("");
+                        current.setLatitude(departure.getLatitude());
+                        current.setLongitude(departure.getLongitude());
+                        addMarker(current);
+
+                        addRedMarker(destination, "Departure");
+
+                        drawRoute();
+
+                        startRideBtn.setVisibility(View.GONE);
+                        endRideBtn.setVisibility(View.VISIBLE);
+                        panicBtn.setVisibility(View.VISIBLE);
+                    }
+
+                    @Override
+                    public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+                    }
+                });
+
+            }
+        });
+
+        endRideBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String jwt = activity.getSharedPreferences("AirRide_preferences", Context.MODE_PRIVATE).getString("accessToken", "");
+                ServiceUtils.rideService.endRide("Bearer " + jwt, ride.getId()).enqueue(new Callback<ResponseBody>() {
+                    @Override
+                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                        Intent main = new Intent(activity, DriverMainActivity.class);
+                        main.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(main);
+                    }
+
+                    @Override
+                    public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+                    }
+                });
+
+            }
+        });
+
+        panicBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                android.app.AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                builder.setTitle("Please enter a reason");
+                final EditText input = new EditText(getContext());
+                input.setInputType(InputType.TYPE_CLASS_TEXT);
+                input.setPadding(30,30,30,30);
+                builder.setView(input);
+
+                builder.setPositiveButton("Submit", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        String reason = input.getText().toString();
+                        Panic panic = new Panic();
+                        panic.setReason(reason);
+
+                        String jwt = activity.getSharedPreferences("AirRide_preferences", Context.MODE_PRIVATE).getString("accessToken", "");
+                        ServiceUtils.rideService.panicRide("Bearer " + jwt, ride.getId(), panic).enqueue(new Callback<ResponseBody>() {
+                            @Override
+                            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                                Toast.makeText(activity, "Panic was sent", Toast.LENGTH_SHORT).show();
+                                Intent main = new Intent(activity, DriverMainActivity.class);
+                                main.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
+                                startActivity(main);
+                            }
+
+                            @Override
+                            public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+                            }
+                        });
+                    }
+                });
+                builder.create().show();
+            }
+        });
+    }
+
 }
