@@ -13,7 +13,7 @@ import retrofit2.http.Path;
 
 public interface UserService {
 
-    @POST("login")
+    @POST("user/login")
     Call<TokensDTO> login(@Body LoginDTO loginDTO);
 
     @GET("user/{passengerId}/{driverId}/{rideId}/message")
