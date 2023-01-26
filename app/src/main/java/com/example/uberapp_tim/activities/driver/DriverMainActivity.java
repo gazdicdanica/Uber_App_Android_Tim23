@@ -104,7 +104,12 @@ public class DriverMainActivity extends AppCompatActivity{
                 @Override
                 public void run()
                     {
-                        showNewRideDialog();
+                        if(isDestroyed() || isFinishing()){
+                            Log.wtf("Finish?????", "????");
+                        }else{
+                            showNewRideDialog();
+                        }
+
                     }
             });
         });
@@ -206,7 +211,7 @@ public class DriverMainActivity extends AppCompatActivity{
     }
 
     public void showNewRideDialog(){
-        AlertDialog.Builder builder = new AlertDialog.Builder(DriverMainActivity.this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
         LayoutInflater inflater = DriverMainActivity.this.getLayoutInflater();
 
         View dialogView = inflater.inflate(R.layout.dialog_driver_new_ride, null);
