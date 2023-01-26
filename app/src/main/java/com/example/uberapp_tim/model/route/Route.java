@@ -4,11 +4,11 @@ import java.time.LocalDateTime;
 
 public class Route {
     private Long id;
-    private float distance;
+    private double distance;
     private Location departure;
     private Location destination;
 
-    public Route(Long id, float distance, Location departure, Location destination) {
+    public Route(Long id, double distance, Location departure, Location destination) {
         this.id = id;
         this.distance = distance;
         this.departure = departure;
@@ -35,11 +35,11 @@ public class Route {
     }
 
 
-    public float getDistance() {
+    public double getDistance() {
         return distance;
     }
 
-    public void setDistance(float distance) {
+    public void setDistance(double distance) {
         this.distance = distance;
     }
 
