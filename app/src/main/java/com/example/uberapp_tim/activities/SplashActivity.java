@@ -36,7 +36,7 @@ public class SplashActivity extends Activity {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void run() {
-                startActivity(new Intent(SplashActivity.this, PassengerMainActivity.class));
+                startActivity(new Intent(SplashActivity.this, UserLoginActivity.class));
                 finish();
             }
         }, 3000);
