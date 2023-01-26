@@ -7,6 +7,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.InputType;
 import android.util.Log;
@@ -19,6 +20,8 @@ import com.example.uberapp_tim.R;
 import com.example.uberapp_tim.activities.ChatActivity;
 import com.example.uberapp_tim.connection.ServiceUtils;
 import com.example.uberapp_tim.dto.RideDTO;
+import com.example.uberapp_tim.fragments.DriverMapFragment;
+import com.example.uberapp_tim.fragments.MapFragment;
 import com.example.uberapp_tim.fragments.RideFragment;
 import com.example.uberapp_tim.model.message.Panic;
 import com.example.uberapp_tim.model.route.Location;
@@ -154,13 +157,21 @@ public class DriverRideActivity extends AppCompatActivity implements FragmentToA
         });
 
         Fragment fragment = RideFragment.newInstance();
-        FragmentTransition.to(fragment, DriverRideActivity.this, false);
+//        FragmentTransition.to(fragment, DriverRideActivity.this, false);
     }
 
     public Bundle getIdBundle(){
         Bundle bundle = new Bundle();
         bundle.putLong("id", rideId);
         return bundle;
+    }
+
+    @Override
+    protected void onResume(){
+        super.onResume();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            FragmentTransition.to(RideFragment.newInstance(), this, false);
+        }
     }
 
 
