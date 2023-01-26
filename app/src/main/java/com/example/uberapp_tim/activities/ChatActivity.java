@@ -68,7 +68,8 @@ public class ChatActivity extends AppCompatActivity {
             public void onClick(View view) {
                 SendMessageDTO dto = new SendMessageDTO(editText.getText().toString(), MessageType.RIDE, rideId);
                 editText.setText("");
-                ServiceUtils.userService.sendMessage(user2id, dto).enqueue(new Callback<ResponseBody>() {
+                String jwt = getSharedPreferences("AirRide_preferences", Context.MODE_PRIVATE).getString("accessToken", "");
+                ServiceUtils.userService.sendMessage("Bearer " + jwt, user2id, dto).enqueue(new Callback<ResponseBody>() {
                     @Override
                     public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                         try {
@@ -118,7 +119,8 @@ public class ChatActivity extends AppCompatActivity {
     Runnable mStatusCheker = new Runnable() {
         @Override
         public void run() {
-            ServiceUtils.userService.getMessagesForUsersByRide(user2id, user1id, rideId).enqueue(new Callback<ResponseBody>() {
+            String jwt = getSharedPreferences("AirRide_preferences", Context.MODE_PRIVATE).getString("accessToken", "");
+            ServiceUtils.userService.getMessagesForUsersByRide("Bearer " + jwt, user2id, user1id, rideId).enqueue(new Callback<ResponseBody>() {
                 @Override
                 public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                     try {

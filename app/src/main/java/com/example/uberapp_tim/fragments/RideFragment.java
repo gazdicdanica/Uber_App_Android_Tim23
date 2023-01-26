@@ -85,8 +85,8 @@ public class RideFragment extends Fragment implements LocationListener, OnMapRea
         DriverRideActivity activity = (DriverRideActivity)getActivity();
         Bundle res = activity.getIdBundle();
         id = res.getLong("id");
-
-        ServiceUtils.rideService.getRide(id).enqueue(new Callback<ResponseBody>() {
+        String jwt = getActivity().getSharedPreferences("AirRide_preferences", Context.MODE_PRIVATE).getString("accessToken", "");
+        ServiceUtils.rideService.getRide("Bearer " + jwt, id).enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
 
