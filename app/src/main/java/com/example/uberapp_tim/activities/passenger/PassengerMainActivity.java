@@ -271,7 +271,8 @@ public class PassengerMainActivity extends AppCompatActivity implements View.OnC
                     createRide();
                     createRoute();
                     this.rideDTO.addRoute(route);
-                    ServiceUtils.rideService.createRide(this.rideDTO).enqueue(new Callback<ResponseBody>() {
+                    String jwt = getSharedPreferences("AirRide_preferences", Context.MODE_PRIVATE).getString("accessToken", "");
+                    ServiceUtils.rideService.createRide("Bearer " + jwt, this.rideDTO).enqueue(new Callback<ResponseBody>() {
                         @Override
                         public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                             Toast.makeText(PassengerMainActivity.this, "Waiting For Driver", Toast.LENGTH_SHORT).show();

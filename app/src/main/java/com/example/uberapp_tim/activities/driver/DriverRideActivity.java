@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -65,8 +66,8 @@ public class DriverRideActivity extends AppCompatActivity implements FragmentToA
         startRideBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                ServiceUtils.rideService.startRide(rideId).enqueue(new Callback<ResponseBody>() {
+                String jwt = getSharedPreferences("AirRide_preferences", Context.MODE_PRIVATE).getString("accessToken", "");
+                ServiceUtils.rideService.startRide("Bearer " + jwt, rideId).enqueue(new Callback<ResponseBody>() {
                     @Override
                     public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                         startRideBtn.setVisibility(View.GONE);
@@ -86,7 +87,8 @@ public class DriverRideActivity extends AppCompatActivity implements FragmentToA
         endRideBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ServiceUtils.rideService.endRide(rideId).enqueue(new Callback<ResponseBody>() {
+                String jwt = getSharedPreferences("AirRide_preferences", Context.MODE_PRIVATE).getString("accessToken", "");
+                ServiceUtils.rideService.endRide("Bearer " + jwt, rideId).enqueue(new Callback<ResponseBody>() {
                     @Override
                     public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                         Intent main = new Intent(DriverRideActivity.this, DriverMainActivity.class);
@@ -120,7 +122,8 @@ public class DriverRideActivity extends AppCompatActivity implements FragmentToA
                         Panic panic = new Panic();
                         panic.setReason(reason);
 
-                        ServiceUtils.rideService.panicRide(rideId, panic).enqueue(new Callback<ResponseBody>() {
+                        String jwt = getSharedPreferences("AirRide_preferences", Context.MODE_PRIVATE).getString("accessToken", "");
+                        ServiceUtils.rideService.panicRide("Bearer " + jwt, rideId, panic).enqueue(new Callback<ResponseBody>() {
                             @Override
                             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                                 Toast.makeText(DriverRideActivity.this, "Panic was sent", Toast.LENGTH_SHORT).show();

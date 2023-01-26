@@ -81,7 +81,7 @@ public class DriverMainActivity extends AppCompatActivity{
         createNotificationChannel("DriverNotification", "New ride notifications", "driver");
 
         webSocket = new WebSocket();
-        webSocket.stompClient.topic("/ride").subscribe(topicMessage -> {
+        webSocket.stompClient.topic("/ride-driver/"+getSharedPreferences("AirRide_preferences", Context.MODE_PRIVATE).getString("id", null)).subscribe(topicMessage -> {
 
             String rideMessage = topicMessage.getPayload();
             Gson g = null;
@@ -96,17 +96,14 @@ public class DriverMainActivity extends AppCompatActivity{
                 }).create();
             }
             ride = g.fromJson(rideMessage, RideDTO.class);
-
-//            if(Objects.equals(ride.getDriver().getId(), id)){
-                runOnUiThread(new Runnable()
-                {
-                    @Override
-                    public void run()
+            runOnUiThread(new Runnable()
+            {
+                @Override
+                public void run()
                     {
                         showNewRideDialog();
                     }
-                });
-//            }
+            });
         });
 
         String id = getSharedPreferences("AirRide_preferences", Context.MODE_PRIVATE).getString("id", null);
@@ -152,7 +149,8 @@ public class DriverMainActivity extends AppCompatActivity{
         toggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    ServiceUtils.driverService.startShift(DriverMainActivity.this.id).enqueue(new Callback<ResponseBody>() {
+                    String jwt = getSharedPreferences("AirRide_preferences", Context.MODE_PRIVATE).getString("accessToken", "");
+                    ServiceUtils.driverService.startShift("Bearer " + jwt, DriverMainActivity.this.id).enqueue(new Callback<ResponseBody>() {
                         @Override
                         public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                             if(response.code() == 200){
@@ -171,7 +169,8 @@ public class DriverMainActivity extends AppCompatActivity{
 
                 } else {
 
-                    ServiceUtils.driverService.endShift(DriverMainActivity.this.id).enqueue(new Callback<ResponseBody>() {
+                    String jwt = getSharedPreferences("AirRide_preferences", Context.MODE_PRIVATE).getString("accessToken", "");
+                    ServiceUtils.driverService.endShift("Bearer " + jwt,DriverMainActivity.this.id).enqueue(new Callback<ResponseBody>() {
                         @Override
                         public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                             if(response.code() == 200){
@@ -188,7 +187,8 @@ public class DriverMainActivity extends AppCompatActivity{
             }
         });
 
-        ServiceUtils.driverService.startShift(DriverMainActivity.this.id).enqueue(new Callback<ResponseBody>() {
+        String jwt = getSharedPreferences("AirRide_preferences", Context.MODE_PRIVATE).getString("accessToken", "");
+        ServiceUtils.driverService.startShift("Bearer " + jwt, DriverMainActivity.this.id).enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 Toast.makeText(DriverMainActivity.this, "Online", Toast.LENGTH_SHORT).show();
@@ -220,6 +220,7 @@ public class DriverMainActivity extends AppCompatActivity{
         endLocation.setText(ride.getLocations().get(0).getDestination().getAddress());
         String value = String.valueOf(ride.getEstimatedTimeInMinutes()) + " min";
         time.setText(value);
+        System.err.println(ride.getLocations().get(0));
         value = String.valueOf(ride.getLocations().get(0).getDistance()) + " km";
         km.setText(value);
         people.setText(String.valueOf(ride.getPassengers().size()));
@@ -238,7 +239,8 @@ public class DriverMainActivity extends AppCompatActivity{
         builder.setPositiveButton(R.string.dialog_accept, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                ServiceUtils.rideService.acceptRide(ride.getId()).enqueue(new Callback<ResponseBody>() {
+                String jwt = getSharedPreferences("AirRide_preferences", Context.MODE_PRIVATE).getString("accessToken", "");
+                ServiceUtils.rideService.acceptRide("Bearer " +jwt,  ride.getId()).enqueue(new Callback<ResponseBody>() {
                     @Override
                     public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                         if(response.code() == 200){
@@ -274,8 +276,8 @@ public class DriverMainActivity extends AppCompatActivity{
                 String reason = input.getText().toString();
                 Rejection rejection = new Rejection();
                 rejection.setReason(reason);
-
-                ServiceUtils.rideService.cancelRide(ride.getId(), rejection).enqueue(new Callback<ResponseBody>() {
+                String jwt = getSharedPreferences("AirRide_preferences", Context.MODE_PRIVATE).getString("accessToken", "");
+                ServiceUtils.rideService.cancelRide("Bearer " + jwt, ride.getId(), rejection).enqueue(new Callback<ResponseBody>() {
                     @Override
                     public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                         Toast.makeText(DriverMainActivity.this, "Ride canceled", Toast.LENGTH_SHORT).show();

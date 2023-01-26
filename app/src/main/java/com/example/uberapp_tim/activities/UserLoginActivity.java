@@ -134,7 +134,7 @@ public class UserLoginActivity extends AppCompatActivity {
             sharedPreferences.edit().putString("role", role).apply();
             sharedPreferences.edit().putString("email", editTextEmail.getText().toString()).apply();
             Log.d("LOGIN", getSharedPreferences("AirRide_preferences", Context.MODE_PRIVATE).getString("id", null));
-            if(role.equals("passenger")){
+            if(role.equals("ROLE_USER")){
                 startActivity(new Intent(UserLoginActivity.this, PassengerMainActivity.class));
             }else{
                 startActivity(new Intent(UserLoginActivity.this, DriverMainActivity.class));
