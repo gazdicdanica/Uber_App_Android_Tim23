@@ -1,7 +1,11 @@
 package com.example.uberapp_tim.activities.passenger;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -17,8 +21,15 @@ import androidx.appcompat.widget.Toolbar;
 import com.example.uberapp_tim.R;
 import com.example.uberapp_tim.activities.EditActivity;
 import com.example.uberapp_tim.activities.UserLoginActivity;
+import com.example.uberapp_tim.connection.ServiceUtils;
+import com.example.uberapp_tim.model.users.User;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
+
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class PassengerAccountActivity extends AppCompatActivity {
 
@@ -28,6 +39,8 @@ public class PassengerAccountActivity extends AppCompatActivity {
     EditText phoneNum;
     EditText password;
     BottomNavigationView passengerNav;
+
+    User passenger;
 
     @Override
     protected void onCreate(Bundle savedInstance){
@@ -52,7 +65,22 @@ public class PassengerAccountActivity extends AppCompatActivity {
         password = findViewById(R.id.user_password);
 
         //TODO set parameters in edittext
-        setListeners();
+
+        SharedPreferences pref = getSharedPreferences("AirRide_preferences", Context.MODE_PRIVATE);
+        String jwt = pref.getString("accessToken", "");
+        Long id = Long.valueOf(pref.getString("id", ""));
+        ServiceUtils.passengerService.getPassenger("Bearer " + jwt, id).enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                passenger = response.body();
+                setParameters(response.body());
+            }
+
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+                Log.wtf("message",  t.getMessage());
+            }
+        });
 
         passengerNav = findViewById(R.id.passNav);
         passengerNav.setSelectedItemId(R.id.action_account);
@@ -63,8 +91,11 @@ public class PassengerAccountActivity extends AppCompatActivity {
                 switch (item.getItemId()) {
 
                     case (R.id.action_main):
-                        i = new Intent(PassengerAccountActivity.this, PassengerMainActivity.class);
-                        startActivity(i);
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                            i = new Intent(PassengerAccountActivity.this, PassengerMainActivity.class);
+                            startActivity(i);
+                        }
+
                         return true;
                     case (R.id.action_account):
                         return true;
@@ -83,77 +114,16 @@ public class PassengerAccountActivity extends AppCompatActivity {
             }
         });
 
-        setParameters();
 
     }
 
-    private void setParameters(){
-        fullName.setText("Jovan Jovanovic");
-        email.setText("test2@gmail.com");
-        phoneNum.setText("0691852001");
-        address.setText("JNA 12");
-        password.setText("danica");
-    }
-
-
-    private void setListeners(){
-
-        fullName.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent i = new Intent(PassengerAccountActivity.this, EditActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putString("label1", "Name");
-                bundle.putString("label2", "Last name");
-                i.putExtras(bundle);
-                startActivity(i);
-            }
-        });
-
-        email.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent i = new Intent(PassengerAccountActivity.this, EditActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putString("label1", "E-mail");
-                i.putExtras(bundle);
-                startActivity(i);
-            }
-        });
-
-        address.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent i = new Intent(PassengerAccountActivity.this, EditActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putString("label1", "Address");
-                i.putExtras(bundle);
-                startActivity(i);
-            }
-        });
-
-        phoneNum.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent i = new Intent(PassengerAccountActivity.this, EditActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putString("label1", "Phone");
-                i.putExtras(bundle);
-                startActivity(i);
-            }
-        });
-
-        password.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent i = new Intent(PassengerAccountActivity.this, EditActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putString("label1", "Old password");
-                bundle.putString("label2", "New password");
-                i.putExtras(bundle);
-                startActivity(i);
-            }
-        });
+    private void setParameters(User user){
+        String name = user.getName() + " " + user.getLastName();
+        fullName.setText(name);
+        email.setText(user.getEmail());
+        phoneNum.setText(user.getPhoneNumber());
+        address.setText(user.getAddress());
+        password.setText(user.getPassword());
     }
 
     @Override

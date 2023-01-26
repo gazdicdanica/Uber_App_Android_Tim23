@@ -41,6 +41,9 @@ public class EditActivity extends AppCompatActivity {
 
         String label2 = bundle.getString("label2");
 
+        EditText editText1 = findViewById(R.id.editTxtEdit1);
+        editText1.setText(bundle.getString("value1"));
+
         EditText editText2 = findViewById(R.id.editTxtEdit2);
         if(label2!=null){
             AppCompatTextView textView2 = findViewById(R.id.txtViewEdit2);
@@ -48,6 +51,15 @@ public class EditActivity extends AppCompatActivity {
             textView2.setVisibility(View.VISIBLE);
 
             editText2.setVisibility(View.VISIBLE);
+            editText2.setText(bundle.getString("value2"));
+
+            if(label2.equals("New password")){
+                AppCompatTextView tw = findViewById(R.id.txtViewEdit3);
+                EditText et = findViewById(R.id.editTxtEdit3);
+
+                tw.setVisibility(View.VISIBLE);
+                et.setVisibility(View.VISIBLE);
+            }
         }
         setInputType(label1, findViewById(R.id.editTxtEdit1), editText2);
 

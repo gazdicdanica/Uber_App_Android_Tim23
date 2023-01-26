@@ -63,5 +63,5 @@
     <string name="end_ride">End ride</string>
     <string name="panic">PANIC</string>
     <string name="date_picker">Pick a date</string>
->>>>>>> 4190a098ec56c0dea8c7402ff34861381c838d82
+    <string name="change">Update personal info</string>
 </resources>
