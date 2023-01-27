@@ -89,15 +89,13 @@ public class DriverMainActivity extends AppCompatActivity{
 
             Log.i("RIDE MESSAGE", rideMessage);
 
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-                g = new GsonBuilder().registerTypeAdapter(LocalDateTime.class, new JsonDeserializer<LocalDateTime>() {
-                    @Override
-                    public LocalDateTime deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-                        DateTimeFormatter format = DateTimeFormatter.ofPattern("yyy-MM-dd'T'HH:mm:ss.SSS'Z'");
-                        return LocalDateTime.parse(json.getAsJsonPrimitive().getAsString(), format);
-                    }
-                }).create();
-            }
+            g = new GsonBuilder().registerTypeAdapter(LocalDateTime.class, new JsonDeserializer<LocalDateTime>() {
+                @Override
+                public LocalDateTime deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+                    DateTimeFormatter format = DateTimeFormatter.ofPattern("yyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+                    return LocalDateTime.parse(json.getAsJsonPrimitive().getAsString(), format);
+                }
+            }).create();
             ride = g.fromJson(rideMessage, RideDTO.class);
             runOnUiThread(new Runnable()
             {
