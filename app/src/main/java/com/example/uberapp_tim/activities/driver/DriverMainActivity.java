@@ -73,6 +73,7 @@ public class DriverMainActivity extends AppCompatActivity{
     public static NotificationService notificationService;
     private PendingIntent pendingIntent;
     public static RideDTO ride;
+    private AlertDialog dialog;
 
     @SuppressLint("CheckResult")
     @Override
@@ -111,6 +112,25 @@ public class DriverMainActivity extends AppCompatActivity{
                     }
             });
         });
+
+        webSocket.stompClient.topic("/ride-cancel/"+getSharedPreferences("AirRide_preferences", Context.MODE_PRIVATE).getString("id", null)).subscribe(
+                topicMessage->{
+                    Log.wtf("TOPIC", topicMessage.getPayload());
+
+                    runOnUiThread(new Runnable()
+                    {
+                        @Override
+                        public void run()
+                        {
+                            if(dialog.isShowing()){
+                                dialog.dismiss();
+                            }
+                            Toast.makeText(DriverMainActivity.this, "Pending ride was canceled", Toast.LENGTH_LONG).show();
+                        }
+                    });
+
+                }
+        );
 
         String id = getSharedPreferences("AirRide_preferences", Context.MODE_PRIVATE).getString("id", null);
         this.id = Long.valueOf(id);
@@ -264,8 +284,8 @@ public class DriverMainActivity extends AppCompatActivity{
                 });
             }
         });
-        AlertDialog alertDialog = builder.create();
-        alertDialog.show();
+        dialog = builder.create();
+        dialog.show();
     }
 
     public void showDeclineDialog(){

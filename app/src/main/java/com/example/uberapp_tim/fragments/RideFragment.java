@@ -129,7 +129,26 @@ public class RideFragment extends Fragment implements LocationListener, OnMapRea
                         }
                     });
 
-                });
+                }
+        );
+
+        webSocket.stompClient.topic("/ride-cancel/"+getActivity().getSharedPreferences("AirRide_preferences", Context.MODE_PRIVATE).getString("id", null)).subscribe(
+                topicMessage->{
+
+                    activity.runOnUiThread(new Runnable()
+                    {
+                        @Override
+                        public void run()
+                        {
+                            Toast.makeText(activity, "Pending ride was canceled", Toast.LENGTH_LONG).show();
+                        }
+                    });
+
+                    Intent main = new Intent(activity, DriverMainActivity.class);
+                    main.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(main);
+                }
+        );
 
     }
 
