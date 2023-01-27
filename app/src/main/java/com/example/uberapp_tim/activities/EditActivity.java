@@ -104,7 +104,6 @@ public class EditActivity extends AppCompatActivity {
                 }
                 Long id = Long.valueOf(getSharedPreferences("AirRide_preferences", Context.MODE_PRIVATE).getString("id", null));
                 String jwt = "Bearer " + getSharedPreferences("AirRide_preferences", Context.MODE_PRIVATE).getString("accessToken", "");
-                Log.d("DOSAO", "DO ovde");
                 ServiceUtils.userService.changePassword(jwt, id, new UpdatePasswordDTO(newPw, oldPw)).enqueue(new Callback<ResponseBody>() {
                     @Override
                     public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
