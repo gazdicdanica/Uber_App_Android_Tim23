@@ -1,5 +1,6 @@
 package com.example.uberapp_tim.service;
 
+import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.Service;
@@ -13,7 +14,9 @@ import android.util.Log;
 
 import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 
+import com.example.uberapp_tim.R;
 import com.example.uberapp_tim.activities.driver.DriverMainActivity;
 import com.example.uberapp_tim.model.users.Driver;
 import com.example.uberapp_tim.tools.AppTools;
@@ -27,6 +30,16 @@ public class NotificationService extends Service {
     ExecutorService executor = Executors.newSingleThreadExecutor();
     Handler handler = new Handler(Looper.getMainLooper());
 
+    private NotificationManager notificationManager;
+    private static final int NOTIFICATION_ID = 1;
+    private static final String CHANNEL_ID = "DRIVER";
+
+    @Override
+    public void onCreate(){
+        super.onCreate();
+        notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+    }
+
     @Override
     public IBinder onBind(Intent intent) {
         // TODO: Return the communication channel to the service.
@@ -35,19 +48,29 @@ public class NotificationService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId){
-        int status = AppTools.getConnectivityStatus(getApplicationContext());
+        String notificationTitle = intent.getStringExtra("title");
+        String notificationText = intent.getStringExtra("text");
+        String channel = intent.getStringExtra("channel");
+        String bigText = intent.getStringExtra("bigText");
+        Long id = Long.valueOf(intent.getStringExtra("id"));
 
-        if(status == AppTools.TYPE_WIFI || status == AppTools.TYPE_MOBILE){
-            executor.execute( () ->{
-                Log.i("REZ", "Background work here");
-                handler.post(() ->{
-                    Intent ints = new Intent(DriverMainActivity.NEW_RIDE);
-                    getApplicationContext().sendBroadcast(ints);
-                });
-            });
+        if(id.equals(Long.valueOf(getSharedPreferences("AirRide_preferences", Context.MODE_PRIVATE).getString("id", null)))){
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(this, channel)
+                    .setSmallIcon(R.drawable.ic_baseline_directions_car_24)
+                    .setContentTitle(notificationTitle)
+                    .setContentText(notificationText)
+                    .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+
+            if(!bigText.equals("")){
+                builder.setStyle(new NotificationCompat.BigTextStyle()
+                        .bigText(bigText));
+            }
+
+            NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+            notificationManager.notify(1, builder.build());
         }
 
-        stopSelf();
+
 
         return START_NOT_STICKY;
     }
