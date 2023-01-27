@@ -68,12 +68,22 @@ public class PassengerAccountActivity extends AppCompatActivity {
         password = findViewById(R.id.user_password);
         changeBtn = findViewById(R.id.change_btn);
 
+        password.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(PassengerAccountActivity.this, EditActivity.class);
+                i.putExtra("label1", "Old password");
+                i.putExtra("label2", "New password");
+                startActivity(i);
+
+            }
+        });
+
         changeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
                 Intent i = new Intent(PassengerAccountActivity.this, UpdateProfilePassengerActivity.class);
-
                 startActivity(i);
             }
         });
