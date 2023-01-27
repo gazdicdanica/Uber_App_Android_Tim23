@@ -36,4 +36,7 @@ public interface RideService {
 
     @POST("ride")
     Call<ResponseBody> createRide(@Header("authorization") String token, @Body RideRequestDTO request);
+
+    @PUT("ride/{id}/withdraw")
+    Call<ResponseBody> withdrawRide(@Header("authorization") String token, @Path("id")Long id);
 }

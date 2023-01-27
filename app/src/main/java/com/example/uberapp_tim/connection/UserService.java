@@ -25,6 +25,9 @@ public interface UserService {
     @POST("user/{id}/message")
     Call<ResponseBody> sendMessage(@Header("authorization") String token, @Path("id")Long id, @Body SendMessageDTO dto);
 
+    @GET("user/exist/{email}")
+    Call<ResponseBody> doesUserExist(@Header("authorization") String token, @Path("email")String email);
+
     @PUT("user/{id}/changePassword")
     Call<ResponseBody> changePassword(@Header("authorization") String token, @Path("id")Long id, @Body UpdatePasswordDTO dto);
 }

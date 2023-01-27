@@ -7,6 +7,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -56,7 +57,6 @@ public class DrawRouteFragment extends Fragment implements OnMapReadyCallback {
     String provider;
     private FragmentToActivity mCallback;
     PassengerMainActivity activity;
-    DirectionsResult directionsResult;
     float distance;
     Duration duration;
 
@@ -65,7 +65,6 @@ public class DrawRouteFragment extends Fragment implements OnMapReadyCallback {
         return mpf;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -113,10 +112,8 @@ public class DrawRouteFragment extends Fragment implements OnMapReadyCallback {
         super.onDetach();
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
-        Toast.makeText(getContext(), "MAP_READY", Toast.LENGTH_SHORT).show();
         mMap = googleMap;
         mMap.addMarker(new MarkerOptions().position(start).title("Start"));
 
