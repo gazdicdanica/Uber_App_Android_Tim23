@@ -118,7 +118,6 @@ public class UserLoginActivity extends AppCompatActivity {
         });
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
     private void changeActivity(){
         String token = sharedPreferences.getString("accessToken", null);
         if(token != null){

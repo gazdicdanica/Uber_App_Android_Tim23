@@ -40,6 +40,7 @@ import com.example.uberapp_tim.dto.RideRequestDTO;
 import com.example.uberapp_tim.dto.UserShortDTO;
 import com.example.uberapp_tim.fragments.DrawRouteFragment;
 import com.example.uberapp_tim.fragments.MapFragment;
+import com.example.uberapp_tim.fragments.PassengerInRideFragment;
 import com.example.uberapp_tim.model.ride.Ride;
 import com.example.uberapp_tim.model.ride.RideStatus;
 import com.example.uberapp_tim.model.route.Location;
@@ -79,7 +80,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 
-@RequiresApi(api = Build.VERSION_CODES.O)
 public class PassengerMainActivity extends AppCompatActivity implements View.OnClickListener, FragmentToActivity, AdapterView.OnItemSelectedListener {
 
     private static final DecimalFormat dfSharp = new DecimalFormat("#.##");
@@ -100,6 +100,7 @@ public class PassengerMainActivity extends AppCompatActivity implements View.OnC
     String startLoc="", finishLoc="", timeData="", carTypeSelected = "STANDARD";
     LatLng s, f;
     List<String> invitedPeople = new ArrayList<>();
+    private boolean isus = false;
 
     public static WebSocket webSocket = new WebSocket();
     AlertDialog alertDialog = null;
@@ -107,6 +108,9 @@ public class PassengerMainActivity extends AppCompatActivity implements View.OnC
     private RideRequestDTO rideDTO = new RideRequestDTO();
     private Ride rideResp;
     private RideDTO rideRespDTO = null;
+    MapFragment mapFragment;
+    DrawRouteFragment drawRouteFragment;
+
     @Override
     protected void onCreate(Bundle savedInstance){
         super.onCreate(savedInstance);
@@ -133,6 +137,7 @@ public class PassengerMainActivity extends AppCompatActivity implements View.OnC
 
         carType = findViewById(R.id.carType);
         carType.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, CarType.values()));
+
 
         final ActionBar actionBar = getSupportActionBar();
 
@@ -207,7 +212,7 @@ public class PassengerMainActivity extends AppCompatActivity implements View.OnC
         txt = dfSharp.format(this.distance)+"km";
         distanceTxt.setText(txt);
 
-        txt = dfSharp.format(estimatePrice())+"RSD";
+        txt = (int) estimatePrice()+"RSD";
         priceTxt.setText(txt);
     }
 
@@ -238,7 +243,8 @@ public class PassengerMainActivity extends AppCompatActivity implements View.OnC
     @Override
     protected void onResume(){
         super.onResume();
-        FragmentTransition.to(MapFragment.newInstance(), this, false);
+        mapFragment = MapFragment.newInstance();
+        FragmentTransition.to(mapFragment, this, false);
         passengerNav.setSelectedItemId(R.id.action_main);
     }
 
@@ -280,7 +286,7 @@ public class PassengerMainActivity extends AppCompatActivity implements View.OnC
         } else if (view == requestRide) {
             if (start != null && finish != null) {
                 if (isClicked) {
-                    requestRide.setEnabled(false);
+//                    requestRide.setEnabled(false);        Proba
                     linkPsngr.setVisibility(View.GONE);
                     linkPassengerBtn.setVisibility(View.GONE);
                     createRide();
@@ -292,37 +298,43 @@ public class PassengerMainActivity extends AppCompatActivity implements View.OnC
                     ServiceUtils.rideService.createRide("Bearer " + jwt, this.rideDTO).enqueue(new Callback<ResponseBody>() {
                         @Override
                         public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                            if (rideDTO.getScheduledTime() == null) {       // Voznja odmah
-                                Gson g = null;
-                                try {
-                                    String json = response.body().string();
-                                    g = new GsonBuilder().registerTypeAdapter(LocalDateTime.class, new JsonDeserializer<LocalDateTime>() {
+                            if (response.code() == 200) {
+                                if (rideDTO.getScheduledTime() == null) {       // Voznja odmah
+                                    Gson g = null;
+                                    try {
+                                        String json = response.body().string();
+                                        g = new GsonBuilder().registerTypeAdapter(LocalDateTime.class, new JsonDeserializer<LocalDateTime>() {
 
-                                        @Override
-                                        public LocalDateTime deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-                                            DateTimeFormatter format = DateTimeFormatter.ofPattern("yyy-MM-dd'T'HH:mm:ss.SSS'Z'");
-                                            return LocalDateTime.parse(json.getAsJsonPrimitive().getAsString(), format);
-                                        }
-                                    }).create();
-                                    Ride ride = g.fromJson(json, Ride.class);
-                                    rideResp = ride;
-                                    start.setVisibility(View.GONE);
-                                    finish.setVisibility(View.GONE);
+                                            @Override
+                                            public LocalDateTime deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+                                                DateTimeFormatter format = DateTimeFormatter.ofPattern("yyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+                                                return LocalDateTime.parse(json.getAsJsonPrimitive().getAsString(), format);
+                                            }
+                                        }).create();
+                                        rideResp = g.fromJson(json, Ride.class);
+                                        start.setVisibility(View.GONE);
+                                        finish.setVisibility(View.GONE);
 
-                                    showWaitingDialog();
-                                    //TODO WEBSOCKET WAITING FOR DRIVER
+                                        showWaitingDialog();
 
-                                } catch (IOException e) {
-                                    e.printStackTrace();
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
+                                } else {                                        // Voznja zakazivanje
+                                    if (response.code() == 200) {
+                                        Toast.makeText(PassengerMainActivity.this, "Scheduling Successful", Toast.LENGTH_SHORT).show();
+                                        finish();
+                                        overridePendingTransition(0, 0);
+                                        startActivity(getIntent());
+                                        overridePendingTransition(0, 0);
+                                    }
                                 }
-                            } else {                                        // Voznja zakazivanje
-                                if (response.code() == 200) {
-                                    Toast.makeText(PassengerMainActivity.this, "Scheduling Successful", Toast.LENGTH_SHORT).show();
-                                    finish();
-                                    overridePendingTransition(0, 0);
-                                    startActivity(getIntent());
-                                    overridePendingTransition(0, 0);
-                                }
+                            } else {
+                                finish();
+                                overridePendingTransition(0, 0);
+                                startActivity(getIntent());
+                                overridePendingTransition(0, 0);
+                                Toast.makeText(PassengerMainActivity.this, "Invalid Request", Toast.LENGTH_SHORT).show();
                             }
                         }
 
@@ -349,7 +361,9 @@ public class PassengerMainActivity extends AppCompatActivity implements View.OnC
                 priceTxt.setVisibility(View.VISIBLE);
                 priceTxt.setEnabled(false);
 
-                FragmentTransition.to(DrawRouteFragment.newInstance(), this, false);
+
+                drawRouteFragment = DrawRouteFragment.newInstance();
+                FragmentTransition.to(drawRouteFragment, this, false);
             }
         } else if (view == linkPassengerBtn) {
             if (invitedPeople.size() <= 4) {
@@ -475,7 +489,6 @@ public class PassengerMainActivity extends AppCompatActivity implements View.OnC
             if(addresses != null){
                 Address returned = addresses.get(0);
                 address = returned.getAddressLine(0);
-                Log.println(Log.ASSERT, "ADRESAAA", ""+address);
             } else {
                 address = "No Address Found";
             }
@@ -505,8 +518,8 @@ public class PassengerMainActivity extends AppCompatActivity implements View.OnC
         builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                String jwt = getSharedPreferences("AirRide_preferences", Context.MODE_PRIVATE).getString("accessToken", "");
-                ServiceUtils.rideService.withdrawRide(jwt, 1L).enqueue(new Callback<ResponseBody>() {
+                String jwt = "Bearer " + getSharedPreferences("AirRide_preferences", Context.MODE_PRIVATE).getString("accessToken", "");
+                ServiceUtils.rideService.withdrawRide(jwt, rideResp.getId()).enqueue(new Callback<ResponseBody>() {
                     @Override
                     public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                         if (response.code() == 200) {
@@ -520,7 +533,7 @@ public class PassengerMainActivity extends AppCompatActivity implements View.OnC
 
                     @Override
                     public void onFailure(Call<ResponseBody> call, Throwable t) {
-                        Toast.makeText(PassengerMainActivity.this, "Failed Decline", Toast.LENGTH_SHORT).show();
+                        Log.i("PORUKA FAIL:", t.getMessage());
                     }
                 });
             }
@@ -534,7 +547,6 @@ public class PassengerMainActivity extends AppCompatActivity implements View.OnC
     private void subscribeToWebSocket() {
         webSocket.stompClient.topic("/ride-passenger/"+getSharedPreferences("AirRide_preferences", Context.MODE_PRIVATE).getString("id", null)).subscribe(topicMassage -> {
             String message = topicMassage.getPayload();
-            Log.i("PORUKA: ", message);
             Gson g = new GsonBuilder().registerTypeAdapter(LocalDateTime.class, new JsonDeserializer<LocalDateTime>() {
                 @Override
                 public LocalDateTime deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
@@ -546,10 +558,15 @@ public class PassengerMainActivity extends AppCompatActivity implements View.OnC
             if (rideRespDTO.getStatus() == RideStatus.ACCEPTED) {
                 if (alertDialog != null) {
                     alertDialog.dismiss();
-                }
+                    Bundle b = rideBundle();
+                    PassengerInRideFragment fragment = PassengerInRideFragment.newInstance();
+                    fragment.setArguments(b);
 
-                //TODO IN_RIDE
-            } else {
+                    FragmentTransition.remove(this);
+                    FragmentTransition.to(fragment, this, false);
+                    isus = !isus;
+                }
+            } else if (!isus){
                 finish();
                 overridePendingTransition(0, 0);
                 startActivity(getIntent());

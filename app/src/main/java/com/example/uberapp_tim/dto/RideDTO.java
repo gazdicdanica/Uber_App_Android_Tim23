@@ -93,6 +93,25 @@ public class RideDTO implements Serializable {
         this.estimatedTimeInMinutes = estimatedTimeInMinutes;
     }
 
+    @Override
+    public String toString() {
+        return "RideDTO{" +
+                "id=" + id +
+                ", startTime=" + startTime +
+                ", endTime=" + endTime +
+                ", totalCost=" + totalCost +
+                ", driver=" + driver +
+                ", estimatedTimeInMinutes=" + estimatedTimeInMinutes +
+                ", locations=" + locations +
+                ", passengers=" + passengers +
+                ", vehicleType=" + vehicleType +
+                ", babyTransport=" + babyTransport +
+                ", petTransport=" + petTransport +
+                ", status=" + status +
+                ", rejection=" + rejection +
+                '}';
+    }
+
     public ArrayList<Route> getLocations() {
         return locations;
     }

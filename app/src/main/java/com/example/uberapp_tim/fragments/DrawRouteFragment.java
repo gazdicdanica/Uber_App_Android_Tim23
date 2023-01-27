@@ -57,7 +57,6 @@ public class DrawRouteFragment extends Fragment implements OnMapReadyCallback {
     String provider;
     private FragmentToActivity mCallback;
     PassengerMainActivity activity;
-    DirectionsResult directionsResult;
     float distance;
     Duration duration;
 
@@ -115,7 +114,6 @@ public class DrawRouteFragment extends Fragment implements OnMapReadyCallback {
 
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
-        Toast.makeText(getContext(), "MAP_READY", Toast.LENGTH_SHORT).show();
         mMap = googleMap;
         mMap.addMarker(new MarkerOptions().position(start).title("Start"));
 
