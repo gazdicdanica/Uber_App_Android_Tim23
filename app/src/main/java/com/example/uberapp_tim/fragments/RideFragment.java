@@ -160,7 +160,6 @@ public class RideFragment extends Fragment implements LocationListener, OnMapRea
         dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
             @Override
             public void onCancel(DialogInterface dialogInterface) {
-                Log.d("DISMISSED", " DIALOG");
                 Intent main = new Intent(activity, DriverMainActivity.class);
                 main.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(main);

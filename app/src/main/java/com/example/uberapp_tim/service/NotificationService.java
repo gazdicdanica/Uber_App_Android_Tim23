@@ -51,7 +51,6 @@ public class NotificationService extends Service {
         String notificationTitle = intent.getStringExtra("title");
         String notificationText = intent.getStringExtra("text");
         String channel = intent.getStringExtra("channel");
-        String bigText = intent.getStringExtra("bigText");
         Long id = Long.valueOf(intent.getStringExtra("id"));
 
         if(id.equals(Long.valueOf(getSharedPreferences("AirRide_preferences", Context.MODE_PRIVATE).getString("id", null)))){
@@ -60,11 +59,6 @@ public class NotificationService extends Service {
                     .setContentTitle(notificationTitle)
                     .setContentText(notificationText)
                     .setPriority(NotificationCompat.PRIORITY_DEFAULT);
-
-            if(!bigText.equals("")){
-                builder.setStyle(new NotificationCompat.BigTextStyle()
-                        .bigText(bigText));
-            }
 
             NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
             notificationManager.notify(1, builder.build());

@@ -101,9 +101,9 @@ public class DriverMainActivity extends AppCompatActivity{
             ride = g.fromJson(rideMessage, RideDTO.class);
 
             Intent intent = new Intent(this, NotificationReceiver.class);
-            intent.putExtra("title", "New ride alert");
+            intent.putExtra("title", "New ride");
             intent.putExtra("bigText", "DEPARTURE: " + ride.getLocations().get(0).getDeparture().getAddress() +"\n\nDESTINATION: " +ride.getLocations().get(0).getDestination().getAddress());
-            intent.putExtra("text", "Accept?");
+            intent.putExtra("text", "You have a new ride request");
             intent.putExtra("channel", "driver_channel");
             intent.putExtra("id", id);
 

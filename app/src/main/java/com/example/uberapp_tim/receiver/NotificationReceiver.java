@@ -28,8 +28,6 @@ public class NotificationReceiver extends BroadcastReceiver {
         serviceIntent.putExtra("title", intent.getStringExtra("title"));
         serviceIntent.putExtra("text", intent.getStringExtra("text"));
         serviceIntent.putExtra("channel", intent.getStringExtra("channel"));
-        serviceIntent.putExtra("bigText", intent.getStringExtra("bigText"));
-        Log.wtf("BIG TEXT", intent.getStringExtra("bigText"));
         serviceIntent.putExtra("id", intent.getStringExtra("id"));
         context.startService(serviceIntent);
 
