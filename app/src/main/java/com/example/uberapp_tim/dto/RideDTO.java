@@ -25,11 +25,12 @@ public class RideDTO implements Serializable {
     private boolean petTransport;
     private RideStatus status;
     private Rejection rejection;
+    private Double totalDistance;
 
     public RideDTO(Long id, LocalDateTime startTime, LocalDateTime endTime, double totalCost,
                    UserShortDTO driver, int estimatedTimeInMinutes, ArrayList<Route> locations,
                    ArrayList<UserShortDTO> passengers, CarType vehicleType, boolean babyTransport,
-                   boolean petTransport, RideStatus status, Rejection rejection) {
+                   boolean petTransport, RideStatus status, Rejection rejection, Double totalDistance) {
         this.id = id;
         this.startTime = startTime;
         this.endTime = endTime;
@@ -43,6 +44,15 @@ public class RideDTO implements Serializable {
         this.petTransport = petTransport;
         this.status = status;
         this.rejection = rejection;
+        this.totalDistance = totalDistance;
+    }
+
+    public Double getTotalDistance() {
+        return totalDistance;
+    }
+
+    public void setTotalDistance(Double totalDistance) {
+        this.totalDistance = totalDistance;
     }
 
     public Long getId() {

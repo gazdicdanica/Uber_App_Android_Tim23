@@ -7,6 +7,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.InputType;
 import android.util.Log;
@@ -19,6 +20,8 @@ import com.example.uberapp_tim.R;
 import com.example.uberapp_tim.activities.ChatActivity;
 import com.example.uberapp_tim.connection.ServiceUtils;
 import com.example.uberapp_tim.dto.RideDTO;
+import com.example.uberapp_tim.fragments.DriverMapFragment;
+import com.example.uberapp_tim.fragments.MapFragment;
 import com.example.uberapp_tim.fragments.RideFragment;
 import com.example.uberapp_tim.model.message.Panic;
 import com.example.uberapp_tim.model.route.Location;
@@ -62,87 +65,6 @@ public class DriverRideActivity extends AppCompatActivity implements FragmentToA
         countdownTV = findViewById(R.id.countdown_time);
         kmTV = findViewById(R.id.countdown_distance);
 
-
-        startRideBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String jwt = getSharedPreferences("AirRide_preferences", Context.MODE_PRIVATE).getString("accessToken", "");
-                ServiceUtils.rideService.startRide("Bearer " + jwt, rideId).enqueue(new Callback<ResponseBody>() {
-                    @Override
-                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                        startRideBtn.setVisibility(View.GONE);
-                        endRideBtn.setVisibility(View.VISIBLE);
-                        panicBtn.setVisibility(View.VISIBLE);
-                    }
-
-                    @Override
-                    public void onFailure(Call<ResponseBody> call, Throwable t) {
-
-                    }
-                });
-
-            }
-        });
-
-        endRideBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String jwt = getSharedPreferences("AirRide_preferences", Context.MODE_PRIVATE).getString("accessToken", "");
-                ServiceUtils.rideService.endRide("Bearer " + jwt, rideId).enqueue(new Callback<ResponseBody>() {
-                    @Override
-                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                        Intent main = new Intent(DriverRideActivity.this, DriverMainActivity.class);
-                        main.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
-                        startActivity(main);
-                    }
-
-                    @Override
-                    public void onFailure(Call<ResponseBody> call, Throwable t) {
-
-                    }
-                });
-
-            }
-        });
-
-        panicBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                android.app.AlertDialog.Builder builder = new AlertDialog.Builder(DriverRideActivity.this);
-                builder.setTitle("Please enter a reason");
-                final EditText input = new EditText(DriverRideActivity.this);
-                input.setInputType(InputType.TYPE_CLASS_TEXT);
-                input.setPadding(30,30,30,30);
-                builder.setView(input);
-
-                builder.setPositiveButton("Submit", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        String reason = input.getText().toString();
-                        Panic panic = new Panic();
-                        panic.setReason(reason);
-
-                        String jwt = getSharedPreferences("AirRide_preferences", Context.MODE_PRIVATE).getString("accessToken", "");
-                        ServiceUtils.rideService.panicRide("Bearer " + jwt, rideId, panic).enqueue(new Callback<ResponseBody>() {
-                            @Override
-                            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                                Toast.makeText(DriverRideActivity.this, "Panic was sent", Toast.LENGTH_SHORT).show();
-                                Intent main = new Intent(DriverRideActivity.this, DriverMainActivity.class);
-                                main.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
-                                startActivity(main);
-                            }
-
-                            @Override
-                            public void onFailure(Call<ResponseBody> call, Throwable t) {
-
-                            }
-                        });
-                    }
-                });
-                builder.create().show();
-            }
-        });
-
         messageBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -154,13 +76,21 @@ public class DriverRideActivity extends AppCompatActivity implements FragmentToA
         });
 
         Fragment fragment = RideFragment.newInstance();
-        FragmentTransition.to(fragment, DriverRideActivity.this, false);
+//        FragmentTransition.to(fragment, DriverRideActivity.this, false);
     }
 
     public Bundle getIdBundle(){
         Bundle bundle = new Bundle();
         bundle.putLong("id", rideId);
         return bundle;
+    }
+
+    @Override
+    protected void onResume(){
+        super.onResume();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            FragmentTransition.to(RideFragment.newInstance(), this, false);
+        }
     }
 
 

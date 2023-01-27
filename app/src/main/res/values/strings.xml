@@ -67,5 +67,6 @@
     <string name="add">Add</string>
     <string name="searching_for_driver">Searching For Driver</string>
     <string name="cancel">Cancel</string>
-    >>>>>>> 4190a098ec56c0dea8c7402ff34861381c838d82
+    <string name="change">Update personal info</string>
+    <string name="save">Save changes</string>
 </resources>

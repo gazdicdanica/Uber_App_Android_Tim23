@@ -12,6 +12,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.InputType;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -86,6 +87,8 @@ public class DriverMainActivity extends AppCompatActivity{
             String rideMessage = topicMessage.getPayload();
             Gson g = null;
 
+            Log.i("RIDE MESSAGE", rideMessage);
+
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
                 g = new GsonBuilder().registerTypeAdapter(LocalDateTime.class, new JsonDeserializer<LocalDateTime>() {
                     @Override
@@ -101,7 +104,12 @@ public class DriverMainActivity extends AppCompatActivity{
                 @Override
                 public void run()
                     {
-                        showNewRideDialog();
+                        if(isDestroyed() || isFinishing()){
+                            Log.wtf("Finish?????", "????");
+                        }else{
+                            showNewRideDialog();
+                        }
+
                     }
             });
         });
@@ -163,7 +171,7 @@ public class DriverMainActivity extends AppCompatActivity{
 
                         @Override
                         public void onFailure(Call<ResponseBody> call, Throwable t) {
-
+                            Log.wtf("ERROR", t.getMessage());
                         }
                     });
 
@@ -203,7 +211,7 @@ public class DriverMainActivity extends AppCompatActivity{
     }
 
     public void showNewRideDialog(){
-        AlertDialog.Builder builder = new AlertDialog.Builder(DriverMainActivity.this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
         LayoutInflater inflater = DriverMainActivity.this.getLayoutInflater();
 
         View dialogView = inflater.inflate(R.layout.dialog_driver_new_ride, null);
@@ -221,7 +229,7 @@ public class DriverMainActivity extends AppCompatActivity{
         String value = String.valueOf(ride.getEstimatedTimeInMinutes()) + " min";
         time.setText(value);
         System.err.println(ride.getLocations().get(0));
-        value = String.valueOf(ride.getLocations().get(0).getDistance()) + " km";
+        value = String.valueOf(ride.getTotalDistance()) + " km";
         km.setText(value);
         people.setText(String.valueOf(ride.getPassengers().size()));
         value = String.valueOf(ride.getTotalCost()) + " RSD";
