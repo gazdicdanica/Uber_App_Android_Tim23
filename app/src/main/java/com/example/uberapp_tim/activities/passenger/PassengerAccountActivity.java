@@ -24,6 +24,7 @@ import com.example.uberapp_tim.activities.UserLoginActivity;
 import com.example.uberapp_tim.connection.ServiceUtils;
 import com.example.uberapp_tim.model.users.User;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.navigation.NavigationBarView;
 
 import okhttp3.ResponseBody;
@@ -39,6 +40,8 @@ public class PassengerAccountActivity extends AppCompatActivity {
     EditText phoneNum;
     EditText password;
     BottomNavigationView passengerNav;
+
+    MaterialButton changeBtn;
 
     User passenger;
 
@@ -63,8 +66,18 @@ public class PassengerAccountActivity extends AppCompatActivity {
         address = findViewById(R.id.user_address);
         phoneNum = findViewById(R.id.user_phone);
         password = findViewById(R.id.user_password);
+        changeBtn = findViewById(R.id.change_btn);
 
-        //TODO set parameters in edittext
+        changeBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Intent i = new Intent(PassengerAccountActivity.this, UpdateProfilePassengerActivity.class);
+
+                startActivity(i);
+            }
+        });
+
 
         SharedPreferences pref = getSharedPreferences("AirRide_preferences", Context.MODE_PRIVATE);
         String jwt = pref.getString("accessToken", "");

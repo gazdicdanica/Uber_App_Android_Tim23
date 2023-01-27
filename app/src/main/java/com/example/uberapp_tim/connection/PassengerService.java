@@ -11,6 +11,7 @@ import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 import retrofit2.http.Path;
 
 public interface PassengerService {
@@ -24,4 +25,7 @@ public interface PassengerService {
 
     @GET("passenger/{id}")
     Call<User> getPassenger(@Header("authorization") String token, @Path("id") Long id);
+
+    @PUT("passenger/{id}")
+    Call<User> updatePassenger(@Header("authorization") String token, @Path("id") Long id, @Body User user);
 }

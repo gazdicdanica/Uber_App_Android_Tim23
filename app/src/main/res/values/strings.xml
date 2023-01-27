@@ -64,4 +64,5 @@
     <string name="panic">PANIC</string>
     <string name="date_picker">Pick a date</string>
     <string name="change">Update personal info</string>
+    <string name="save">Save changes</string>
 </resources>
