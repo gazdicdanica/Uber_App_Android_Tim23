@@ -9,7 +9,7 @@ import retrofit2.http.Path;
 
 public interface DriverService {
 
-    @POST("driver/{id}/working-hour/start")
+    @PUT("driver/{id}/working-hour/start")
     Call<ResponseBody> startShift(@Header("authorization") String token, @Path("id")Long id);
 
     @PUT("driver/{id}/working-hour/end")
