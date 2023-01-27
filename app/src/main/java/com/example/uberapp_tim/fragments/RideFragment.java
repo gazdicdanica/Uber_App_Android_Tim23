@@ -2,7 +2,7 @@ package com.example.uberapp_tim.fragments;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.Activity;
+
 import androidx.appcompat.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -15,7 +15,6 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.text.InputType;
-import android.text.Layout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,7 +34,6 @@ import com.example.uberapp_tim.activities.driver.DriverMainActivity;
 import com.example.uberapp_tim.activities.driver.DriverRideActivity;
 import com.example.uberapp_tim.connection.ServiceUtils;
 import com.example.uberapp_tim.connection.WebSocket;
-import com.example.uberapp_tim.dialogs.LocationDialog;
 import com.example.uberapp_tim.dto.RideDTO;
 import com.example.uberapp_tim.model.message.Panic;
 import com.example.uberapp_tim.service.FragmentToActivity;
@@ -65,7 +63,6 @@ import com.google.maps.model.DirectionsLeg;
 import com.google.maps.model.DirectionsResult;
 import com.google.maps.model.DirectionsRoute;
 import com.google.maps.model.DirectionsStep;
-import com.google.maps.model.Duration;
 import com.google.maps.model.EncodedPolyline;
 
 import java.io.IOException;
@@ -163,7 +160,6 @@ public class RideFragment extends Fragment implements LocationListener, OnMapRea
         dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
             @Override
             public void onCancel(DialogInterface dialogInterface) {
-                Log.d("DISMISSED", " DIALOG");
                 Intent main = new Intent(activity, DriverMainActivity.class);
                 main.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(main);
@@ -402,6 +398,9 @@ public class RideFragment extends Fragment implements LocationListener, OnMapRea
                         destination = ride.getLocations().get(0).getDeparture();
                         addRedMarker(destination, "Departure");
                         drawRoute();
+                        Location loc = new Location("");
+                        loc.setLatitude(destination.getLatitude());
+                        loc.setLongitude(destination.getLongitude());
                         mCallback.communicate(ride.getPassengers().get(0).getId());
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -537,5 +536,6 @@ public class RideFragment extends Fragment implements LocationListener, OnMapRea
             }
         });
     }
+
 
 }

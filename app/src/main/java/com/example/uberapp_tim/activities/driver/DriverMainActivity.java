@@ -82,8 +82,9 @@ public class DriverMainActivity extends AppCompatActivity{
 
         createNotificationChannel("DriverNotification", "New ride notifications", "driver");
 
+        String id = getSharedPreferences("AirRide_preferences", Context.MODE_PRIVATE).getString("id", null);
         webSocket = new WebSocket();
-        webSocket.stompClient.topic("/ride-driver/"+getSharedPreferences("AirRide_preferences", Context.MODE_PRIVATE).getString("id", null)).subscribe(topicMessage -> {
+        webSocket.stompClient.topic("/ride-driver/"+id).subscribe(topicMessage -> {
 
             String rideMessage = topicMessage.getPayload();
             Gson g = null;
@@ -98,6 +99,16 @@ public class DriverMainActivity extends AppCompatActivity{
                 }
             }).create();
             ride = g.fromJson(rideMessage, RideDTO.class);
+
+            Intent intent = new Intent(this, NotificationReceiver.class);
+            intent.putExtra("title", "New ride");
+            intent.putExtra("bigText", "DEPARTURE: " + ride.getLocations().get(0).getDeparture().getAddress() +"\n\nDESTINATION: " +ride.getLocations().get(0).getDestination().getAddress());
+            intent.putExtra("text", "You have a new ride request");
+            intent.putExtra("channel", "driver_channel");
+            intent.putExtra("id", id);
+
+            sendBroadcast(intent);
+
             runOnUiThread(new Runnable()
             {
                 @Override
@@ -132,7 +143,6 @@ public class DriverMainActivity extends AppCompatActivity{
                 }
         );
 
-        String id = getSharedPreferences("AirRide_preferences", Context.MODE_PRIVATE).getString("id", null);
         this.id = Long.valueOf(id);
 
         setContentView(R.layout.driver_main);
