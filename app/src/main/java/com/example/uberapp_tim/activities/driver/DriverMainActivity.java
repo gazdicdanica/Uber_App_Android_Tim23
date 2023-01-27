@@ -73,6 +73,7 @@ public class DriverMainActivity extends AppCompatActivity{
     public static NotificationService notificationService;
     private PendingIntent pendingIntent;
     public static RideDTO ride;
+    private AlertDialog dialog;
 
     @SuppressLint("CheckResult")
     @Override
@@ -89,15 +90,13 @@ public class DriverMainActivity extends AppCompatActivity{
 
             Log.i("RIDE MESSAGE", rideMessage);
 
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-                g = new GsonBuilder().registerTypeAdapter(LocalDateTime.class, new JsonDeserializer<LocalDateTime>() {
-                    @Override
-                    public LocalDateTime deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-                        DateTimeFormatter format = DateTimeFormatter.ofPattern("yyy-MM-dd'T'HH:mm:ss.SSS'Z'");
-                        return LocalDateTime.parse(json.getAsJsonPrimitive().getAsString(), format);
-                    }
-                }).create();
-            }
+            g = new GsonBuilder().registerTypeAdapter(LocalDateTime.class, new JsonDeserializer<LocalDateTime>() {
+                @Override
+                public LocalDateTime deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+                    DateTimeFormatter format = DateTimeFormatter.ofPattern("yyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+                    return LocalDateTime.parse(json.getAsJsonPrimitive().getAsString(), format);
+                }
+            }).create();
             ride = g.fromJson(rideMessage, RideDTO.class);
             runOnUiThread(new Runnable()
             {
@@ -113,6 +112,25 @@ public class DriverMainActivity extends AppCompatActivity{
                     }
             });
         });
+
+        webSocket.stompClient.topic("/ride-cancel/"+getSharedPreferences("AirRide_preferences", Context.MODE_PRIVATE).getString("id", null)).subscribe(
+                topicMessage->{
+                    Log.wtf("TOPIC", topicMessage.getPayload());
+
+                    runOnUiThread(new Runnable()
+                    {
+                        @Override
+                        public void run()
+                        {
+                            if(dialog.isShowing()){
+                                dialog.dismiss();
+                            }
+                            Toast.makeText(DriverMainActivity.this, "Pending ride was canceled", Toast.LENGTH_LONG).show();
+                        }
+                    });
+
+                }
+        );
 
         String id = getSharedPreferences("AirRide_preferences", Context.MODE_PRIVATE).getString("id", null);
         this.id = Long.valueOf(id);
@@ -266,8 +284,8 @@ public class DriverMainActivity extends AppCompatActivity{
                 });
             }
         });
-        AlertDialog alertDialog = builder.create();
-        alertDialog.show();
+        dialog = builder.create();
+        dialog.show();
     }
 
     public void showDeclineDialog(){
