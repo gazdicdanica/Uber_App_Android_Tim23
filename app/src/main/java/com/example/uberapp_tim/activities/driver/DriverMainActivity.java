@@ -73,6 +73,7 @@ public class DriverMainActivity extends AppCompatActivity{
     public static NotificationService notificationService;
     private PendingIntent pendingIntent;
     public static RideDTO ride;
+    private AlertDialog dialog;
 
     @SuppressLint("CheckResult")
     @Override
@@ -81,24 +82,33 @@ public class DriverMainActivity extends AppCompatActivity{
 
         createNotificationChannel("DriverNotification", "New ride notifications", "driver");
 
+        String id = getSharedPreferences("AirRide_preferences", Context.MODE_PRIVATE).getString("id", null);
         webSocket = new WebSocket();
-        webSocket.stompClient.topic("/ride-driver/"+getSharedPreferences("AirRide_preferences", Context.MODE_PRIVATE).getString("id", null)).subscribe(topicMessage -> {
+        webSocket.stompClient.topic("/ride-driver/"+id).subscribe(topicMessage -> {
 
             String rideMessage = topicMessage.getPayload();
             Gson g = null;
 
             Log.i("RIDE MESSAGE", rideMessage);
 
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-                g = new GsonBuilder().registerTypeAdapter(LocalDateTime.class, new JsonDeserializer<LocalDateTime>() {
-                    @Override
-                    public LocalDateTime deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-                        DateTimeFormatter format = DateTimeFormatter.ofPattern("yyy-MM-dd'T'HH:mm:ss.SSS'Z'");
-                        return LocalDateTime.parse(json.getAsJsonPrimitive().getAsString(), format);
-                    }
-                }).create();
-            }
+            g = new GsonBuilder().registerTypeAdapter(LocalDateTime.class, new JsonDeserializer<LocalDateTime>() {
+                @Override
+                public LocalDateTime deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+                    DateTimeFormatter format = DateTimeFormatter.ofPattern("yyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+                    return LocalDateTime.parse(json.getAsJsonPrimitive().getAsString(), format);
+                }
+            }).create();
             ride = g.fromJson(rideMessage, RideDTO.class);
+
+            Intent intent = new Intent(this, NotificationReceiver.class);
+            intent.putExtra("title", "New ride");
+            intent.putExtra("bigText", "DEPARTURE: " + ride.getLocations().get(0).getDeparture().getAddress() +"\n\nDESTINATION: " +ride.getLocations().get(0).getDestination().getAddress());
+            intent.putExtra("text", "You have a new ride request");
+            intent.putExtra("channel", "driver_channel");
+            intent.putExtra("id", id);
+
+            sendBroadcast(intent);
+
             runOnUiThread(new Runnable()
             {
                 @Override
@@ -114,7 +124,25 @@ public class DriverMainActivity extends AppCompatActivity{
             });
         });
 
-        String id = getSharedPreferences("AirRide_preferences", Context.MODE_PRIVATE).getString("id", null);
+        webSocket.stompClient.topic("/ride-cancel/"+getSharedPreferences("AirRide_preferences", Context.MODE_PRIVATE).getString("id", null)).subscribe(
+                topicMessage->{
+                    Log.wtf("TOPIC", topicMessage.getPayload());
+
+                    runOnUiThread(new Runnable()
+                    {
+                        @Override
+                        public void run()
+                        {
+                            if(dialog.isShowing()){
+                                dialog.dismiss();
+                            }
+                            Toast.makeText(DriverMainActivity.this, "Pending ride was canceled", Toast.LENGTH_LONG).show();
+                        }
+                    });
+
+                }
+        );
+
         this.id = Long.valueOf(id);
 
         setContentView(R.layout.driver_main);
@@ -266,8 +294,8 @@ public class DriverMainActivity extends AppCompatActivity{
                 });
             }
         });
-        AlertDialog alertDialog = builder.create();
-        alertDialog.show();
+        dialog = builder.create();
+        dialog.show();
     }
 
     public void showDeclineDialog(){
