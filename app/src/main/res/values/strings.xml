@@ -69,4 +69,7 @@
     <string name="cancel">Cancel</string>
     <string name="change">Update personal info</string>
     <string name="save">Save changes</string>
+    <string name="enter_email">Enter linked email address</string>
+    <string name="code">Code</string>
+    <string name="new_password">New password</string>
 </resources>
