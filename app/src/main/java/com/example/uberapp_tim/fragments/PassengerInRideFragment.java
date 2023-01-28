@@ -9,11 +9,13 @@ import android.location.Criteria;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.text.InputType;
+import android.text.Layout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.RatingBar;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -24,6 +26,7 @@ import com.example.uberapp_tim.BuildConfig;
 import com.example.uberapp_tim.R;
 import com.example.uberapp_tim.connection.ServiceUtils;
 import com.example.uberapp_tim.connection.WebSocket;
+import com.example.uberapp_tim.dto.ReviewDTO;
 import com.example.uberapp_tim.dto.RideDTO;
 import com.example.uberapp_tim.model.message.Panic;
 import com.example.uberapp_tim.model.ride.RideStatus;
@@ -34,6 +37,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.android.material.textfield.TextInputEditText;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonDeserializationContext;
@@ -233,12 +237,127 @@ public class PassengerInRideFragment extends Fragment implements OnMapReadyCallb
                 });
             } else if (rideRespDTO.getStatus() == RideStatus.FINISHED) {
                 Log.i("usao2", " si");
+
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        showReviewDialog();
+                    }
+                });
+            }
+            Log.i("koja je ovde:", "a");
+        });
+    }
+
+    public void showReviewDialog(){
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        LayoutInflater inflater = getActivity().getLayoutInflater();
+
+        View dialogView = inflater.inflate(R.layout.dialog_review, null);
+
+        RatingBar driverRating = dialogView.findViewById(R.id.driver_ratingbar);
+        RatingBar vehicleRating = dialogView.findViewById(R.id.vehicle_ratingbar);
+        TextInputEditText driverComment = dialogView.findViewById(R.id.driver_comment);
+        TextInputEditText vehicleComment = dialogView.findViewById(R.id.vehicle_comment);
+
+        builder.setView(dialogView);
+
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.cancel();
+            }
+        });
+
+        builder.setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+            }
+        });
+
+        AlertDialog dialog = builder.create();
+
+        dialog.setCanceledOnTouchOutside(true);
+        dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialogInterface) {
                 getActivity().finish();
                 getActivity().overridePendingTransition(0, 0);
                 startActivity(getActivity().getIntent());
                 getActivity().overridePendingTransition(0, 0);
+
             }
-            Log.i("koja je ovde:", "a");
         });
+
+        dialog.show();
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v) {
+                boolean sendDriver = false;
+                boolean sendVehicle = false;
+
+                boolean close = true;
+
+                float dRating = driverRating.getRating();
+                String dComment = driverComment.getText().toString();
+                Log.wtf("COMMENT", dComment);
+                Log.wtf("RATINg", String.valueOf(dComment));
+                if (!dComment.equals("") && dRating == 0) {
+                    Toast.makeText(getActivity(), "You cannot leave a comment without a rating", Toast.LENGTH_SHORT).show();
+                    close = false;
+                    Log.wtf("CLOSE", String.valueOf(close));
+                    return;
+                } else {
+                    if (dRating > 0) {
+                        sendDriver = true;
+                    }
+                }
+                float vRating = vehicleRating.getRating();
+                String vComment = vehicleComment.getText().toString();
+                if (!vComment.equals("") && vRating == 0) {
+                    Toast.makeText(getActivity(), "You cannot leave a comment without a rating", Toast.LENGTH_SHORT).show();
+                    close = false;
+                    return;
+                } else {
+                    if (vRating > 0) {
+                        sendVehicle = true;
+                    }
+                }
+                String jwt = "Bearer " + getActivity().getSharedPreferences("AirRide_preferences", Context.MODE_PRIVATE).getString("accessToken", "");
+                if (sendVehicle) {
+                    ServiceUtils.reviewService.createReviewVehicle(jwt, rideRespDTO.getId(), new ReviewDTO((int) Math.round(dRating), dComment, null)).enqueue(new Callback<ResponseBody>() {
+                        @Override
+                        public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+
+                        }
+
+                        @Override
+                        public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+                        }
+                    });
+                }
+                if (sendDriver) {
+                    ServiceUtils.reviewService.createReviewDriver(jwt, rideRespDTO.getId(), new ReviewDTO((int) Math.round(dRating), dComment, null)).enqueue(new Callback<ResponseBody>() {
+                        @Override
+                        public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+
+                        }
+
+                        @Override
+                        public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+                        }
+                    });
+                    Log.wtf("KRAJNJI CLOSE", String.valueOf(close));
+                    if (close) dialog.cancel();
+                    //else dialog stays open. Make sure you have an obvious way to close the dialog especially if you set cancellable to false.
+                }
+            }
+        });
+
     }
 }

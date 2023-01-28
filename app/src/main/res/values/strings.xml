@@ -72,4 +72,7 @@
     <string name="enter_email">Enter linked email address</string>
     <string name="code">Code</string>
     <string name="new_password">New password</string>
+    <string name="driver_review">Driver review</string>
+    <string name="vehicle_review">Vehicle review</string>
+    <string name="comment">Comment…</string>
 </resources>
