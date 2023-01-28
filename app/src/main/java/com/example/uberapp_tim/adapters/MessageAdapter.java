@@ -20,6 +20,7 @@ import java.util.Objects;
 
 import com.example.uberapp_tim.dto.MessageDTO;
 import com.example.uberapp_tim.model.message.Message;
+import com.example.uberapp_tim.model.users.User;
 
 
 public class MessageAdapter extends RecyclerView.Adapter {
@@ -28,10 +29,12 @@ public class MessageAdapter extends RecyclerView.Adapter {
 
     private Context mContext;
     private List<MessageDTO> mMessageList;
+    private User receiving;
 
-    public MessageAdapter(Context context, List<MessageDTO> messages){
+    public MessageAdapter(Context context, List<MessageDTO> messages, User receiving){
         mContext = context;
         mMessageList = messages;
+        this.receiving = receiving;
     }
 
     @NonNull
@@ -99,6 +102,8 @@ public class MessageAdapter extends RecyclerView.Adapter {
 
         void bind(MessageDTO message){
             messageTxt.setText(message.getMessage());
+            String fullName = receiving.getName() + " " + receiving.getLastName();
+            nameTxt.setText(fullName);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 timeTxt.setText(message.getTimeOfSending().format(DateTimeFormatter.ofPattern("HH:mm")));
                 dateTxt.setText(message.getTimeOfSending().format(DateTimeFormatter.ofPattern("dd.MM.yyyy.")));

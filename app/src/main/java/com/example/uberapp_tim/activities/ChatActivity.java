@@ -24,6 +24,7 @@ import com.example.uberapp_tim.dto.MessageDTO;
 import com.example.uberapp_tim.dto.SendMessageDTO;
 import com.example.uberapp_tim.model.message.Message;
 import com.example.uberapp_tim.model.message.MessageType;
+import com.example.uberapp_tim.model.users.User;
 import com.example.uberapp_tim.receiver.NotificationReceiver;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -69,7 +70,7 @@ public class ChatActivity extends AppCompatActivity {
 
         webSocket = new WebSocket();
         setContentView(R.layout.chat);
-        jwt = getSharedPreferences("AirRide_preferences", Context.MODE_PRIVATE).getString("accessToken", "");
+        jwt = "Bearer "+ getSharedPreferences("AirRide_preferences", Context.MODE_PRIVATE).getString("accessToken", "");
 
         send = findViewById(R.id.button_chat_send);
         editText = findViewById(R.id.edit_message);
@@ -78,7 +79,7 @@ public class ChatActivity extends AppCompatActivity {
             public void onClick(View view) {
                 SendMessageDTO dto = new SendMessageDTO(editText.getText().toString(), MessageType.RIDE, rideId);
                 editText.setText("");
-                ServiceUtils.userService.sendMessage("Bearer " + jwt, user2id, dto).enqueue(new Callback<ResponseBody>() {
+                ServiceUtils.userService.sendMessage(jwt, user2id, dto).enqueue(new Callback<ResponseBody>() {
                     @Override
                     public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                         try {
@@ -177,7 +178,7 @@ public class ChatActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        ServiceUtils.userService.getMessagesForUsersByRide("Bearer " + jwt, user2id, user1id, rideId).enqueue(new Callback<ResponseBody>() {
+        ServiceUtils.userService.getMessagesForUsersByRide(jwt, user2id, user1id, rideId).enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 try {
@@ -198,7 +199,20 @@ public class ChatActivity extends AppCompatActivity {
 
                     Type listType = new TypeToken<ArrayList<MessageDTO>>(){}.getType();
                     messages = g.fromJson(message, listType);
-                    mMessageRecycler.setAdapter(new MessageAdapter(ChatActivity.this, messages));
+
+                    ServiceUtils.userService.getUserData(jwt, user2id).enqueue(new Callback<User>() {
+                        @Override
+                        public void onResponse(Call<User> call, Response<User> response) {
+                            Log.wtf("Response123", response.body().getName());
+                            mMessageRecycler.setAdapter(new MessageAdapter(ChatActivity.this, messages, response.body()));
+                        }
+
+                        @Override
+                        public void onFailure(Call<User> call, Throwable t) {
+
+                        }
+                    });
+
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

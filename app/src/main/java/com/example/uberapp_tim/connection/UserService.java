@@ -39,4 +39,7 @@ public interface UserService {
 
     @PUT("user/resetPassword")
     Call<ResponseBody> resetPassword(@Body ResetPasswordDTO dto);
+
+    @GET("user/{id}")
+    Call<User>getUserData(@Header("authorization") String token,@Path("id")Long id);
 }
