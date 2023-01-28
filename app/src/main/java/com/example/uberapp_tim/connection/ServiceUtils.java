@@ -36,4 +36,6 @@ public class ServiceUtils {
 
     public static RideService rideService = retrofit.create(RideService.class);
 
+    public static ReviewService reviewService = retrofit.create(ReviewService.class);
+
 }
