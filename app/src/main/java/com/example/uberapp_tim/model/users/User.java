@@ -32,6 +32,8 @@ public class User implements Serializable {
     private String profilePhoto;
     private boolean blocked;
 
+    public User() { }
+
     public User(Long id, String name, String lastName,String email, String phoneNumber,
                 String address, String password, String profilePhoto, Boolean blocked){
         this.id = id;

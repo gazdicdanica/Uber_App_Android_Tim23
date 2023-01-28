@@ -86,7 +86,6 @@ public class UserLoginActivity extends AppCompatActivity {
         LoginDTO loginDTO = new LoginDTO(email, password);
 
         ServiceUtils.userService.login(loginDTO).enqueue(new Callback<TokensDTO>() {
-            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onResponse(Call<TokensDTO> call, Response<TokensDTO> response) {
                 if(response.code() == 200){

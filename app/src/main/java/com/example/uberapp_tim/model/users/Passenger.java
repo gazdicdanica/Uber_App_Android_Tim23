@@ -10,6 +10,8 @@ public class Passenger extends User implements Serializable {
 
     private Route favoriteRoute;
 
+    public Passenger() { }
+
     public Passenger(Long id, String name, String lastName, String email, String phoneNumber,
                      String address, String password, String profilePhoto,
                      boolean blocked, Route favoriteRoute){
@@ -18,4 +20,11 @@ public class Passenger extends User implements Serializable {
         this.favoriteRoute = favoriteRoute;
     }
 
+    public Route getFavoriteRoute() {
+        return favoriteRoute;
+    }
+
+    public void setFavoriteRoute(Route favoriteRoute) {
+        this.favoriteRoute = favoriteRoute;
+    }
 }

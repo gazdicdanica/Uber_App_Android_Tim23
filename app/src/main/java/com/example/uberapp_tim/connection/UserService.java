@@ -5,6 +5,7 @@ import com.example.uberapp_tim.dto.ResetPasswordDTO;
 import com.example.uberapp_tim.dto.SendMessageDTO;
 import com.example.uberapp_tim.dto.TokensDTO;
 import com.example.uberapp_tim.dto.UpdatePasswordDTO;
+import com.example.uberapp_tim.model.users.User;
 import com.example.uberapp_tim.dto.UserShortDTO;
 
 import okhttp3.ResponseBody;
