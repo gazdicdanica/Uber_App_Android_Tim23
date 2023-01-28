@@ -136,7 +136,7 @@ public class PassengerAccountActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
                 passenger = response.body();
-                setParameters(response.body());
+                setParameters(passenger);
             }
 
             @Override
@@ -374,7 +374,7 @@ public class PassengerAccountActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
                 passenger = response.body();
-                setParameters(response.body());
+                setParameters(passenger);
             }
 
             @Override
@@ -406,7 +406,7 @@ public class PassengerAccountActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
                 passenger = response.body();
-                setParameters(response.body());
+                setParameters(passenger);
             }
 
             @Override
