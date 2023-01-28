@@ -21,7 +21,7 @@ public interface PassengerService {
             "Content-Type:application/json"
     })
     @POST("passenger")
-    Call<ResponseBody> createPassenger(@Body Passenger passenger);
+    Call<User> createPassenger(@Body Passenger passenger);
 
     @GET("passenger/{id}")
     Call<User> getPassenger(@Header("authorization") String token, @Path("id") Long id);

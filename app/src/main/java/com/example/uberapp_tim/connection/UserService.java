@@ -4,6 +4,7 @@ import com.example.uberapp_tim.dto.LoginDTO;
 import com.example.uberapp_tim.dto.SendMessageDTO;
 import com.example.uberapp_tim.dto.TokensDTO;
 import com.example.uberapp_tim.dto.UpdatePasswordDTO;
+import com.example.uberapp_tim.model.users.User;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
