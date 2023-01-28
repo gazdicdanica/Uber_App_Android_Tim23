@@ -4,13 +4,13 @@ import com.example.uberapp_tim.model.message.MessageType;
 
 public class SendMessageDTO {
     private String message;
-    private MessageType messageType;
+    private MessageType type;
     private Long rideId;
 
 
     public SendMessageDTO(String message, MessageType messageType, Long rideId) {
         this.message = message;
-        this.messageType = messageType;
+        this.type = messageType;
         this.rideId = rideId;
     }
 
@@ -23,11 +23,11 @@ public class SendMessageDTO {
     }
 
     public MessageType getMessageType() {
-        return messageType;
+        return type;
     }
 
     public void setMessageType(MessageType messageType) {
-        this.messageType = messageType;
+        this.type = messageType;
     }
 
     public Long getRideId() {

@@ -90,9 +90,9 @@ public class MessageAdapter extends RecyclerView.Adapter {
 
         protected  ReceivedMessageHolder(View itemView){
             super(itemView);
-            messageTxt = (TextView) itemView.findViewById(R.id.text_user_other);
+            messageTxt = (TextView) itemView.findViewById(R.id.text_message_other);
             timeTxt = (TextView) itemView.findViewById(R.id.text_timestamp_other);
-            nameTxt = (TextView) itemView.findViewById(R.id.text_message_other);
+            nameTxt = (TextView) itemView.findViewById(R.id.name_user_other);
             profileImage = (ImageView) itemView.findViewById(R.id.image_profile_other);
             dateTxt = (TextView) itemView.findViewById(R.id.text_date_other);
         }

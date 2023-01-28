@@ -26,6 +26,7 @@ import com.example.uberapp_tim.fragments.RideFragment;
 import com.example.uberapp_tim.model.message.Panic;
 import com.example.uberapp_tim.model.route.Location;
 import com.example.uberapp_tim.service.FragmentToActivity;
+import com.example.uberapp_tim.service.OnMessageReceivedListener;
 import com.example.uberapp_tim.tools.FragmentTransition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.material.button.MaterialButton;
@@ -89,7 +90,7 @@ public class DriverRideActivity extends AppCompatActivity implements FragmentToA
     protected void onResume(){
         super.onResume();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            FragmentTransition.to(RideFragment.newInstance(), this, false);
+            FragmentTransition.to(RideFragment.newInstance(), this, true);
         }
     }
 

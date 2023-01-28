@@ -4,9 +4,12 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 
 import androidx.appcompat.app.AlertDialog;
+
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Criteria;
@@ -14,6 +17,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -34,9 +38,13 @@ import com.example.uberapp_tim.activities.driver.DriverMainActivity;
 import com.example.uberapp_tim.activities.driver.DriverRideActivity;
 import com.example.uberapp_tim.connection.ServiceUtils;
 import com.example.uberapp_tim.connection.WebSocket;
+import com.example.uberapp_tim.dto.MessageDTO;
 import com.example.uberapp_tim.dto.RideDTO;
 import com.example.uberapp_tim.model.message.Panic;
+import com.example.uberapp_tim.receiver.NotificationReceiver;
 import com.example.uberapp_tim.service.FragmentToActivity;
+import com.example.uberapp_tim.service.OnMessageReceivedListener;
+import com.example.uberapp_tim.service.WebSocketService;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -77,7 +85,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class RideFragment extends Fragment implements LocationListener, OnMapReadyCallback {
+public class RideFragment extends Fragment implements LocationListener, OnMapReadyCallback, OnMessageReceivedListener {
 
     public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
 
@@ -97,6 +105,7 @@ public class RideFragment extends Fragment implements LocationListener, OnMapRea
 
     private static WebSocket webSocket;
     private FragmentToActivity mCallback;
+
 
     public static RideFragment newInstance(){
         RideFragment f = new RideFragment();
@@ -129,6 +138,7 @@ public class RideFragment extends Fragment implements LocationListener, OnMapRea
                 }
         );
 
+
         webSocket.stompClient.topic("/ride-cancel/"+getActivity().getSharedPreferences("AirRide_preferences", Context.MODE_PRIVATE).getString("id", null)).subscribe(
                 topicMessage->{
 
@@ -143,9 +153,37 @@ public class RideFragment extends Fragment implements LocationListener, OnMapRea
 
                     Intent main = new Intent(activity, DriverMainActivity.class);
                     main.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
-                    startActivity(main);
+                    getActivity().startActivity(main);
                 }
         );
+
+        webSocket.stompClient.topic("/message/"+id+"/"+getActivity().getSharedPreferences("AirRide_preferences", Context.MODE_PRIVATE).getString("id", null)).subscribe(topicMessage ->{
+            String message = topicMessage.getPayload();
+            Log.d("MESSAGE", message);
+
+            Gson g = null;
+
+            g = new GsonBuilder().registerTypeAdapter(LocalDateTime.class, new JsonDeserializer<LocalDateTime>() {
+                @Override
+                public LocalDateTime deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+                    DateTimeFormatter format = DateTimeFormatter.ofPattern("yyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+                    return LocalDateTime.parse(json.getAsJsonPrimitive().getAsString(), format);
+                }
+            }).create();
+
+            MessageDTO messageDTO = g.fromJson(message, MessageDTO.class);
+            Log.wtf("converted", messageDTO.toString());
+            if(!String.valueOf(messageDTO.getSender()).equals(getActivity().getSharedPreferences("AirRide_preferences", Context.MODE_PRIVATE).getString("id", null))){
+                Intent i = new Intent(getActivity(), NotificationReceiver.class);
+                i.putExtra("title", "In ride message");
+                i.putExtra("text", messageDTO.getMessage());
+                i.putExtra("channel", "in_ride_channel");
+                i.putExtra("id", getActivity().getSharedPreferences("AirRide_preferences", Context.MODE_PRIVATE).getString("id", null));
+
+                getActivity().sendBroadcast(i);
+            }
+
+        });
 
     }
 
@@ -432,6 +470,7 @@ public class RideFragment extends Fragment implements LocationListener, OnMapRea
         }
     }
 
+    @SuppressLint("CheckResult")
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -538,4 +577,8 @@ public class RideFragment extends Fragment implements LocationListener, OnMapRea
     }
 
 
+    @Override
+    public void onMessageReceived(String message) {
+
+    }
 }

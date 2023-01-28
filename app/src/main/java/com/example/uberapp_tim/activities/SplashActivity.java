@@ -27,8 +27,6 @@ public class SplashActivity extends Activity {
         super.onCreate(savedInstance);
         setContentView(R.layout.splash);
 
-        createNotificationChannels();
-
         try{
             String accessToken = getSharedPreferences("AirRide_preferences", Context.MODE_PRIVATE).getString("accessToken", "");
 
@@ -46,14 +44,6 @@ public class SplashActivity extends Activity {
         }, 3000);
     }
 
-    private void createNotificationChannels(){
-        NotificationChannel channelDriver = new NotificationChannel("driver_channel", "Driver notifications", NotificationManager.IMPORTANCE_HIGH);
-        NotificationManager notificationManager = getSystemService(NotificationManager.class);
-        notificationManager.createNotificationChannel(channelDriver);
-
-        NotificationChannel channelPassenger = new NotificationChannel("passenger_channel", "Passenger notifications", NotificationManager.IMPORTANCE_HIGH);
-        notificationManager.createNotificationChannel(channelPassenger);
-    }
 
     @Override
     protected void onStart(){
