@@ -20,57 +20,49 @@
         </androidx.appcompat.widget.Toolbar>
     </com.google.android.material.appbar.AppBarLayout>
 
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/idTxtView"
-        android:layout_below="@+id/appBarLayout"
+    <LinearLayout
+        android:layout_below="@id/appBarLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:drawableStartCompat="@drawable/id_card"
-        android:layout_marginTop="30dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginEnd="20dp"
-        android:text="@string/id_number"
-        android:drawablePadding="7dp"
-        android:drawableTint="?attr/colorOnBackground"/>
+        android:orientation="vertical"
+        android:layout_height="wrap_content">
 
-    <EditText
-        android:id="@+id/idNum"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="number"
-        android:focusable="false"
-        android:layout_marginEnd="20dp"
-        android:layout_marginStart="20dp"
-        android:layout_below="@+id/idTxtView"
-        android:drawableEnd="@drawable/ic_baseline_arrow_forward_18"
-        android:drawablePadding="7dp"
-        android:drawableTint="?attr/colorOnBackground"/>
+        <TextView
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/id_number"
+            android:layout_marginBottom="5dp"
+            android:gravity="center"/>
 
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/regTxtView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:drawableStartCompat="@drawable/id_card"
-        android:layout_marginTop="30dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginEnd="20dp"
-        android:text="@string/vehicle_registration_id"
-        android:drawablePadding="7dp"
-        android:drawableTint="?attr/colorOnBackground"
-        android:layout_below="@+id/idNum"/>
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/idCardPhoto"
+            android:layout_width="164dp"
+            android:layout_height="100dp"
+            android:layout_gravity="center"
+            android:layout_marginBottom="25dp"
+            android:src="@drawable/man"
+            app:civ_border_color="@color/white"
+            app:civ_border_width="3dp">
 
-    <EditText
-        android:id="@+id/vehicleRegistrationIdNum"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="number"
-        android:focusable="false"
-        android:layout_marginEnd="20dp"
-        android:layout_marginStart="20dp"
-        android:layout_below="@+id/regTxtView"
-        android:drawableEnd="@drawable/ic_baseline_arrow_forward_18"
-        android:drawablePadding="7dp"
-        android:drawableTint="?attr/colorOnBackground"/>
+        </de.hdodenhof.circleimageview.CircleImageView>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/vehicle_registration_id"
+            android:layout_marginBottom="5dp"
+            android:gravity="center"/>
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/vehicleRegistrationPhoto"
+            android:layout_width="164dp"
+            android:layout_height="100dp"
+            android:layout_gravity="center"
+            android:src="@drawable/man"
+            app:civ_border_color="@color/white"
+            app:civ_border_width="3dp">
+
+        </de.hdodenhof.circleimageview.CircleImageView>
+    </LinearLayout>
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/confirmDriverIds"

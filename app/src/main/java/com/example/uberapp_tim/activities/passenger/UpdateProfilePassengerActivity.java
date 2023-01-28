@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.example.uberapp_tim.R;
+import com.example.uberapp_tim.activities.driver.DriverAccountActivity;
 import com.example.uberapp_tim.connection.ServiceUtils;
 import com.example.uberapp_tim.model.users.User;
 import com.google.android.material.button.MaterialButton;
@@ -66,53 +67,92 @@ public class UpdateProfilePassengerActivity extends AppCompatActivity {
                 String email = UpdateProfilePassengerActivity.this.email.getText().toString();
                 String phoneNum = UpdateProfilePassengerActivity.this.phoneNum.getText().toString();
 
-                if (address.equals("")){
+                if (address.equals("")) {
                     addressLayout.setError("Required");
-                }if(name.equals("")){
+                }
+                if (name.equals("")) {
                     nameLayout.setError("Required");
-                }if(surname.equals("")){
+                }
+                if (surname.equals("")) {
                     lastNameLayout.setError("Required");
-                }if(email.equals("")){
+                }
+                if (email.equals("")) {
                     emailLayout.setError("Required");
-                }if(phoneNum.equals("")){
+                }
+                if (phoneNum.equals("")) {
                     phoneNumLayout.setError("Required");
                 }
 
                 Long id = Long.valueOf(getSharedPreferences("AirRide_preferences", Context.MODE_PRIVATE).getString("id", ""));
+                String role = getSharedPreferences("AirRide_preferences", Context.MODE_PRIVATE).getString("role", "");
+
                 String jwt = getSharedPreferences("AirRide_preferences", Context.MODE_PRIVATE).getString("accessToken", "");
-                ServiceUtils.passengerService.updatePassenger("Bearer " + jwt, id, new User(id,name, surname, email, phoneNum, address, "", passenger.getProfilePhoto(), passenger.isBlocked())).enqueue(new Callback<User>() {
-                    @Override
-                    public void onResponse(Call<User> call, Response<User> response) {
-                        Toast.makeText(UpdateProfilePassengerActivity.this, "Profile successfully updated", Toast.LENGTH_SHORT).show();
-                        Intent i = new Intent(UpdateProfilePassengerActivity.this, PassengerAccountActivity.class);
-                        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        startActivity(i);
-                    }
+                User u = new User(id, name, surname, email, phoneNum, address, "", passenger.getProfilePhoto(), passenger.isBlocked());
+                if (role.equals("ROLE_USER")) {
+                    ServiceUtils.passengerService.updatePassenger("Bearer " + jwt, id, u).enqueue(new Callback<User>() {
+                        @Override
+                        public void onResponse(Call<User> call, Response<User> response) {
+                            Toast.makeText(UpdateProfilePassengerActivity.this, "Profile successfully updated", Toast.LENGTH_SHORT).show();
+                            Intent i = new Intent(UpdateProfilePassengerActivity.this, PassengerAccountActivity.class);
+                            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            startActivity(i);
+                        }
 
-                    @Override
-                    public void onFailure(Call<User> call, Throwable t) {
+                        @Override
+                        public void onFailure(Call<User> call, Throwable t) {
 
-                    }
+                        }
                 });
+                } else if (role.equals("ROLE_DRIVER")) {
+                    ServiceUtils.driverService.updateDriver("Bearer "+jwt, id, u).enqueue(new Callback<User>() {
+                        @Override
+                        public void onResponse(Call<User> call, Response<User> response) {
+                            Toast.makeText(UpdateProfilePassengerActivity.this, "Profile successfully updated", Toast.LENGTH_SHORT).show();
+                            Intent i = new Intent(UpdateProfilePassengerActivity.this, DriverAccountActivity.class);
+                            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            startActivity(i);
+                        }
+
+                        @Override
+                        public void onFailure(Call<User> call, Throwable t) {
+                            Log.wtf("Update Driver:", t.getMessage());
+                        }
+                    });
+                }
             }
         });
 
         SharedPreferences pref = getSharedPreferences("AirRide_preferences", Context.MODE_PRIVATE);
         String jwt = pref.getString("accessToken", "");
+        String role = getSharedPreferences("AirRide_preferences", Context.MODE_PRIVATE).getString("role", "");
         Long id = Long.valueOf(pref.getString("id", ""));
-        ServiceUtils.passengerService.getPassenger("Bearer " + jwt, id).enqueue(new Callback<User>() {
-            @Override
-            public void onResponse(Call<User> call, Response<User> response) {
-                passenger = response.body();
-                setParameters();
-            }
+        if (role.equals("ROLE_USER")) {
+            ServiceUtils.passengerService.getPassenger("Bearer " + jwt, id).enqueue(new Callback<User>() {
+                @Override
+                public void onResponse(Call<User> call, Response<User> response) {
+                    passenger = response.body();
+                    setParameters();
+                }
 
-            @Override
-            public void onFailure(Call<User> call, Throwable t) {
-                Log.wtf("message",  t.getMessage());
-            }
-        });
+                @Override
+                public void onFailure(Call<User> call, Throwable t) {
+                    Log.wtf("message", t.getMessage());
+                }
+            });
+        } else if (role.equals("ROLE_DRIVER")) {
+            ServiceUtils.driverService.getDriver("Bearer "+jwt, id).enqueue(new Callback<User>() {
+                @Override
+                public void onResponse(Call<User> call, Response<User> response) {
+                    passenger = response.body();
+                    setParameters();
+                }
 
+                @Override
+                public void onFailure(Call<User> call, Throwable t) {
+                    Log.wtf("get driver msg: ", t.getMessage());
+                }
+            });
+        }
     }
 
     private void setParameters(){
