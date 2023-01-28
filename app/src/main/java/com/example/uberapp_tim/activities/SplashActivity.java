@@ -2,6 +2,8 @@ package com.example.uberapp_tim.activities;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
@@ -25,6 +27,8 @@ public class SplashActivity extends Activity {
         super.onCreate(savedInstance);
         setContentView(R.layout.splash);
 
+        createNotificationChannels();
+
         try{
             String accessToken = getSharedPreferences("AirRide_preferences", Context.MODE_PRIVATE).getString("accessToken", "");
 
@@ -40,6 +44,15 @@ public class SplashActivity extends Activity {
                 finish();
             }
         }, 3000);
+    }
+
+    private void createNotificationChannels(){
+        NotificationChannel channelDriver = new NotificationChannel("driver_channel", "Driver notifications", NotificationManager.IMPORTANCE_HIGH);
+        NotificationManager notificationManager = getSystemService(NotificationManager.class);
+        notificationManager.createNotificationChannel(channelDriver);
+
+        NotificationChannel channelPassenger = new NotificationChannel("passenger_channel", "Passenger notifications", NotificationManager.IMPORTANCE_HIGH);
+        notificationManager.createNotificationChannel(channelPassenger);
     }
 
     @Override

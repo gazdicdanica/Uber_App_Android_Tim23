@@ -2,8 +2,8 @@ package com.example.uberapp_tim.fragments;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.app.AlertDialog;
+
+import androidx.appcompat.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -15,7 +15,6 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.text.InputType;
-import android.text.Layout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,7 +33,7 @@ import com.example.uberapp_tim.R;
 import com.example.uberapp_tim.activities.driver.DriverMainActivity;
 import com.example.uberapp_tim.activities.driver.DriverRideActivity;
 import com.example.uberapp_tim.connection.ServiceUtils;
-import com.example.uberapp_tim.dialogs.LocationDialog;
+import com.example.uberapp_tim.connection.WebSocket;
 import com.example.uberapp_tim.dto.RideDTO;
 import com.example.uberapp_tim.model.message.Panic;
 import com.example.uberapp_tim.service.FragmentToActivity;
@@ -64,7 +63,6 @@ import com.google.maps.model.DirectionsLeg;
 import com.google.maps.model.DirectionsResult;
 import com.google.maps.model.DirectionsRoute;
 import com.google.maps.model.DirectionsStep;
-import com.google.maps.model.Duration;
 import com.google.maps.model.EncodedPolyline;
 
 import java.io.IOException;
@@ -97,6 +95,7 @@ public class RideFragment extends Fragment implements LocationListener, OnMapRea
     private Marker endMarker;
     private Polyline activeRoute;
 
+    private static WebSocket webSocket;
     private FragmentToActivity mCallback;
 
     public static RideFragment newInstance(){
@@ -104,6 +103,7 @@ public class RideFragment extends Fragment implements LocationListener, OnMapRea
         return f;
     }
 
+    @SuppressLint("CheckResult")
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
@@ -112,6 +112,61 @@ public class RideFragment extends Fragment implements LocationListener, OnMapRea
         activity = (DriverRideActivity)getActivity();
         Bundle res = activity.getIdBundle();
         id = res.getLong("id");
+
+        webSocket = new WebSocket();
+        webSocket.stompClient.topic("/ride-panic/"+getActivity().getSharedPreferences("AirRide_preferences", Context.MODE_PRIVATE).getString("id", null)).subscribe(
+                topicMessage->{
+                    activity.runOnUiThread(new Runnable()
+                    {
+                        @Override
+                        public void run()
+                        {
+                            RideFragment.this.showPanicDialog();
+
+                        }
+                    });
+
+                }
+        );
+
+        webSocket.stompClient.topic("/ride-cancel/"+getActivity().getSharedPreferences("AirRide_preferences", Context.MODE_PRIVATE).getString("id", null)).subscribe(
+                topicMessage->{
+
+                    activity.runOnUiThread(new Runnable()
+                    {
+                        @Override
+                        public void run()
+                        {
+                            Toast.makeText(activity, "Pending ride was canceled", Toast.LENGTH_LONG).show();
+                        }
+                    });
+
+                    Intent main = new Intent(activity, DriverMainActivity.class);
+                    main.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(main);
+                }
+        );
+
+    }
+
+    public void showPanicDialog(){
+        AlertDialog dialog;
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        LayoutInflater inflater = activity.getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.panic_dialog_layout, null);
+        builder.setView(dialogView);
+        dialog = builder.create();
+        dialog.setCanceledOnTouchOutside(true);
+        dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialogInterface) {
+                Intent main = new Intent(activity, DriverMainActivity.class);
+                main.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(main);
+            }
+        });
+        dialog.show();
+
     }
 
 
@@ -343,6 +398,9 @@ public class RideFragment extends Fragment implements LocationListener, OnMapRea
                         destination = ride.getLocations().get(0).getDeparture();
                         addRedMarker(destination, "Departure");
                         drawRoute();
+                        Location loc = new Location("");
+                        loc.setLatitude(destination.getLatitude());
+                        loc.setLongitude(destination.getLongitude());
                         mCallback.communicate(ride.getPassengers().get(0).getId());
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -443,7 +501,7 @@ public class RideFragment extends Fragment implements LocationListener, OnMapRea
         panicBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                android.app.AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                 builder.setTitle("Please enter a reason");
                 final EditText input = new EditText(getContext());
                 input.setInputType(InputType.TYPE_CLASS_TEXT);
@@ -478,5 +536,6 @@ public class RideFragment extends Fragment implements LocationListener, OnMapRea
             }
         });
     }
+
 
 }

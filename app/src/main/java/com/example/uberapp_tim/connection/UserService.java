@@ -1,10 +1,12 @@
 package com.example.uberapp_tim.connection;
 
 import com.example.uberapp_tim.dto.LoginDTO;
+import com.example.uberapp_tim.dto.ResetPasswordDTO;
 import com.example.uberapp_tim.dto.SendMessageDTO;
 import com.example.uberapp_tim.dto.TokensDTO;
 import com.example.uberapp_tim.dto.UpdatePasswordDTO;
 import com.example.uberapp_tim.model.users.User;
+import com.example.uberapp_tim.dto.UserShortDTO;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -30,5 +32,11 @@ public interface UserService {
     Call<ResponseBody> doesUserExist(@Header("authorization") String token, @Path("email")String email);
 
     @PUT("user/{id}/changePassword")
-    Call<ResponseBody> changePassword(@Header("authorization") String token, @Path("id")Long id, @Body UpdatePasswordDTO dto);
+    Call<ResponseBody> changePassword(@Header("authorization") String token, @Path("id") Long id, @Body UpdatePasswordDTO dto);
+
+    @PUT("user/forgotPassword")
+    Call<ResponseBody> sendResetEmail(@Body UserShortDTO dto);
+
+    @PUT("user/resetPassword")
+    Call<ResponseBody> resetPassword(@Body ResetPasswordDTO dto);
 }
