@@ -3,24 +3,40 @@ package com.example.uberapp_tim.model.vehicle;
 public class Vehicle {
     private Long id;
     private String model;
-    private String registrationPlates;
-    private int capacity;
-    private boolean acceptBabies;
-    private boolean acceptPets;
-    private CarType carType;
+    private String licenseNumber;
+    private int passengerSeats;
+    private boolean babyTransport;
+    private boolean petTransport;
+    private CarType vehicleType;
     private float pricePerKilometer;
 
-    public Vehicle(Long id, String model, String registrationPlates, int capacity,
-                   boolean acceptBabies, boolean acceptPets, CarType carType, float pricePerKilometer) {
+    public Vehicle(Long id, String model, String licenseNumber, int passengerSeats,
+                   boolean babyTransport, boolean petTransport, CarType vehicleType, float pricePerKilometer) {
         this.id = id;
         this.model = model;
-        this.registrationPlates = registrationPlates;
-        this.capacity = capacity;
-        this.acceptBabies = acceptBabies;
-        this.acceptPets = acceptPets;
-        this.carType = carType;
+        this.licenseNumber = licenseNumber;
+        this.passengerSeats = passengerSeats;
+        this.babyTransport = babyTransport;
+        this.petTransport = petTransport;
+        this.vehicleType = vehicleType;
         this.pricePerKilometer = pricePerKilometer;
     }
+
+    @Override
+    public String toString() {
+        return "Vehicle{" +
+                "id=" + id +
+                ", model='" + model + '\'' +
+                ", registrationPlates='" + licenseNumber + '\'' +
+                ", capacity=" + passengerSeats +
+                ", acceptBabies=" + babyTransport +
+                ", acceptPets=" + petTransport +
+                ", carType=" + vehicleType +
+                ", pricePerKilometer=" + pricePerKilometer +
+                '}';
+    }
+
+    public Vehicle() { }
 
     public Long getId() {
         return id;
@@ -38,44 +54,44 @@ public class Vehicle {
         this.model = model;
     }
 
-    public String getRegistrationPlates() {
-        return registrationPlates;
+    public String getLicenseNumber() {
+        return licenseNumber;
     }
 
-    public void setRegistrationPlates(String registrationPlates) {
-        this.registrationPlates = registrationPlates;
+    public void setLicenseNumber(String licenseNumber) {
+        this.licenseNumber = licenseNumber;
     }
 
-    public int getCapacity() {
-        return capacity;
+    public int getPassengerSeats() {
+        return passengerSeats;
     }
 
-    public void setCapacity(int capacity) {
-        this.capacity = capacity;
+    public void setPassengerSeats(int passengerSeats) {
+        this.passengerSeats = passengerSeats;
     }
 
-    public boolean isAcceptBabies() {
-        return acceptBabies;
+    public boolean isBabyTransport() {
+        return babyTransport;
     }
 
-    public void setAcceptBabies(boolean acceptBabies) {
-        this.acceptBabies = acceptBabies;
+    public void setBabyTransport(boolean babyTransport) {
+        this.babyTransport = babyTransport;
     }
 
-    public boolean isAcceptPets() {
-        return acceptPets;
+    public boolean isPetTransport() {
+        return petTransport;
     }
 
-    public void setAcceptPets(boolean acceptPets) {
-        this.acceptPets = acceptPets;
+    public void setPetTransport(boolean petTransport) {
+        this.petTransport = petTransport;
     }
 
-    public CarType getCarType() {
-        return carType;
+    public CarType getVehicleType() {
+        return vehicleType;
     }
 
-    public void setCarType(CarType carType) {
-        this.carType = carType;
+    public void setVehicleType(CarType vehicleType) {
+        this.vehicleType = vehicleType;
     }
 
     public float getPricePerKilometer() {
