@@ -3,8 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/nav">
+    xmlns:tools="http://schemas.android.com/tools">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/layout_group_chat"

@@ -76,7 +76,7 @@ public class MessageAdapter extends RecyclerView.Adapter {
         String idStr = mContext.getSharedPreferences("AirRide_preferences", Context.MODE_PRIVATE).getString("id", null);
         Long id = Long.parseLong(idStr);
         Log.d("SENT_ID", idStr);
-        if (Objects.equals(message.getSender(), id)){
+        if (Objects.equals(message.getSender().getId(), id)){
             return VIEW_TYPE_SENT;
         }else{
             return VIEW_TYPE_RECEIVED;

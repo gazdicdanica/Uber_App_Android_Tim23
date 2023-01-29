@@ -361,6 +361,7 @@ public class DriverAccountActivity extends AppCompatActivity {
                 overridePendingTransition(0,0);
                 return true;
             case (R.id.action_logout):
+                // TODO finish working hour if not already finished
                 Intent loginScreen =new Intent(DriverAccountActivity.this, UserLoginActivity.class);
                 loginScreen.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(loginScreen);

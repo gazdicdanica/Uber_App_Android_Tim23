@@ -31,7 +31,7 @@ public class ChatActivity extends AppCompatActivity {
 
         setContentView(R.layout.chat);
 
-        Toolbar toolbar = findViewById(R.id.nav);
+        Toolbar toolbar = findViewById(R.id.toolbar_chat);
         setSupportActionBar(toolbar);
 
         final ActionBar actionBar = getSupportActionBar();
