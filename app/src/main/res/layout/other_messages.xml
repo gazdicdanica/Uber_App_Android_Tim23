@@ -3,14 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginStart="8dp"
-    android:layout_marginTop="16dp">
+    android:layout_marginStart="8dp">
 
     <TextView
         android:id="@+id/text_date_other"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="20dp"
         android:paddingStart="8dp"
         android:paddingTop="4dp"
         android:paddingEnd="8dp"
@@ -30,7 +29,7 @@
         app:layout_constraintTop_toBottomOf="@+id/text_date_other" />
 
     <TextView
-        android:id="@+id/text_user_other"
+        android:id="@+id/name_user_other"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -49,7 +48,7 @@
         app:cardPreventCornerOverlap="false"
         app:cardUseCompatPadding="true"
         app:layout_constraintStart_toEndOf="@+id/image_profile_other"
-        app:layout_constraintTop_toBottomOf="@+id/text_user_other">
+        app:layout_constraintTop_toBottomOf="@+id/name_user_other">
 
         <LinearLayout
             android:id="@+id/layout_container_other"

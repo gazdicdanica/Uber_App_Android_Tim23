@@ -20,6 +20,7 @@ import java.util.Objects;
 
 import com.example.uberapp_tim.dto.MessageDTO;
 import com.example.uberapp_tim.model.message.Message;
+import com.example.uberapp_tim.model.users.User;
 
 
 public class MessageAdapter extends RecyclerView.Adapter {
@@ -72,11 +73,10 @@ public class MessageAdapter extends RecyclerView.Adapter {
     public int getItemViewType(int position){
         MessageDTO message = (MessageDTO) mMessageList.get(position);
 
-        // TODO resolve logged in user
         String idStr = mContext.getSharedPreferences("AirRide_preferences", Context.MODE_PRIVATE).getString("id", null);
         Long id = Long.parseLong(idStr);
         Log.d("SENT_ID", idStr);
-        if (Objects.equals(message.getSender(), id)){
+        if (Objects.equals(message.getSender().getId(), id)){
             return VIEW_TYPE_SENT;
         }else{
             return VIEW_TYPE_RECEIVED;
@@ -90,15 +90,17 @@ public class MessageAdapter extends RecyclerView.Adapter {
 
         protected  ReceivedMessageHolder(View itemView){
             super(itemView);
-            messageTxt = (TextView) itemView.findViewById(R.id.text_user_other);
+            messageTxt = (TextView) itemView.findViewById(R.id.text_message_other);
             timeTxt = (TextView) itemView.findViewById(R.id.text_timestamp_other);
-            nameTxt = (TextView) itemView.findViewById(R.id.text_message_other);
+            nameTxt = (TextView) itemView.findViewById(R.id.name_user_other);
             profileImage = (ImageView) itemView.findViewById(R.id.image_profile_other);
             dateTxt = (TextView) itemView.findViewById(R.id.text_date_other);
         }
 
         void bind(MessageDTO message){
             messageTxt.setText(message.getMessage());
+            String fullName = message.getSender().getName() + " " + message.getSender().getLastName();
+            nameTxt.setText(fullName);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 timeTxt.setText(message.getTimeOfSending().format(DateTimeFormatter.ofPattern("HH:mm")));
                 dateTxt.setText(message.getTimeOfSending().format(DateTimeFormatter.ofPattern("dd.MM.yyyy.")));

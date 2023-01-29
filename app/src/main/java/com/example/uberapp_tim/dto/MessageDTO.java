@@ -1,13 +1,15 @@
 package com.example.uberapp_tim.dto;
 
 import com.example.uberapp_tim.model.message.MessageType;
+import com.example.uberapp_tim.model.users.User;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
-public class MessageDTO {
+public class MessageDTO implements Serializable {
     private Long id;
-    private Long sender;
-    private Long receiver;
+    private User sender;
+    private User receiver;
     private String message;
 
     private LocalDateTime timeOfSending;
@@ -15,7 +17,7 @@ public class MessageDTO {
     private Long ride;
 
 
-    public MessageDTO(Long id, Long sender, Long receiver, String message, LocalDateTime timeOfSending, MessageType type, Long ride) {
+    public MessageDTO(Long id, User sender, User receiver, String message, LocalDateTime timeOfSending, MessageType type, Long ride) {
         this.id = id;
         this.sender = sender;
         this.receiver = receiver;
@@ -34,19 +36,19 @@ public class MessageDTO {
         this.id = id;
     }
 
-    public Long getSender() {
+    public User getSender() {
         return sender;
     }
 
-    public void setSender(Long sender) {
+    public void setSender(User sender) {
         this.sender = sender;
     }
 
-    public Long getReceiver() {
+    public User getReceiver() {
         return receiver;
     }
 
-    public void setReceiver(Long receiver) {
+    public void setReceiver(User receiver) {
         this.receiver = receiver;
     }
 

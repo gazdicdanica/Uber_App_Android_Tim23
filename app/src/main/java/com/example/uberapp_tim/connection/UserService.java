@@ -25,6 +25,9 @@ public interface UserService {
     @GET("user/{passengerId}/{driverId}/{rideId}/message")
     Call<ResponseBody> getMessagesForUsersByRide(@Header("authorization") String token, @Path("passengerId")Long id1, @Path("driverId") Long id2, @Path("rideId")Long id3);
 
+    @GET("user/{id}/message")
+    Call<ResponseBody> getAllMessages(@Header("authorization") String token, @Path("id")Long id);
+
     @POST("user/{id}/message")
     Call<ResponseBody> sendMessage(@Header("authorization") String token, @Path("id")Long id, @Body SendMessageDTO dto);
 
@@ -39,4 +42,7 @@ public interface UserService {
 
     @PUT("user/resetPassword")
     Call<ResponseBody> resetPassword(@Body ResetPasswordDTO dto);
+
+    @GET("user/{id}")
+    Call<User>getUserData(@Header("authorization") String token,@Path("id")Long id);
 }
