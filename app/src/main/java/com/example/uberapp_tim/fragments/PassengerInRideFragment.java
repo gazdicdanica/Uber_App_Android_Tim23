@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.location.Criteria;
 import android.location.LocationManager;
@@ -30,6 +31,7 @@ import com.example.uberapp_tim.dto.ReviewDTO;
 import com.example.uberapp_tim.dto.RideDTO;
 import com.example.uberapp_tim.model.message.Panic;
 import com.example.uberapp_tim.model.ride.RideStatus;
+import com.example.uberapp_tim.receiver.NotificationReceiver;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -237,6 +239,15 @@ public class PassengerInRideFragment extends Fragment implements OnMapReadyCallb
                 });
             } else if (rideRespDTO.getStatus() == RideStatus.FINISHED) {
                 Log.i("usao2", " si");
+
+                Intent i = new Intent(getActivity(), NotificationReceiver.class);
+                i.putExtra("title", "Ride finished");
+                i.putExtra("text", "Ride is finished. Hope you enjoyed!");
+                i.putExtra("channel", "passenger_channel");
+                i.putExtra("id", getActivity().getSharedPreferences("AirRide_preferences", Context.MODE_PRIVATE).getString("id", null));
+
+                Log.d("BEFORE BROADCAS", "");
+                getActivity().sendBroadcast(i);
 
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
