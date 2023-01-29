@@ -76,6 +76,14 @@
             android:exported="true" />
 
         <activity
+            android:name=".activities.InRideChatActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+
+        <activity
             android:name=".activities.ChatActivity"
             android:exported="false">
             <meta-data

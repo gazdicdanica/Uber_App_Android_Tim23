@@ -29,12 +29,10 @@ public class MessageAdapter extends RecyclerView.Adapter {
 
     private Context mContext;
     private List<MessageDTO> mMessageList;
-    private User receiving;
 
-    public MessageAdapter(Context context, List<MessageDTO> messages, User receiving){
+    public MessageAdapter(Context context, List<MessageDTO> messages){
         mContext = context;
         mMessageList = messages;
-        this.receiving = receiving;
     }
 
     @NonNull
@@ -101,7 +99,7 @@ public class MessageAdapter extends RecyclerView.Adapter {
 
         void bind(MessageDTO message){
             messageTxt.setText(message.getMessage());
-            String fullName = receiving.getName() + " " + receiving.getLastName();
+            String fullName = message.getSender().getName() + " " + message.getSender().getLastName();
             nameTxt.setText(fullName);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 timeTxt.setText(message.getTimeOfSending().format(DateTimeFormatter.ofPattern("HH:mm")));

@@ -3,9 +3,10 @@ package com.example.uberapp_tim.dto;
 import com.example.uberapp_tim.model.message.MessageType;
 import com.example.uberapp_tim.model.users.User;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
-public class MessageDTO {
+public class MessageDTO implements Serializable {
     private Long id;
     private User sender;
     private User receiver;
