@@ -75,7 +75,6 @@ public class MessageAdapter extends RecyclerView.Adapter {
     public int getItemViewType(int position){
         MessageDTO message = (MessageDTO) mMessageList.get(position);
 
-        // TODO resolve logged in user
         String idStr = mContext.getSharedPreferences("AirRide_preferences", Context.MODE_PRIVATE).getString("id", null);
         Long id = Long.parseLong(idStr);
         Log.d("SENT_ID", idStr);

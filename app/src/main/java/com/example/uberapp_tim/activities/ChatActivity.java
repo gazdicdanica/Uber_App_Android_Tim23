@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.example.uberapp_tim.R;
@@ -58,6 +59,7 @@ public class ChatActivity extends AppCompatActivity {
     private Long rideId;
     private Long user1id;
     private Long user2id;
+    private boolean showChat =true;
     private WebSocket webSocket;
 
     private String jwt;
@@ -125,6 +127,14 @@ public class ChatActivity extends AppCompatActivity {
 
         user2id = getIntent().getLongExtra("userId", 0);
         rideId = getIntent().getLongExtra("rideId", 0);
+
+        if(getIntent().hasExtra("showChat")){
+            showChat = false;
+        }
+        if(!showChat){
+            RelativeLayout l = findViewById(R.id.layout_chat);
+            l.setVisibility(View.GONE);
+        }
 
         Log.wtf("user id", user1id.toString());
         Log.wtf("ride id", rideId.toString());
@@ -203,7 +213,6 @@ public class ChatActivity extends AppCompatActivity {
                     ServiceUtils.userService.getUserData(jwt, user2id).enqueue(new Callback<User>() {
                         @Override
                         public void onResponse(Call<User> call, Response<User> response) {
-                            Log.wtf("Response123", response.body().getName());
                             mMessageRecycler.setAdapter(new MessageAdapter(ChatActivity.this, messages, response.body()));
                         }
 
