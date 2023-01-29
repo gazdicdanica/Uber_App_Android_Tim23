@@ -175,6 +175,10 @@ public class DriverMainActivity extends AppCompatActivity{
                         overridePendingTransition(0,0);
                         return true;
                     case (R.id.action_inbox):
+                        i = new Intent(DriverMainActivity.this, DriverInboxActivity.class);
+                        startActivity(i);
+                        overridePendingTransition(0,0);
+                        return true;
                 }
                 return false;
             }
