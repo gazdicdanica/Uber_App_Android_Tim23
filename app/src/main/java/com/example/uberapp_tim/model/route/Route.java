@@ -1,31 +1,61 @@
 package com.example.uberapp_tim.model.route;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 
 public class Route {
-    private int id;
-    private LocalDateTime startTime;
-    private LocalDateTime endTime;
+    private Long id;
     private float distance;
-    private double estimatedTime;   // Za sada stavljeno u sekundama, promeniti po potrebi
-    private float estimatedPrice;
-    private Location startLocation;
-    private Location endLocation;
-    private ArrayList<Location> stops;
+    private Location departure;
+    private Location destination;
 
-    public Route(int id, LocalDateTime startTime, LocalDateTime endTime, float distance,
-                 double estimatedTime, float estimatedPrice, Location startLocation,
-                 Location endLocation, ArrayList<Location> stops) {
+    public Route(Long id, float distance, Location departure, Location destination) {
         this.id = id;
-        this.startTime = startTime;
-        this.endTime = endTime;
         this.distance = distance;
-        this.estimatedTime = estimatedTime;
-        this.estimatedPrice = estimatedPrice;
-        this.startLocation = startLocation;
-        this.endLocation = endLocation;
-        this.stops = stops;
+        this.departure = departure;
+        this.destination = destination;
     }
 
+    public Route() {}
+
+    @Override
+    public String toString() {
+        return "Route{" +
+                ", distance=" + distance +
+                ", startLocation=" + departure +
+                ", endLocation=" + destination +
+                '}';
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+
+    public float getDistance() {
+        return distance;
+    }
+
+    public void setDistance(float distance) {
+        this.distance = distance;
+    }
+
+    public Location getDeparture() {
+        return departure;
+    }
+
+    public void setDeparture(Location departure) {
+        this.departure = departure;
+    }
+
+    public Location getDestination() {
+        return destination;
+    }
+
+    public void setDestination(Location destination) {
+        this.destination = destination;
+    }
 }

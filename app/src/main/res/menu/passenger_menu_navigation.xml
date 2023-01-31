@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item android:id="@+id/action_main"
+        android:title="@string/main_activity"
+        android:orderInCategory="100"
+        android:icon="@drawable/ic_baseline_home_white_24"
+        app:showAsAction="always" />
+
+    <item android:id="@+id/action_reports"
+        android:title="@string/reports_activity"
+        android:orderInCategory="300"
+        android:icon="@drawable/ic_baseline_area_chart_24"
+        app:showAsAction="always"/>
+
+    <item android:id="@+id/action_inbox"
+        android:title="@string/inbox_activity"
+        android:orderInCategory="400"
+        android:icon="@drawable/ic_baseline_message_white_24"
+        app:showAsAction="always"/>
+
+    <item android:id="@+id/action_account"
+        android:title="@string/account_activitY"
+        android:orderInCategory="500"
+        android:icon="@drawable/ic_baseline_person_white_24"
+        app:showAsAction="always"/>
+</menu>

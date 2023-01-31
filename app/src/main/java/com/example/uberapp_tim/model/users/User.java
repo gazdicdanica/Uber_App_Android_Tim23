@@ -11,28 +11,31 @@ import java.io.Serializable;
 public class User implements Serializable {
     @SerializedName("id")
     @Expose
-    private int id;
+    private Long id;
     @SerializedName("name")
     @Expose
     private String name;
-    @SerializedName("lastName")
+    @SerializedName("surname")
     @Expose
     private String lastName;
     @SerializedName("email")
     @Expose
     private String email;
-    @SerializedName("phoneNumber")
+    @SerializedName("telephoneNumber")
     @Expose
     private String phoneNumber;
     @SerializedName("address")
     @Expose
     private String address;
     private String password;
-    private Bitmap profilePhoto;
+    @SerializedName("profilePicture")
+    private String profilePhoto;
     private boolean blocked;
 
-    public User(int id, String name, String lastName,String email, String phoneNumber,
-                String address, String password, Bitmap profilePhoto, Boolean blocked){
+    public User() { }
+
+    public User(Long id, String name, String lastName,String email, String phoneNumber,
+                String address, String password, String profilePhoto, Boolean blocked){
         this.id = id;
         this.name = name;
         this.lastName = lastName;
@@ -44,11 +47,11 @@ public class User implements Serializable {
         this.blocked = blocked;
     }
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -100,11 +103,11 @@ public class User implements Serializable {
         this.password = password;
     }
 
-    public Bitmap getProfilePhoto() {
+    public String getProfilePhoto() {
         return profilePhoto;
     }
 
-    public void setProfilePhoto(Bitmap profilePhoto) {
+    public void setProfilePhoto(String profilePhoto) {
         this.profilePhoto = profilePhoto;
     }
 

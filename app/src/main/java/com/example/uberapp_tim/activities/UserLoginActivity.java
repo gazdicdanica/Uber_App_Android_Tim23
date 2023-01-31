@@ -3,14 +3,17 @@ package com.example.uberapp_tim.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.auth0.android.jwt.JWT;
@@ -19,23 +22,15 @@ import com.example.uberapp_tim.activities.driver.DriverMainActivity;
 import com.example.uberapp_tim.activities.passenger.PassengerMainActivity;
 import com.example.uberapp_tim.activities.passenger.PassengerRegisterActivity;
 
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.example.uberapp_tim.dto.LoginDTO;
 import com.example.uberapp_tim.dto.TokensDTO;
-import com.example.uberapp_tim.model.users.Driver;
-import com.example.uberapp_tim.model.users.Passenger;
-import com.example.uberapp_tim.model.users.User;
-import com.example.uberapp_tim.service.ServiceUtils;
-import com.example.uberapp_tim.tools.Mokap;
+import com.example.uberapp_tim.connection.ServiceUtils;
 import com.google.android.material.textfield.TextInputLayout;
 
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -72,14 +67,17 @@ public class UserLoginActivity extends AppCompatActivity {
             }
         });
 
-//        TextView txtForgotPassword = findViewById(R.id.txtViewForgotPassword);
-//        txtForgotPassword.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                //TODO Forgot password activity
-////                startActivity(new Intent(UserLoginActivity.this, ));
-//            }
-//        });
+        TextView txtForgotPassword = findViewById(R.id.forgot_pw);
+        txtForgotPassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //TODO Forgot password activity
+                Intent i = new Intent(UserLoginActivity.this, ResetPasswordActivity.class);
+                i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(i);
+//                startActivity(new Intent(UserLoginActivity.this, ));
+            }
+        });
     }
 
     private void attemptLogin(){
@@ -102,7 +100,6 @@ public class UserLoginActivity extends AppCompatActivity {
 
                     changeActivity();
 
-                    Toast.makeText(UserLoginActivity.this, "SUCCESS!!!", Toast.LENGTH_SHORT).show();
                 }else if(response.code() == 400){
                     editTextEmail.setText("");
                     editTextPassword.setText("");
@@ -132,8 +129,14 @@ public class UserLoginActivity extends AppCompatActivity {
             ArrayList<String> claim = jwt.getClaim("role").asObject(ArrayList.class);
             assert claim != null;
             String role = claim.get(0);
+
+            String id = jwt.getClaim("id").asString();
+
+            sharedPreferences.edit().putString("id", id).apply();
             sharedPreferences.edit().putString("role", role).apply();
-            if(role.equals("passenger")){
+            sharedPreferences.edit().putString("email", editTextEmail.getText().toString()).apply();
+            Log.d("LOGIN", getSharedPreferences("AirRide_preferences", Context.MODE_PRIVATE).getString("id", null));
+            if(role.equals("ROLE_USER")){
                 startActivity(new Intent(UserLoginActivity.this, PassengerMainActivity.class));
             }else{
                 startActivity(new Intent(UserLoginActivity.this, DriverMainActivity.class));

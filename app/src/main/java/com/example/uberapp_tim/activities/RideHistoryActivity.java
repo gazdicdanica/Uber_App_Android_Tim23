@@ -38,7 +38,7 @@ public class RideHistoryActivity extends AppCompatActivity {
         }
 
         historyNav = findViewById(R.id.historyNav);
-        historyNav.setSelectedItemId(R.id.action_history);
+//        historyNav.setSelectedItemId(R.id.action_history);
         historyNav.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -61,8 +61,8 @@ public class RideHistoryActivity extends AppCompatActivity {
                         startActivity(i);
                         overridePendingTransition(0,0);
                         return true;
-                    case (R.id.action_history):
-                        return true;
+//                    case (R.id.action_history):
+//                        return true;
                 }
                 return false;
             }
@@ -96,7 +96,7 @@ public class RideHistoryActivity extends AppCompatActivity {
     @Override
     protected void onResume(){
         super.onResume();
-        historyNav.setSelectedItemId(R.id.action_history);
+//        historyNav.setSelectedItemId(R.id.action_history);
     }
 
     @Override

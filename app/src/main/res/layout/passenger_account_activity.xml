@@ -38,17 +38,14 @@
             android:id="@+id/user_full_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Imenko Prezimic"
             android:textColor="@color/white"
             android:layout_gravity="center"
             android:textSize="25sp"
             android:padding="5dp"
             android:layout_marginTop="15dp"
             android:layout_below="@+id/profile_pic"
-            android:layout_centerHorizontal="true"
-            app:drawableEndCompat="@drawable/ic_baseline_edit_18"
-            android:drawablePadding="10dp"
-            />
+            android:layout_centerHorizontal="true">
+        </TextView>
     </RelativeLayout>
     <LinearLayout
         android:layout_width="match_parent"
@@ -56,99 +53,100 @@
         android:layout_weight="2"
         android:orientation="vertical">
 
-        <androidx.appcompat.widget.AppCompatTextView
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:drawableStartCompat="@drawable/ic_baseline_alternate_email_24"
-            android:layout_marginTop="30dp"
-            android:layout_marginStart="20dp"
-            android:layout_marginEnd="20dp"
-            android:text="@string/e_mail"
-            android:drawablePadding="7dp"
-            android:drawableTint="?attr/colorOnBackground"/>
+            android:layout_height="wrap_content">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/user_email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textEmailAddress"
+                android:layout_marginBottom="10dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="15dp"
+                android:layout_marginTop="20dp"
+                android:focusable="false"
+                android:hint="@string/e_mail"
+                android:textColorHint="?attr/colorOnSecondary"
+                android:drawableStart="@drawable/ic_baseline_alternate_email_24"
+                android:drawablePadding="5dp"
+                android:drawableTint="?attr/colorOnBackground">
+            </com.google.android.material.textfield.TextInputEditText>
+        </com.google.android.material.textfield.TextInputLayout>
 
-        <EditText
-            android:id="@+id/user_email"
+
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="textEmailAddress"
-            android:layout_marginEnd="20dp"
-            android:layout_marginStart="20dp"
-            android:focusable="false"
-            android:drawableEnd="@drawable/ic_baseline_arrow_forward_18"
-            android:drawablePadding="5dp"
-            android:drawableTint="?attr/colorOnBackground"/>
+            android:layout_height="wrap_content">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/user_address"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text"
+                android:layout_marginBottom="10dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="15dp"
+                android:layout_marginTop="10dp"
+                android:focusable="false"
+                android:hint="@string/address"
+                android:drawableStart="@drawable/ic_baseline_home_24"
+                android:drawablePadding="5dp"
+                android:drawableTint="?attr/colorOnBackground"/>
+        </com.google.android.material.textfield.TextInputLayout>
 
-        <androidx.appcompat.widget.AppCompatTextView
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
-            app:drawableStartCompat="@drawable/ic_baseline_home_24"
-            android:layout_marginStart="20dp"
-            android:layout_marginEnd="20dp"
-            android:text="@string/address"
-            android:drawablePadding="7dp"
-            android:drawableTint="?attr/colorOnBackground"/>
+            android:layout_height="wrap_content">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/user_phone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="phone"
+                android:layout_marginBottom="10dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="15dp"
+                android:layout_marginTop="10dp"
+                android:focusable="false"
+                android:hint="@string/phone_number"
+                android:drawableStart="@drawable/ic_baseline_phone_24"
+                android:drawablePadding="5dp"
+                android:drawableTint="?attr/colorOnBackground"/>
+        </com.google.android.material.textfield.TextInputLayout>
 
-        <EditText
-            android:id="@+id/user_address"
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="text"
-            android:layout_marginEnd="20dp"
-            android:layout_marginStart="20dp"
-            android:focusable="false"
-            android:drawableEnd="@drawable/ic_baseline_arrow_forward_18"
-            android:drawablePadding="5dp"
-            android:drawableTint="?attr/colorOnBackground"/>
+            android:layout_height="wrap_content">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/user_password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPassword"
+                android:layout_marginBottom="0dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="15dp"
+                android:layout_marginTop="10dp"
+                android:focusable="false"
+                android:hint="@string/password"
+                android:drawableEnd="@drawable/ic_baseline_arrow_forward_18"
+                android:drawableStart="@drawable/ic_round_lock_24"
+                android:drawablePadding="5dp"
+                android:drawableTint="?attr/colorOnBackground"/>
+        </com.google.android.material.textfield.TextInputLayout>
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
-            app:drawableStartCompat="@drawable/ic_baseline_phone_24"
-            android:layout_marginStart="20dp"
-            android:layout_marginEnd="20dp"
-            android:text="@string/phone_number"
-            android:drawablePadding="7dp"
-            android:drawableTint="?attr/colorOnBackground"/>
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/change_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="0dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
+        android:layout_marginTop="10dp"
+        android:padding="15dp"
+        android:textSize="17sp"
+        android:text="@string/change"
+        android:textAllCaps="false">
 
-        <EditText
-            android:id="@+id/user_phone"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="phone"
-            android:layout_marginEnd="20dp"
-            android:layout_marginStart="20dp"
-            android:focusable="false"
-            android:drawableEnd="@drawable/ic_baseline_arrow_forward_18"
-            android:drawablePadding="5dp"
-            android:drawableTint="?attr/colorOnBackground"/>
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
-            app:drawableStartCompat="@drawable/ic_round_lock_24"
-            android:layout_marginStart="20dp"
-            android:layout_marginEnd="20dp"
-            android:text="@string/password"
-            android:drawablePadding="7dp"
-            android:drawableTint="?attr/colorOnBackground"/>
-
-        <EditText
-            android:id="@+id/user_password"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="textPassword"
-            android:layout_marginEnd="20dp"
-            android:layout_marginStart="20dp"
-            android:focusable="false"
-            android:drawableEnd="@drawable/ic_baseline_arrow_forward_18"
-            android:drawablePadding="5dp"
-            android:drawableTint="?attr/colorOnBackground"/>
-
-
+    </com.google.android.material.button.MaterialButton>
 
     </LinearLayout>
 
@@ -156,7 +154,7 @@
         android:id="@+id/passNav"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        app:menu="@menu/menu_navigation"
+        app:menu="@menu/passenger_menu_navigation"
         app:labelVisibilityMode="labeled"/>
 
 

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -29,7 +30,7 @@
             android:layout_height="100dp"
             android:layout_centerHorizontal="true"
             android:layout_gravity="center"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="10dp"
             android:src="@drawable/man"
             app:civ_border_color="@color/white"
             app:civ_border_width="3dp">
@@ -39,7 +40,6 @@
             android:id="@+id/driver_full_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Imenko Prezimic"
             android:textColor="@color/white"
             android:layout_gravity="center"
             android:textSize="25sp"
@@ -47,8 +47,6 @@
             android:layout_marginTop="15dp"
             android:layout_below="@+id/profile_pic"
             android:layout_centerHorizontal="true"
-            app:drawableEndCompat="@drawable/ic_baseline_edit_18"
-            android:drawablePadding="10dp"
             />
     </RelativeLayout>
 
@@ -67,7 +65,7 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="0dp"
                     android:orientation="vertical"
                     android:layout_weight="2">
 
@@ -90,7 +88,6 @@
                         android:layout_marginEnd="20dp"
                         android:layout_marginStart="20dp"
                         android:focusable="false"
-                        android:drawableEnd="@drawable/ic_baseline_arrow_forward_18"
                         android:drawableTint="?attr/colorOnBackground"
                         android:drawablePadding="7dp"/>
 
@@ -113,7 +110,6 @@
                         android:layout_marginEnd="20dp"
                         android:focusable="false"
                         android:layout_marginStart="20dp"
-                        android:drawableEnd="@drawable/ic_baseline_arrow_forward_18"
                         android:drawableTint="?attr/colorOnBackground"
                         android:drawablePadding="7dp"/>
 
@@ -132,13 +128,13 @@
                         android:id="@+id/user_phone"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="phone"
-                        android:layout_marginEnd="20dp"
-                        android:focusable="false"
                         android:layout_marginStart="20dp"
-                        android:drawableEnd="@drawable/ic_baseline_arrow_forward_18"
+                        android:layout_marginEnd="20dp"
+                        android:drawablePadding="7dp"
                         android:drawableTint="?attr/colorOnBackground"
-                        android:drawablePadding="7dp"/>
+                        android:focusable="false"
+                        android:inputType="phone"
+                        tools:ignore="SpeakableTextPresentCheck" />
 
                     <androidx.appcompat.widget.AppCompatTextView
                         android:layout_width="match_parent"
@@ -170,6 +166,22 @@
                         android:orientation="vertical"
                         android:gravity="center"
                         android:layout_marginTop="10dp">
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/updateDataBtn"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="15dp"
+                            android:layout_marginStart="15dp"
+                            android:layout_marginTop="1dp"
+                            android:padding="15dp"
+                            android:text="@string/change"
+                            android:textAllCaps="false"
+                            app:backgroundTint="@color/black"
+                            android:textColor="@color/white"
+                            app:strokeColor="@color/white"
+                            app:strokeWidth="2dp"
+                            />
 
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/carButton"
@@ -219,7 +231,7 @@
         android:id="@+id/driverAccNav"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        app:menu="@menu/menu_navigation"
+        app:menu="@menu/driver_menu_navigation"
         app:labelVisibilityMode="labeled"/>
 
 </LinearLayout>

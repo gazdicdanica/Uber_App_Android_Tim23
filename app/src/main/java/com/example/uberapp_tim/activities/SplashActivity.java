@@ -1,9 +1,17 @@
 package com.example.uberapp_tim.activities;
 
+import android.Manifest;
 import android.app.Activity;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.widget.Toast;
+
+import androidx.annotation.RequiresApi;
+import androidx.core.content.ContextCompat;
 
 import com.example.uberapp_tim.R;
 import com.example.uberapp_tim.tools.AppTools;
@@ -17,20 +25,36 @@ public class SplashActivity extends Activity {
     protected void onCreate(Bundle savedInstance){
         super.onCreate(savedInstance);
         setContentView(R.layout.splash);
+
         int connection = AppTools.getConnectivityStatus(getApplicationContext());
         if(connection == AppTools.TYPE_WIFI || connection == AppTools.TYPE_MOBILE){
+            try{
+                String accessToken = getSharedPreferences("AirRide_preferences", Context.MODE_PRIVATE).getString("accessToken", "");
+
+            }catch(NullPointerException ex){
+                ex.printStackTrace();
+            }
+
             new Timer().schedule(new TimerTask() {
+                @RequiresApi(api = Build.VERSION_CODES.O)
                 @Override
                 public void run() {
                     startActivity(new Intent(SplashActivity.this, UserLoginActivity.class));
                     finish();
                 }
             }, 5000);
-        }else {
-
+        }else{
+            Toast.makeText(this, "No network provider", Toast.LENGTH_SHORT).show();
+            new Timer().schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    finish();
+                }
+            }, 5000);
         }
 
     }
+
 
     @Override
     protected void onStart(){
