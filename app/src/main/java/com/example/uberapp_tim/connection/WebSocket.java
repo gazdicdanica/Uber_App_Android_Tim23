@@ -12,7 +12,7 @@ public class WebSocket{
     public StompClient stompClient;
 
     public WebSocket(){
-        stompClient = Stomp.over(Stomp.ConnectionProvider.OKHTTP, "ws://192.168.1.9:8080/socket/websocket");
+        stompClient = Stomp.over(Stomp.ConnectionProvider.OKHTTP, "ws://192.168.0.20:8080/socket/websocket");
         stompClient.connect();
     }
 

@@ -6,11 +6,10 @@ import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
-import android.os.Build;
 import android.os.Bundle;
+import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -18,21 +17,17 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.RelativeLayout;
+import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TimePicker;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.uberapp_tim.R;
-import com.example.uberapp_tim.activities.SplashActivity;
-import com.example.uberapp_tim.activities.UserLoginActivity;
-import com.example.uberapp_tim.activities.driver.DriverMainActivity;
 import com.example.uberapp_tim.connection.ServiceUtils;
 import com.example.uberapp_tim.connection.WebSocket;
 import com.example.uberapp_tim.dto.RideDTO;
@@ -41,11 +36,11 @@ import com.example.uberapp_tim.dto.UserShortDTO;
 import com.example.uberapp_tim.fragments.DrawRouteFragment;
 import com.example.uberapp_tim.fragments.MapFragment;
 import com.example.uberapp_tim.fragments.PassengerInRideFragment;
+import com.example.uberapp_tim.model.message.Panic;
 import com.example.uberapp_tim.model.ride.Ride;
 import com.example.uberapp_tim.model.ride.RideStatus;
 import com.example.uberapp_tim.model.route.Location;
 import com.example.uberapp_tim.model.route.Route;
-import com.example.uberapp_tim.model.users.User;
 import com.example.uberapp_tim.model.vehicle.CarType;
 import com.example.uberapp_tim.service.FragmentToActivity;
 import com.example.uberapp_tim.tools.FragmentTransition;
@@ -66,7 +61,6 @@ import java.io.IOException;
 import java.lang.reflect.Type;
 import java.text.DecimalFormat;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -92,7 +86,7 @@ public class PassengerMainActivity extends AppCompatActivity implements View.OnC
     LocalDateTime scheduledTime = null;
     ToggleButton pets, babies;
     Spinner carType;
-    CircleButton requestRide;
+    CircleButton requestRideBtn, panicBtn, chatBtn;
     private com.example.uberapp_tim.model.route.Location startLocation = null, endLocation = null;
     private float distance=0;
     private double duration;
@@ -118,8 +112,12 @@ public class PassengerMainActivity extends AppCompatActivity implements View.OnC
         subscribeToWebSocket();
         btnTimePicker = findViewById(R.id.btnTimePicker);
         btnTimePicker.setOnClickListener(this);
-        requestRide = findViewById(R.id.requestRide);
-        requestRide.setOnClickListener(this);
+        requestRideBtn = findViewById(R.id.requestRide);
+        requestRideBtn.setOnClickListener(this);
+        panicBtn = findViewById(R.id.panicBtn);
+        panicBtn.setOnClickListener(this);
+        chatBtn = findViewById(R.id.msgBtn);
+        chatBtn.setOnClickListener(this);
         linkPassengerBtn = findViewById(R.id.addFriendsBtn);
         linkPassengerBtn.setOnClickListener(this);
 
@@ -283,68 +281,21 @@ public class PassengerMainActivity extends AppCompatActivity implements View.OnC
                     txtTime.setText(txt);
                 }}, hour, minute, true);
             timePickerDialog.show();
-        } else if (view == requestRide) {
+        }
+        else if (view == requestRideBtn) {
             if (start != null && finish != null) {
                 if (isClicked) {
-//                    requestRide.setEnabled(false);        Proba
-                    linkPsngr.setVisibility(View.GONE);
-                    linkPassengerBtn.setVisibility(View.GONE);
+                    requestRideBtn.setVisibility(View.GONE);
                     createRide();
                     createRoute();
                     this.rideDTO.addRoute(route);
                     Log.i("Ride: ", rideDTO.toString());
                     Log.i("Route: ", route.toString());
-                    String jwt = getSharedPreferences("AirRide_preferences", Context.MODE_PRIVATE).getString("accessToken", "");
-                    ServiceUtils.rideService.createRide("Bearer " + jwt, this.rideDTO).enqueue(new Callback<ResponseBody>() {
-                        @Override
-                        public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                            if (response.code() == 200) {
-                                if (rideDTO.getScheduledTime() == null) {       // Voznja odmah
-                                    Gson g = null;
-                                    try {
-                                        String json = response.body().string();
-                                        g = new GsonBuilder().registerTypeAdapter(LocalDateTime.class, new JsonDeserializer<LocalDateTime>() {
-
-                                            @Override
-                                            public LocalDateTime deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-                                                DateTimeFormatter format = DateTimeFormatter.ofPattern("yyy-MM-dd'T'HH:mm:ss.SSS'Z'");
-                                                return LocalDateTime.parse(json.getAsJsonPrimitive().getAsString(), format);
-                                            }
-                                        }).create();
-                                        rideResp = g.fromJson(json, Ride.class);
-                                        start.setVisibility(View.GONE);
-                                        finish.setVisibility(View.GONE);
-
-                                        showWaitingDialog();
-
-                                    } catch (IOException e) {
-                                        e.printStackTrace();
-                                    }
-                                } else {                                        // Voznja zakazivanje
-                                    if (response.code() == 200) {
-                                        Toast.makeText(PassengerMainActivity.this, "Scheduling Successful", Toast.LENGTH_SHORT).show();
-                                        finish();
-                                        overridePendingTransition(0, 0);
-                                        startActivity(getIntent());
-                                        overridePendingTransition(0, 0);
-                                    }
-                                }
-                            } else {
-                                finish();
-                                overridePendingTransition(0, 0);
-                                startActivity(getIntent());
-                                overridePendingTransition(0, 0);
-                                Toast.makeText(PassengerMainActivity.this, "Invalid Request", Toast.LENGTH_SHORT).show();
-                            }
-                        }
-
-                        @Override
-                        public void onFailure(Call<ResponseBody> call, Throwable t) {
-                            Toast.makeText(PassengerMainActivity.this, "Greska 569", Toast.LENGTH_SHORT).show();
-                        }
-                    });
+                    attemptCreateRide();
                 }
                 isClicked = true;
+                linkPsngr.setVisibility(View.GONE);
+                linkPassengerBtn.setVisibility(View.GONE);
                 btnTimePicker.setVisibility(View.GONE);
                 babies.setVisibility(View.GONE);
                 pets.setVisibility(View.GONE);
@@ -354,18 +305,22 @@ public class PassengerMainActivity extends AppCompatActivity implements View.OnC
                 ly1.setVisibility(View.VISIBLE);
                 ly2.setVisibility(View.VISIBLE);
                 l3.setVisibility(View.VISIBLE);
+
                 estimateTxt.setVisibility(View.VISIBLE);
                 estimateTxt.setEnabled(false);
                 distanceTxt.setVisibility(View.VISIBLE);
                 distanceTxt.setEnabled(false);
                 priceTxt.setVisibility(View.VISIBLE);
                 priceTxt.setEnabled(false);
+                start.setEnabled(false);
+                finish.setEnabled(false);
 
 
                 drawRouteFragment = DrawRouteFragment.newInstance();
                 FragmentTransition.to(drawRouteFragment, this, false);
             }
-        } else if (view == linkPassengerBtn) {
+        }
+        else if (view == linkPassengerBtn) {
             if (invitedPeople.size() <= 4) {
                 if (linkPsngr.getText() != null) {
                     String temp = linkPsngr.getText().toString();
@@ -394,6 +349,48 @@ public class PassengerMainActivity extends AppCompatActivity implements View.OnC
             } else {
                 Toast.makeText(this, "You Cannot Invite More People", Toast.LENGTH_SHORT).show();
             }
+        }
+        else if (view == panicBtn) {
+            Log.i("PANIC:", "true");
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Please State a Reason");
+            final EditText input = new EditText(this);
+            input.setInputType(InputType.TYPE_CLASS_TEXT);
+            input.setPadding(30, 30, 30, 30);
+            builder.setView(input);
+            builder.setPositiveButton("Submit", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    String reason = input.getText().toString();
+                    Panic panic = new Panic();
+                    panic.setReason(reason);
+                    String jwt = getSharedPreferences("AirRide_preferences", Context.MODE_PRIVATE).getString("accessToken", "");
+                    ServiceUtils.rideService.panicRide("Bearer " + jwt, rideRespDTO.getId(), panic).enqueue(new Callback<ResponseBody>() {
+                        @Override
+                        public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                            if(response.code() == 200) {
+                                Toast.makeText(PassengerMainActivity.this, "Submitted, Sorry For Inconvenience", Toast.LENGTH_SHORT).show();
+                                finish();
+                                overridePendingTransition(0, 0);
+                                startActivity(getIntent());
+                                overridePendingTransition(0, 0);
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<ResponseBody> call, Throwable t) {
+                            Log.wtf("panic msg:", t.getMessage());
+                        }
+                    });
+
+                }
+            });
+
+            builder.create().show();
+        }
+        else if (view == chatBtn) {
+            Toast.makeText(this, "Danice Ciganko", Toast.LENGTH_SHORT).show();
+            // TODO Danica Ciganka
         }
     }
 
@@ -562,17 +559,79 @@ public class PassengerMainActivity extends AppCompatActivity implements View.OnC
                     PassengerInRideFragment fragment = PassengerInRideFragment.newInstance();
                     fragment.setArguments(b);
 
-                    FragmentTransition.remove(this);
+//                    FragmentTransition.remove(this);
                     FragmentTransition.to(fragment, this, false);
                     isus = !isus;
                 }
-            } else if (!isus){
+            }
+            else if (!isus){
+                Log.i("ISUS", "da");
                 finish();
                 overridePendingTransition(0, 0);
                 startActivity(getIntent());
                 overridePendingTransition(0, 0);
+            } else{
+                Log.i("Ovde puca", "da");
+            }
+        }, throwable -> Log.e("TROWABLE WEBSOCKET: ", throwable.getMessage()));
+
+    }
+
+    private void attemptCreateRide() {
+        String jwt = getSharedPreferences("AirRide_preferences", Context.MODE_PRIVATE).getString("accessToken", "");
+        ServiceUtils.rideService.createRide("Bearer " + jwt, this.rideDTO).enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.code() == 200) {
+                    if (rideDTO.getScheduledTime() == null) {       // Voznja odmah
+                        Gson g = null;
+                        try {
+                            String json = response.body().string();
+                            g = new GsonBuilder().registerTypeAdapter(LocalDateTime.class, new JsonDeserializer<LocalDateTime>() {
+
+                                @Override
+                                public LocalDateTime deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+                                    DateTimeFormatter format = DateTimeFormatter.ofPattern("yyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+                                    return LocalDateTime.parse(json.getAsJsonPrimitive().getAsString(), format);
+                                }
+                            }).create();
+                            rideResp = g.fromJson(json, Ride.class);
+                            start.setVisibility(View.GONE);
+                            finish.setVisibility(View.GONE);
+                            requestRideBtn.setVisibility(View.GONE);
+
+                            showWaitingDialog();
+                            panicBtn.setVisibility(View.VISIBLE);
+                            chatBtn.setVisibility(View.VISIBLE);
+
+
+
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    } else {                                        // Voznja zakazivanje
+                        if (response.code() == 200) {
+                            Toast.makeText(PassengerMainActivity.this, "Scheduling Successful", Toast.LENGTH_SHORT).show();
+                            finish();
+                            overridePendingTransition(0, 0);
+                            startActivity(getIntent());
+                            overridePendingTransition(0, 0);
+                        }
+                    }
+                }
+                else {
+                    finish();
+                    overridePendingTransition(0, 0);
+                    startActivity(getIntent());
+                    overridePendingTransition(0, 0);
+                    Toast.makeText(PassengerMainActivity.this, "Invalid Request", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Toast.makeText(PassengerMainActivity.this, "Greska 569", Toast.LENGTH_SHORT).show();
             }
         });
-
     }
 }

@@ -169,11 +169,11 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
                 if(ContextCompat.checkSelfPermission(requireContext(),
                         Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
 
-                    locationManager.requestLocationUpdates(provider, 1000, 0, this);
+                    locationManager.requestLocationUpdates(provider, 1000, 50, this);
                 } else if(ContextCompat.checkSelfPermission(getContext(),
                         Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
 
-                    locationManager.requestLocationUpdates(provider, 1000, 0, this);
+                    locationManager.requestLocationUpdates(provider, 1000, 50, this);
                 }
             }
         }
@@ -200,7 +200,7 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
         CameraPosition cameraPosition = new CameraPosition.Builder()
                 .target(new LatLng(location.getLatitude(), location.getLongitude()))
                 .zoom(15)
-                .bearing(location.getBearing()).build();
+                .bearing(0).build();
         CameraUpdate update = CameraUpdateFactory.newCameraPosition(cameraPosition);
         map.animateCamera(update);
         home.setFlat(true);
@@ -264,9 +264,11 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
             }
         }
         if(numberOfMarkers == 0) {
-//            String currLocation = "start,"+activity.getAddressFromLocation(new LatLng(location.getLatitude(), location.getLongitude())).split(",")[0];
-//            mCallback.communicate(currLocation);
-//            mCallback.sendStartLocation(new com.example.uberapp_tim.model.route.Location(location));
+            LatLng gpsLocation = new LatLng(location.getLatitude(), location.getLongitude());
+            String currLocation = "start,"+activity.getAddressFromLocation(gpsLocation).split(",")[0];
+            mCallback.saveLatLng("s", gpsLocation);
+            mCallback.communicate(currLocation);
+            mCallback.sendStartLocation(new com.example.uberapp_tim.model.route.Location(location));
         }
 
         map.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
