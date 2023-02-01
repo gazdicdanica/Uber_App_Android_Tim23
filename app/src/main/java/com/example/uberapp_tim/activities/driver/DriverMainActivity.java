@@ -80,7 +80,7 @@ public class DriverMainActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstance){
         super.onCreate(savedInstance);
 
-        createNotificationChannel("DriverNotification", "New ride notifications", "driver");
+        createNotificationChannel();
 
         String id = getSharedPreferences("AirRide_preferences", Context.MODE_PRIVATE).getString("id", null);
         webSocket = new WebSocket();
@@ -132,7 +132,7 @@ public class DriverMainActivity extends AppCompatActivity{
                         @Override
                         public void run()
                         {
-                            if(dialog.isShowing()){
+                            if(dialog != null && dialog.isShowing()) {
                                 dialog.dismiss();
                             }
                             Toast.makeText(DriverMainActivity.this, "Pending ride was canceled", Toast.LENGTH_LONG).show();
@@ -175,6 +175,10 @@ public class DriverMainActivity extends AppCompatActivity{
                         overridePendingTransition(0,0);
                         return true;
                     case (R.id.action_inbox):
+                        i = new Intent(DriverMainActivity.this, DriverInboxActivity.class);
+                        startActivity(i);
+                        overridePendingTransition(0,0);
+                        return true;
                 }
                 return false;
             }
@@ -328,13 +332,13 @@ public class DriverMainActivity extends AppCompatActivity{
         builder.create().show();
     }
 
-    public void setUpReceiver(){
-        notificationReceiver = new NotificationReceiver();
-
-        Intent intent = new Intent(this, NotificationService.class);
-        //add extra ride
-        pendingIntent = PendingIntent.getService(this, 0, intent, 0);
-    }
+//    public void setUpReceiver(){
+//        notificationReceiver = new NotificationReceiver();
+//
+//        Intent intent = new Intent(this, NotificationService.class);
+//        //add extra ride
+//        pendingIntent = PendingIntent.getService(this, 0, intent, 0);
+//    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -382,14 +386,12 @@ public class DriverMainActivity extends AppCompatActivity{
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
-    public void createNotificationChannel(String channelName, String channelDescription, String channelId){
-        int importance = NotificationManager.IMPORTANCE_HIGH;
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-            NotificationChannel channel = new NotificationChannel(channelId, channelName, importance);
-            channel.setDescription(channelDescription);
+    public void createNotificationChannel(){
+        NotificationChannel channelDriver = new NotificationChannel("driver_channel", "Driver notifications", NotificationManager.IMPORTANCE_HIGH);
+        NotificationManager notificationManager = getSystemService(NotificationManager.class);
+        notificationManager.createNotificationChannel(channelDriver);
 
-            NotificationManager notificationManager = getSystemService(NotificationManager.class);
-            notificationManager.createNotificationChannel(channel);
-        }
+        NotificationChannel channelRide = new NotificationChannel("in_ride_channel", "In ride notifications", NotificationManager.IMPORTANCE_HIGH);
+        notificationManager.createNotificationChannel(channelRide);
     }
 }

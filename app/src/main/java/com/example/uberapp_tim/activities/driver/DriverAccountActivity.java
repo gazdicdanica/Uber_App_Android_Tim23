@@ -361,6 +361,23 @@ public class DriverAccountActivity extends AppCompatActivity {
                 overridePendingTransition(0,0);
                 return true;
             case (R.id.action_logout):
+                SharedPreferences sh = getSharedPreferences("AirRide_preferences", Context.MODE_PRIVATE);
+                Long id = Long.valueOf(sh.getString("id", null));
+                String jwt = "Bearer " + sh.getString("accessToken", null);
+                ServiceUtils.driverService.endShift(jwt, id).enqueue(new Callback<ResponseBody>() {
+                    @Override
+                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                        
+                    }
+
+                    @Override
+                    public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+                    }
+                });
+
+                sh.edit().clear().commit();
+
                 Intent loginScreen =new Intent(DriverAccountActivity.this, UserLoginActivity.class);
                 loginScreen.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(loginScreen);

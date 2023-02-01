@@ -2,6 +2,8 @@ package com.example.uberapp_tim.activities.passenger;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -108,6 +110,9 @@ public class PassengerMainActivity extends AppCompatActivity implements View.OnC
     @Override
     protected void onCreate(Bundle savedInstance){
         super.onCreate(savedInstance);
+
+        createNotificationChannel();
+
         setContentView(R.layout.passenger_main_activity);
         subscribeToWebSocket();
         btnTimePicker = findViewById(R.id.btnTimePicker);
@@ -173,6 +178,15 @@ public class PassengerMainActivity extends AppCompatActivity implements View.OnC
                 return false;
             }
         });
+    }
+
+    private void createNotificationChannel(){
+        NotificationChannel channelPassenger = new NotificationChannel("passenger_channel", "Passenger notifications", NotificationManager.IMPORTANCE_HIGH);
+        NotificationManager notificationManager = getSystemService(NotificationManager.class);
+        notificationManager.createNotificationChannel(channelPassenger);
+
+        NotificationChannel channelRide = new NotificationChannel("in_ride_channel", "In ride notifications", NotificationManager.IMPORTANCE_HIGH);
+        notificationManager.createNotificationChannel(channelRide);
     }
 
     @Override

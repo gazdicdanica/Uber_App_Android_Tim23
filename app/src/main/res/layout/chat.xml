@@ -24,10 +24,10 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
-        app:layout_constraintBottom_toTopOf="@+id/text_indicator"
-        app:layout_constraintStart_toStartOf="@+id/layout_group_chat">
+        app:layout_constraintTop_toBottomOf="@+id/layout_group_chat">
+
     </androidx.recyclerview.widget.RecyclerView>
 
     <TextView

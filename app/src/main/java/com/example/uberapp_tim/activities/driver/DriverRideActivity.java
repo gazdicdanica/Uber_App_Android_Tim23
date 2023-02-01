@@ -3,27 +3,15 @@ package com.example.uberapp_tim.activities.driver;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
-import android.app.AlertDialog;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.text.InputType;
-import android.util.Log;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.uberapp_tim.R;
-import com.example.uberapp_tim.activities.ChatActivity;
-import com.example.uberapp_tim.connection.ServiceUtils;
-import com.example.uberapp_tim.dto.RideDTO;
-import com.example.uberapp_tim.fragments.DriverMapFragment;
-import com.example.uberapp_tim.fragments.MapFragment;
+import com.example.uberapp_tim.activities.InRideChatActivity;
 import com.example.uberapp_tim.fragments.RideFragment;
-import com.example.uberapp_tim.model.message.Panic;
 import com.example.uberapp_tim.model.route.Location;
 import com.example.uberapp_tim.service.FragmentToActivity;
 import com.example.uberapp_tim.tools.FragmentTransition;
@@ -32,11 +20,6 @@ import com.google.android.material.button.MaterialButton;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.maps.model.Duration;
-
-import okhttp3.ResponseBody;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class DriverRideActivity extends AppCompatActivity implements FragmentToActivity {
 
@@ -68,7 +51,7 @@ public class DriverRideActivity extends AppCompatActivity implements FragmentToA
         messageBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent chatIntent = new Intent(DriverRideActivity.this, ChatActivity.class);
+                Intent chatIntent = new Intent(DriverRideActivity.this, InRideChatActivity.class);
                 chatIntent.putExtra("rideId", rideId);
                 chatIntent.putExtra("userId", passengerId);
                 startActivity(chatIntent);
@@ -89,7 +72,7 @@ public class DriverRideActivity extends AppCompatActivity implements FragmentToA
     protected void onResume(){
         super.onResume();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            FragmentTransition.to(RideFragment.newInstance(), this, false);
+            FragmentTransition.to(RideFragment.newInstance(), this, true);
         }
     }
 
