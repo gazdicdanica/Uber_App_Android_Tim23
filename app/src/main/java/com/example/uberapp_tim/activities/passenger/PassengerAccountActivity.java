@@ -350,6 +350,8 @@ public class PassengerAccountActivity extends AppCompatActivity {
                 overridePendingTransition(0,0);
                 return true;
             case (R.id.action_logout):
+                SharedPreferences sh = getSharedPreferences("AirRide_preferences", Context.MODE_PRIVATE);
+                sh.edit().clear().commit();
                 Intent loginScreen =new Intent(PassengerAccountActivity.this, UserLoginActivity.class);
                 loginScreen.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(loginScreen);
