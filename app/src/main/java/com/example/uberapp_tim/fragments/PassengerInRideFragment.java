@@ -76,7 +76,7 @@ public class PassengerInRideFragment extends Fragment implements OnMapReadyCallb
     LatLng start, end;
     private WebSocket webSocket = new WebSocket();
     private RideDTO rideRespDTO;
-    CircleButton requestRide;
+    CircleButton panic;
 
     public static PassengerInRideFragment newInstance() {
         PassengerInRideFragment mpf = new PassengerInRideFragment();
@@ -109,7 +109,7 @@ public class PassengerInRideFragment extends Fragment implements OnMapReadyCallb
         View view = inflater.inflate(R.layout.map_layout, container, false);
         Criteria criteria = new Criteria();
         provider = locationManager.getBestProvider(criteria, true);
-        requestRide = getActivity().findViewById(R.id.requestRide);
+        panic = getActivity().findViewById(R.id.panicBtn);
         return view;
     }
 
@@ -185,7 +185,6 @@ public class PassengerInRideFragment extends Fragment implements OnMapReadyCallb
     private void subscribeToWebSocket() {
         webSocket.stompClient.topic("/ride-passenger/"+getActivity().getSharedPreferences("AirRide_preferences", Context.MODE_PRIVATE).getString("id", null)).subscribe(topicMessage -> {
             String msg = topicMessage.getPayload();
-            Log.i("resp", msg);
             Gson g = new GsonBuilder().registerTypeAdapter(LocalDateTime.class, new JsonDeserializer<LocalDateTime>() {
                 @Override
                 public LocalDateTime deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
@@ -193,12 +192,12 @@ public class PassengerInRideFragment extends Fragment implements OnMapReadyCallb
                     return LocalDateTime.parse(json.getAsJsonPrimitive().getAsString(), format);
                 }
             }).create();
+
             rideRespDTO = g.fromJson(msg, RideDTO.class);
             Log.i("Value: ", rideRespDTO.toString());
             if (rideRespDTO.getStatus() == RideStatus.ACTIVE) {
                 Log.i("IN Ride", "Da");
-                requestRide.setColor(Color.RED);
-                requestRide.setOnClickListener(new View.OnClickListener() {
+                panic.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         Log.i("PANIC:", "true");
@@ -219,15 +218,17 @@ public class PassengerInRideFragment extends Fragment implements OnMapReadyCallb
                                 ServiceUtils.rideService.panicRide("Bearer " + jwt, rideRespDTO.getId(), panic).enqueue(new Callback<ResponseBody>() {
                                     @Override
                                     public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                                        getActivity().finish();
-                                        getActivity().overridePendingTransition(0, 0);
-                                        startActivity(getActivity().getIntent());
-                                        getActivity().overridePendingTransition(0, 0);
+                                        if(response.code() == 200) {
+                                            getActivity().finish();
+                                            getActivity().overridePendingTransition(0, 0);
+                                            startActivity(getActivity().getIntent());
+                                            getActivity().overridePendingTransition(0, 0);
+                                        }
                                     }
 
                                     @Override
                                     public void onFailure(Call<ResponseBody> call, Throwable t) {
-
+                                        Log.wtf("panic msg:", t.getMessage());
                                     }
                                 });
 
@@ -237,8 +238,11 @@ public class PassengerInRideFragment extends Fragment implements OnMapReadyCallb
                         builder.create().show();
                     }
                 });
-            } else if (rideRespDTO.getStatus() == RideStatus.FINISHED) {
+            }
+
+            else if (rideRespDTO.getStatus() == RideStatus.FINISHED) {
                 Log.i("usao2", " si");
+                webSocket.disconnect();
 
                 Intent i = new Intent(getActivity(), NotificationReceiver.class);
                 i.putExtra("title", "Ride finished");
@@ -368,7 +372,12 @@ public class PassengerInRideFragment extends Fragment implements OnMapReadyCallb
                     //else dialog stays open. Make sure you have an obvious way to close the dialog especially if you set cancellable to false.
                 }
             }
-        });
+
+            else {      // RideStatus.ACCEPTED
+                Log.i("koja je ovde:", "a");
+            }
+
+        }, throwable -> Log.i("Throwable iz inRide-a: ", throwable.getMessage()));
 
     }
 }

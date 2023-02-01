@@ -235,6 +235,19 @@
                 android:id="@+id/addFriendsLyt"
                 android:layout_height="wrap_content"
                 android:layout_weight="2">
+                    <at.markushi.ui.CircleButton
+                        android:id="@+id/msgBtn"
+                        android:layout_marginRight="35dp"
+                        android:layout_marginBottom="60dp"
+                        android:layout_marginStart="35dp"
+                        android:layout_width="70dip"
+                        android:layout_height="70dip"
+                        app:cb_color="@color/orange"
+                        android:src="@drawable/ic_baseline_message_white_24"
+                        app:cb_pressedRingWidth="9dip"
+                        android:visibility="gone">
+                    </at.markushi.ui.CircleButton>
+
                     <com.google.android.material.textfield.TextInputLayout
                         android:layout_width="match_parent"
                         android:id="@+id/textAddFriends"
@@ -269,17 +282,32 @@
             </Button>
         </LinearLayout>
         <at.markushi.ui.CircleButton
+            android:id="@+id/requestRide"
             android:layout_alignParentRight="true"
             android:layout_marginRight="35dp"
             android:layout_marginBottom="60dp"
             android:layout_alignParentBottom="true"
-            android:id="@+id/requestRide"
             android:layout_width="70dip"
             android:layout_height="70dip"
             app:cb_color="@color/orange"
             android:src="@drawable/ic_baseline_arrow_forward_18_big"
             app:cb_pressedRingWidth="9dip"
+            android:visibility="visible"
             />
+        <at.markushi.ui.CircleButton
+            android:id="@+id/panicBtn"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="35dp"
+            android:layout_marginBottom="60dp"
+            android:layout_alignParentBottom="true"
+            android:layout_width="70dip"
+            android:layout_height="70dip"
+            app:cb_color="@color/error"
+            android:src="@drawable/ic_baseline_error_outline_24"
+            app:cb_pressedRingWidth="9dip"
+            android:visibility="gone">
+
+        </at.markushi.ui.CircleButton>
         </RelativeLayout>
 
         <com.google.android.material.bottomnavigation.BottomNavigationView

@@ -72,6 +72,8 @@ public class DrawRouteFragment extends Fragment implements OnMapReadyCallback {
         PassengerMainActivity activity = (PassengerMainActivity) getActivity();
         start = activity.rideBundle().getParcelable("start");
         end = activity.rideBundle().getParcelable("finish");
+        Log.i("STARTARA: ", start.toString());
+        Log.i("ENDARA: ", end.toString());
     }
 
     @Override
