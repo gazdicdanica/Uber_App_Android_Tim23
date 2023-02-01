@@ -376,6 +376,8 @@ public class DriverAccountActivity extends AppCompatActivity {
                     }
                 });
 
+                sh.edit().clear().commit();
+
                 Intent loginScreen =new Intent(DriverAccountActivity.this, UserLoginActivity.class);
                 loginScreen.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(loginScreen);

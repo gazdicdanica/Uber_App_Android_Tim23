@@ -97,7 +97,9 @@ public class SplashActivity extends Activity {
         setContentView(R.layout.splash);
         int connection = AppTools.getConnectivityStatus(getApplicationContext());
         if(checkPermissions()){
+            Log.d("PERMISSION ", String.valueOf(checkPermissions()));
             if(connection == AppTools.TYPE_WIFI || connection == AppTools.TYPE_MOBILE){
+                Log.d("USPEH ", " Povezano");
                 new Timer().schedule(new TimerTask() {
                     @Override
                     public void run() {
@@ -124,22 +126,25 @@ public class SplashActivity extends Activity {
     }
 
     private void continueOperation(){
-        new Handler().postDelayed(new Runnable() {
+        new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
                 try{
-
+                    Log.d("USAO", "CONTINUe");
                     String accessToken = getSharedPreferences("AirRide_preferences", Context.MODE_PRIVATE).getString("accessToken", "");
                     if(accessToken.length() == 0){
+                        Log.d("TOKEN ", accessToken);
                         startActivity(new Intent(SplashActivity.this, UserLoginActivity.class));
                         finish();
                     }else{
                         switch(getSharedPreferences("AirRide_preferences", Context.MODE_PRIVATE).getString("role", "")){
                             case "ROLE_USER":
+                                Log.d("ROLE", "USER");
                                 startActivity(new Intent(SplashActivity.this, PassengerMainActivity.class));
                                 finish();
                                 break;
                             case "ROLE_DRIVER":
+                                Log.d("ROLE", "DRIVER");
                                 startActivity(new Intent(SplashActivity.this, DriverMainActivity.class));
                                 finish();
                         }
@@ -149,7 +154,7 @@ public class SplashActivity extends Activity {
                     ex.printStackTrace();
                 }
             }
-        }, 5000);
+        }, 2000);
     }
 
 
