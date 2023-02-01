@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
@@ -66,14 +67,17 @@ public class UserLoginActivity extends AppCompatActivity {
             }
         });
 
-//        TextView txtForgotPassword = findViewById(R.id.txtViewForgotPassword);
-//        txtForgotPassword.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                //TODO Forgot password activity
-////                startActivity(new Intent(UserLoginActivity.this, ));
-//            }
-//        });
+        TextView txtForgotPassword = findViewById(R.id.forgot_pw);
+        txtForgotPassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //TODO Forgot password activity
+                Intent i = new Intent(UserLoginActivity.this, ResetPasswordActivity.class);
+                i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(i);
+//                startActivity(new Intent(UserLoginActivity.this, ));
+            }
+        });
     }
 
     private void attemptLogin(){
