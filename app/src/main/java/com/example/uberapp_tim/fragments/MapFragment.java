@@ -228,6 +228,7 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
     }
 
     private void addVehicle(VehicleLocatingDTO vehicle) {
+        if(map == null ) return;
         if (vehicle.getRideStatus() == RideStatus.FINISHED && !checkPresentOnMap(vehicle)) {
             Log.d("NE POSTOJI", "FINISHED");
             LatLng location = new LatLng(vehicle.getVehicle().getCurrentLocation().getLatitude(), vehicle.getVehicle().getCurrentLocation().getLongitude());
@@ -258,6 +259,7 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
             m.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
             LatLng location = new LatLng(vehicle.getVehicle().getCurrentLocation().getLatitude(), vehicle.getVehicle().getCurrentLocation().getLongitude());
             m.setPosition(location);
+            m.setTag(vehicle.getVehicle().getId());
             this.busyDrivers.add(m);
         } else if (this.checkPresentOnMap(vehicle) && vehicle.getRideStatus().equals(RideStatus.FINISHED)
                 && this.getVehicleMarkerById(vehicle.getVehicle().getId()).getTitle().equals("Busy")) {
@@ -268,6 +270,7 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
             m.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
             LatLng location = new LatLng(vehicle.getVehicle().getCurrentLocation().getLatitude(), vehicle.getVehicle().getCurrentLocation().getLongitude());
             m.setPosition(location);
+            m.setTag(vehicle.getVehicle().getId());
             this.activeDrivers.add(m);
         }else{
             Log.d("PROMENA", "LOKACIJE");

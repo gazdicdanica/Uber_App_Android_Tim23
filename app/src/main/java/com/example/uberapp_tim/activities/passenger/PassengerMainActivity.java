@@ -30,6 +30,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.uberapp_tim.R;
+import com.example.uberapp_tim.activities.InRideChatActivity;
 import com.example.uberapp_tim.connection.ServiceUtils;
 import com.example.uberapp_tim.connection.WebSocket;
 import com.example.uberapp_tim.dto.RideDTO;
@@ -403,8 +404,14 @@ public class PassengerMainActivity extends AppCompatActivity implements View.OnC
             builder.create().show();
         }
         else if (view == chatBtn) {
-            Toast.makeText(this, "Danice Ciganko", Toast.LENGTH_SHORT).show();
-            // TODO Danica Ciganka
+            Intent chatIntent = new Intent(PassengerMainActivity.this, InRideChatActivity.class);
+            // rideId
+            chatIntent.putExtra("rideId", rideRespDTO.getId());
+            // userId
+            chatIntent.putExtra("userId", rideRespDTO.getDriver().getId());
+            startActivity(chatIntent);
+
+            // TODO NA POVRATKU JE INKONZISTENTNO :(((
         }
     }
 
@@ -575,7 +582,7 @@ public class PassengerMainActivity extends AppCompatActivity implements View.OnC
                     fragment.setArguments(b);
 
 //                    FragmentTransition.remove(this);
-                    FragmentTransition.to(fragment, this, false);
+                    FragmentTransition.to(fragment, this, true);
                     isus = !isus;
                 }
             }
