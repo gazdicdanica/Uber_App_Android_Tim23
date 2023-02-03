@@ -570,6 +570,7 @@ public class PassengerMainActivity extends AppCompatActivity implements View.OnC
                 if (alertDialog != null) {
                     alertDialog.dismiss();
                     Bundle b = rideBundle();
+                    b.putString("driverID", String.valueOf(rideRespDTO.getDriver().getId()));
                     PassengerInRideFragment fragment = PassengerInRideFragment.newInstance();
                     fragment.setArguments(b);
 

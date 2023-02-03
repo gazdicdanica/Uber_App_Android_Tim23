@@ -89,12 +89,12 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
-        subscribeToWebsocket();
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        subscribeToWebsocket();
         try {
             mCallback = (FragmentToActivity) context;
         } catch (ClassCastException e) {
@@ -210,17 +210,20 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
             Type listType = new TypeToken<ArrayList<VehicleLocatingDTO>>(){}.getType();
             List<VehicleLocatingDTO> vehicles= g.fromJson(message, listType);
 
-            for(VehicleLocatingDTO v : vehicles){
-                getActivity().runOnUiThread(
-                        new Runnable() {
-                            @Override
-                            public void run() {
-                                addVehicle(v);
+            if(getActivity() != null){
+                for(VehicleLocatingDTO v : vehicles){
+                    getActivity().runOnUiThread(
+                            new Runnable() {
+                                @Override
+                                public void run() {
+                                    addVehicle(v);
+                                }
                             }
-                        }
-                );
+                    );
 
+                }
             }
+
         });
     }
 
@@ -250,9 +253,9 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
                 && this.getVehicleMarkerById(vehicle.getVehicle().getId()).getTitle().equals("Available")) {
             Log.d("AVAILABLE TO ", "BUSY");
             Marker m = this.getVehicleMarkerById(vehicle.getVehicle().getId());
-            m.remove();
             this.activeDrivers.remove(m);
             m.setTitle("Busy");
+            m.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
             LatLng location = new LatLng(vehicle.getVehicle().getCurrentLocation().getLatitude(), vehicle.getVehicle().getCurrentLocation().getLongitude());
             m.setPosition(location);
             this.busyDrivers.add(m);
@@ -260,9 +263,9 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
                 && this.getVehicleMarkerById(vehicle.getVehicle().getId()).getTitle().equals("Busy")) {
             Log.d("BUSY YO", "AVAILABLE");
             Marker m = this.getVehicleMarkerById(vehicle.getVehicle().getId());
-            m.remove();
             this.busyDrivers.remove(m);
             m.setTitle("Active");
+            m.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
             LatLng location = new LatLng(vehicle.getVehicle().getCurrentLocation().getLatitude(), vehicle.getVehicle().getCurrentLocation().getLongitude());
             m.setPosition(location);
             this.activeDrivers.add(m);
