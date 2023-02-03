@@ -1,5 +1,6 @@
 package com.example.uberapp_tim.connection;
 
+import com.example.uberapp_tim.model.route.Location;
 import com.example.uberapp_tim.model.users.User;
 import com.example.uberapp_tim.model.vehicle.Document;
 import com.example.uberapp_tim.model.vehicle.Vehicle;
@@ -40,4 +41,7 @@ public interface DriverService {
 
     @POST("driver/{id}/documents")
     Call<Document> addDriverDoc(@Header("authorization")String jwt, @Path("id")Long id, @Body Document doc);
+
+    @GET("driver/{id}/location")
+    Call<Location> getDriverLocation(@Header("authorization")String jwt, @Path("id")Long id);
 }

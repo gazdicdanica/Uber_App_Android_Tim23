@@ -29,14 +29,19 @@ import com.example.uberapp_tim.connection.ServiceUtils;
 import com.example.uberapp_tim.connection.WebSocket;
 import com.example.uberapp_tim.dto.ReviewDTO;
 import com.example.uberapp_tim.dto.RideDTO;
+import com.example.uberapp_tim.dto.VehicleLocatingDTO;
 import com.example.uberapp_tim.model.message.Panic;
 import com.example.uberapp_tim.model.ride.RideStatus;
 import com.example.uberapp_tim.receiver.NotificationReceiver;
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.material.textfield.TextInputEditText;
@@ -46,6 +51,7 @@ import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
+import com.google.gson.reflect.TypeToken;
 import com.google.maps.DirectionsApi;
 import com.google.maps.DirectionsApiRequest;
 import com.google.maps.GeoApiContext;
@@ -54,12 +60,14 @@ import com.google.maps.model.DirectionsResult;
 import com.google.maps.model.DirectionsRoute;
 import com.google.maps.model.DirectionsStep;
 import com.google.maps.model.EncodedPolyline;
+import com.google.maps.model.Vehicle;
 
 import java.lang.reflect.Type;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import at.markushi.ui.CircleButton;
 import okhttp3.ResponseBody;
@@ -76,7 +84,10 @@ public class PassengerInRideFragment extends Fragment implements OnMapReadyCallb
     LatLng start, end;
     private WebSocket webSocket = new WebSocket();
     private RideDTO rideRespDTO;
+    private Long driverId;
     CircleButton panic;
+
+    Marker driverMarker;
 
     public static PassengerInRideFragment newInstance() {
         PassengerInRideFragment mpf = new PassengerInRideFragment();
@@ -89,6 +100,7 @@ public class PassengerInRideFragment extends Fragment implements OnMapReadyCallb
         Bundle b = getArguments();
         start = b.getParcelable("start");
         end = b.getParcelable("finish");
+        driverId = Long.valueOf(b.getString("driverID"));
         locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
         subscribeToWebSocket();
     }
@@ -183,19 +195,20 @@ public class PassengerInRideFragment extends Fragment implements OnMapReadyCallb
 
     @SuppressLint("CheckResult")
     private void subscribeToWebSocket() {
+
+        Gson g = new GsonBuilder().registerTypeAdapter(LocalDateTime.class, new JsonDeserializer<LocalDateTime>() {
+            @Override
+            public LocalDateTime deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+                DateTimeFormatter format = DateTimeFormatter.ofPattern("yyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+                return LocalDateTime.parse(json.getAsJsonPrimitive().getAsString(), format);
+            }
+        }).create();
         webSocket.stompClient.topic("/ride-passenger/"+getActivity().getSharedPreferences("AirRide_preferences", Context.MODE_PRIVATE).getString("id", null)).subscribe(topicMessage -> {
             String msg = topicMessage.getPayload();
-            Gson g = new GsonBuilder().registerTypeAdapter(LocalDateTime.class, new JsonDeserializer<LocalDateTime>() {
-                @Override
-                public LocalDateTime deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-                    DateTimeFormatter format = DateTimeFormatter.ofPattern("yyy-MM-dd'T'HH:mm:ss.SSS'Z'");
-                    return LocalDateTime.parse(json.getAsJsonPrimitive().getAsString(), format);
-                }
-            }).create();
-
             rideRespDTO = g.fromJson(msg, RideDTO.class);
             Log.i("Value: ", rideRespDTO.toString());
             if (rideRespDTO.getStatus() == RideStatus.ACTIVE) {
+
                 Log.i("IN Ride", "Da");
                 panic.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -260,12 +273,84 @@ public class PassengerInRideFragment extends Fragment implements OnMapReadyCallb
                     }
                 });
             }
-            else {      // RideStatus.ACCEPTED
+           else {      // RideStatus.ACCEPTED
                 Log.i("koja je ovde:", "a");
             }
 
         }, throwable -> Log.i("Throwable iz inRide-a: ", throwable.getMessage()));
-        
+
+        webSocket.stompClient.topic("/update-vehicle-location/").subscribe(topicMessage -> {
+            String message = topicMessage.getPayload();
+            Type listType = new TypeToken<ArrayList<VehicleLocatingDTO>>(){}.getType();
+            List<VehicleLocatingDTO> vehicles= g.fromJson(message, listType);
+
+            if(getActivity() != null){
+                for(VehicleLocatingDTO v : vehicles){
+                    if(!Objects.equals(v.getDriverId(), driverId)){
+                        continue;
+                    }
+                    getActivity().runOnUiThread(
+                            new Runnable() {
+                                @Override
+                                public void run() {
+                                    addVehicle(v);
+                                }
+                            }
+                    );
+
+                }
+            }
+
+        });
+    }
+
+    private void addVehicle(VehicleLocatingDTO vehicle){
+        if (vehicle.getRideStatus() == RideStatus.FINISHED && driverMarker == null) {
+            Log.d("NE POSTOJI", "FINISHED");
+            LatLng location = new LatLng(vehicle.getVehicle().getCurrentLocation().getLatitude(), vehicle.getVehicle().getCurrentLocation().getLongitude());
+            driverMarker = mMap.addMarker(
+                    new MarkerOptions()
+                            .title("Available")
+                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))
+                            .position(location)
+            );
+            driverMarker.setTag(vehicle.getVehicle().getId());
+
+        } else if (vehicle.getRideStatus().equals(RideStatus.ACTIVE) && driverMarker == null) {
+            Log.d("NE POSTOJI", "ACTIVE");
+            LatLng location = new LatLng(vehicle.getVehicle().getCurrentLocation().getLatitude(), vehicle.getVehicle().getCurrentLocation().getLongitude());
+            driverMarker = mMap.addMarker(new MarkerOptions()
+                    .title("Busy")
+                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE))
+                    .position(location)
+            );
+            driverMarker.setTag(vehicle.getVehicle().getId());
+        } else if (driverMarker != null && vehicle.getRideStatus().equals(RideStatus.ACTIVE)
+                && this.driverMarker.getTitle().equals("Available")) {
+            Log.d("AVAILABLE TO ", "BUSY");
+            driverMarker.setTitle("Busy");
+            driverMarker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
+            LatLng location = new LatLng(vehicle.getVehicle().getCurrentLocation().getLatitude(), vehicle.getVehicle().getCurrentLocation().getLongitude());
+            driverMarker.setPosition(location);
+        } else if (driverMarker!=null && vehicle.getRideStatus().equals(RideStatus.FINISHED)
+                && this.driverMarker.getTitle().equals("Busy")) {
+            Log.d("BUSY YO", "AVAILABLE");
+            driverMarker.setTitle("Active");
+            driverMarker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+            LatLng location = new LatLng(vehicle.getVehicle().getCurrentLocation().getLatitude(), vehicle.getVehicle().getCurrentLocation().getLongitude());
+            driverMarker.setPosition(location);
+        }else{
+            Log.d("PROMENA", "LOKACIJE");
+            LatLng location = new LatLng(vehicle.getVehicle().getCurrentLocation().getLatitude(), vehicle.getVehicle().getCurrentLocation().getLongitude());
+            this.driverMarker.setPosition(location);
+            CameraPosition cameraPosition = new CameraPosition.Builder()
+                    .target(location)
+                    .zoom(15)
+                    .bearing(0).build();
+            CameraUpdate update = CameraUpdateFactory.newCameraPosition(cameraPosition);
+            mMap.animateCamera(update);
+        }
+
     }
 
     public void showReviewDialog(){
@@ -375,7 +460,9 @@ public class PassengerInRideFragment extends Fragment implements OnMapReadyCallb
                     //else dialog stays open. Make sure you have an obvious way to close the dialog especially if you set cancellable to false.
                 }
             }
+
         });
+
     }
 }
 

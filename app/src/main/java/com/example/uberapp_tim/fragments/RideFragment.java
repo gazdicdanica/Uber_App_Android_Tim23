@@ -10,6 +10,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Criteria;
@@ -17,6 +18,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
 import android.text.InputType;
 import android.util.Log;
@@ -24,6 +26,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -40,6 +44,7 @@ import com.example.uberapp_tim.connection.ServiceUtils;
 import com.example.uberapp_tim.connection.WebSocket;
 import com.example.uberapp_tim.dto.MessageDTO;
 import com.example.uberapp_tim.dto.RideDTO;
+import com.example.uberapp_tim.dto.VehicleLocatingDTO;
 import com.example.uberapp_tim.model.message.Panic;
 import com.example.uberapp_tim.receiver.NotificationReceiver;
 import com.example.uberapp_tim.service.FragmentToActivity;
@@ -64,6 +69,7 @@ import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
+import com.google.gson.reflect.TypeToken;
 import com.google.maps.DirectionsApi;
 import com.google.maps.DirectionsApiRequest;
 import com.google.maps.GeoApiContext;
@@ -79,6 +85,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -100,11 +107,17 @@ public class RideFragment extends Fragment implements LocationListener, OnMapRea
     private RideDTO ride;
     private Long id;
 
+    private String estimation;
+    private TextView estimationView;
+
     private Marker endMarker;
     private Polyline activeRoute;
 
-    private static WebSocket webSocket;
+    private static WebSocket webSocket = new WebSocket();
     private FragmentToActivity mCallback;
+
+    private Handler mHandler;
+    private Runnable mRunnable;
 
 
     public static RideFragment newInstance(){
@@ -122,7 +135,6 @@ public class RideFragment extends Fragment implements LocationListener, OnMapRea
         Bundle res = activity.getIdBundle();
         id = res.getLong("id");
 
-        webSocket = new WebSocket();
         webSocket.stompClient.topic("/ride-panic/"+getActivity().getSharedPreferences("AirRide_preferences", Context.MODE_PRIVATE).getString("id", null)).subscribe(
                 topicMessage->{
                     activity.runOnUiThread(new Runnable()
@@ -184,7 +196,49 @@ public class RideFragment extends Fragment implements LocationListener, OnMapRea
             }
 
         });
+    }
 
+
+    private void updateLocation(){
+
+        mHandler = new Handler();
+        mRunnable = new Runnable() {
+            @Override
+            public void run() {
+
+                if(home!= null){
+                    SharedPreferences sharedPreferences = getActivity().getSharedPreferences("AirRide_preferences", Context.MODE_PRIVATE);
+                    Long id = Long.valueOf(sharedPreferences.getString("id", ""));
+                    String jwt = "Bearer " + sharedPreferences.getString("accessToken", "");
+                    Log.d("jwt " , jwt);
+                    ServiceUtils.driverService.getDriverLocation(jwt, id).enqueue(new Callback<com.example.uberapp_tim.model.route.Location>() {
+                        @Override
+                        public void onResponse(Call<com.example.uberapp_tim.model.route.Location> call, Response<com.example.uberapp_tim.model.route.Location> response) {
+                            getActivity().runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    com.example.uberapp_tim.model.route.Location current = response.body();
+                                    if(current != null){
+                                        home.setPosition(new LatLng(current.getLatitude(), current.getLongitude()));
+                                    }
+
+                                }
+                            });
+                        }
+
+                        @Override
+                        public void onFailure(Call<com.example.uberapp_tim.model.route.Location> call, Throwable t) {
+                            Log.wtf("ERROR", t.getMessage());
+                        }
+                    });
+                }
+
+                mHandler.postDelayed(mRunnable, 2000);
+            }
+        };
+        Log.wtf("BEFORE", "POSt");
+        mHandler.post(mRunnable);
+        Log.wtf("AFTER", "POST");
     }
 
     public void showPanicDialog(){
@@ -266,13 +320,6 @@ public class RideFragment extends Fragment implements LocationListener, OnMapRea
         return view;
     }
 
-    @Override
-    public void onLocationChanged(@NonNull Location location) {
-        if(map != null) {
-            addMarker(location);
-        }
-    }
-
     private void addMarker(Location location) {
         LatLng loc = new LatLng(location.getLatitude(), location.getLongitude());
 
@@ -291,6 +338,11 @@ public class RideFragment extends Fragment implements LocationListener, OnMapRea
         CameraUpdate update = CameraUpdateFactory.newCameraPosition(cameraPosition);
         map.animateCamera(update);
         home.setFlat(true);
+
+    }
+
+    @Override
+    public void onLocationChanged(@NonNull Location location) {
 
     }
 
@@ -456,12 +508,17 @@ public class RideFragment extends Fragment implements LocationListener, OnMapRea
     @Override
     public void onDetach(){
         mCallback = null;
+        mHandler.removeCallbacks(mRunnable);
         super.onDetach();
     }
 
+    @SuppressLint("CheckResult")
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
+
+        updateLocation();
+
         try {
             mCallback = (FragmentToActivity) context;
         } catch (ClassCastException e) {
@@ -477,6 +534,33 @@ public class RideFragment extends Fragment implements LocationListener, OnMapRea
         MaterialButton startRideBtn = activity.findViewById(R.id.start_ride_btn);
         MaterialButton endRideBtn = activity.findViewById(R.id.end_ride_btn);
         MaterialButton panicBtn = activity.findViewById(R.id.panic_btn);
+        estimationView = activity.findViewById(R.id.countdown_time);
+        LinearLayout estLayout = activity.findViewById(R.id.ride_parametersLayout);
+        estLayout.bringToFront();
+
+        Gson g = new Gson();
+        webSocket.stompClient.topic("/update-vehicle-location/").subscribe(topicMessage ->{
+            String message = topicMessage.getPayload();
+            Type listType = new TypeToken<ArrayList<VehicleLocatingDTO>>(){}.getType();
+            List<VehicleLocatingDTO> vehicles= g.fromJson(message, listType);
+            if(activity != null){
+                for(VehicleLocatingDTO v : vehicles){
+                    if(Objects.equals(v.getDriverId(), Long.valueOf(activity.getSharedPreferences("AirRide_preferences", Context.MODE_PRIVATE).getString("id", "")))){
+                        this.estimation = v.getDuration();
+                        if(this.estimation != null){
+                            getActivity().runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    estimationView.setText(estimation);
+                                }
+                            });
+                        }
+
+                    }
+                }
+            }
+
+        });
 
         startRideBtn.setOnClickListener(new View.OnClickListener() {
             @Override
