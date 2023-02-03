@@ -206,6 +206,12 @@ public class DriverMapFragment extends Fragment implements LocationListener, OnM
         return inflater.inflate(R.layout.map_layout, vg, false);
     }
 
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        subscribeToWebsocket();
+    }
+
     @SuppressWarnings("MissingPermission")
     @Override
     public void onPause() {
@@ -253,8 +259,6 @@ public class DriverMapFragment extends Fragment implements LocationListener, OnM
         if (location != null) {
             addMarker(location);
         }
-
-        subscribeToWebsocket();
     }
 
     @SuppressLint("CheckResult")
@@ -269,17 +273,20 @@ public class DriverMapFragment extends Fragment implements LocationListener, OnM
             List<VehicleLocatingDTO> vehicles= g.fromJson(message, listType);
 
             for(VehicleLocatingDTO v : vehicles){
-                if(v.getDriverId().equals(Long.valueOf(getActivity().getSharedPreferences("AirRide_preferences", Context.MODE_PRIVATE).getString("id", "")))){
-                   continue;
-                }
-                getActivity().runOnUiThread(
-                        new Runnable() {
-                            @Override
-                            public void run() {
-                                addVehicle(v);
+                if(getActivity() != null){
+                    if(v.getDriverId().equals(Long.valueOf(getContext().getSharedPreferences("AirRide_preferences", Context.MODE_PRIVATE).getString("id", "")))){
+                        continue;
+                    }
+                    getActivity().runOnUiThread(
+                            new Runnable() {
+                                @Override
+                                public void run() {
+                                    addVehicle(v);
+                                }
                             }
-                        }
-                );
+                    );
+                }
+
 
             }
         });

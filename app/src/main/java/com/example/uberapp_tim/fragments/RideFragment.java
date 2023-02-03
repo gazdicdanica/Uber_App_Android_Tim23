@@ -10,6 +10,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Criteria;
@@ -17,6 +18,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
 import android.text.InputType;
 import android.util.Log;
@@ -106,6 +108,9 @@ public class RideFragment extends Fragment implements LocationListener, OnMapRea
     private static WebSocket webSocket;
     private FragmentToActivity mCallback;
 
+    private Handler mHandler;
+    private Runnable mRunnable;
+
 
     public static RideFragment newInstance(){
         RideFragment f = new RideFragment();
@@ -184,7 +189,49 @@ public class RideFragment extends Fragment implements LocationListener, OnMapRea
             }
 
         });
+    }
 
+    private void updateLocation(){
+
+        mHandler = new Handler();
+        mRunnable = new Runnable() {
+            @Override
+            public void run() {
+
+                Log.wtf("HANDLEr", "TOUCHED");
+                if(home!= null){
+                    SharedPreferences sharedPreferences = getActivity().getSharedPreferences("AirRide_preferences", Context.MODE_PRIVATE);
+                    Long id = Long.valueOf(sharedPreferences.getString("id", ""));
+                    String jwt = sharedPreferences.getString("accessToken", "");
+                    Log.d("jwt " , jwt);
+                    ServiceUtils.driverService.getDriverLocation(jwt, id).enqueue(new Callback<com.example.uberapp_tim.model.route.Location>() {
+                        @Override
+                        public void onResponse(Call<com.example.uberapp_tim.model.route.Location> call, Response<com.example.uberapp_tim.model.route.Location> response) {
+                            getActivity().runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    com.example.uberapp_tim.model.route.Location current = response.body();
+                                    if(current != null){
+                                        home.setPosition(new LatLng(current.getLatitude(), current.getLongitude()));
+                                    }
+
+                                }
+                            });
+                        }
+
+                        @Override
+                        public void onFailure(Call<com.example.uberapp_tim.model.route.Location> call, Throwable t) {
+                            Log.wtf("ERROR", t.getMessage());
+                        }
+                    });
+                }
+
+                mHandler.postDelayed(mRunnable, 2000);
+            }
+        };
+        Log.wtf("BEFORE", "POSt");
+        mHandler.post(mRunnable);
+        Log.wtf("AFTER", "POST");
     }
 
     public void showPanicDialog(){
@@ -266,13 +313,6 @@ public class RideFragment extends Fragment implements LocationListener, OnMapRea
         return view;
     }
 
-    @Override
-    public void onLocationChanged(@NonNull Location location) {
-        if(map != null) {
-            addMarker(location);
-        }
-    }
-
     private void addMarker(Location location) {
         LatLng loc = new LatLng(location.getLatitude(), location.getLongitude());
 
@@ -291,6 +331,11 @@ public class RideFragment extends Fragment implements LocationListener, OnMapRea
         CameraUpdate update = CameraUpdateFactory.newCameraPosition(cameraPosition);
         map.animateCamera(update);
         home.setFlat(true);
+
+    }
+
+    @Override
+    public void onLocationChanged(@NonNull Location location) {
 
     }
 
@@ -456,12 +501,16 @@ public class RideFragment extends Fragment implements LocationListener, OnMapRea
     @Override
     public void onDetach(){
         mCallback = null;
+        mHandler.removeCallbacks(mRunnable);
         super.onDetach();
     }
 
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
+
+        updateLocation();
+
         try {
             mCallback = (FragmentToActivity) context;
         } catch (ClassCastException e) {
