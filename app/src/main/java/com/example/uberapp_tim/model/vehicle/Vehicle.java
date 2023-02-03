@@ -1,5 +1,7 @@
 package com.example.uberapp_tim.model.vehicle;
 
+import com.example.uberapp_tim.model.route.Location;
+
 public class Vehicle {
     private Long id;
     private String model;
@@ -7,11 +9,12 @@ public class Vehicle {
     private int passengerSeats;
     private boolean babyTransport;
     private boolean petTransport;
-    private CarType vehicleType;
-    private float pricePerKilometer;
+    private VehicleType vehicleType;
+    private Location currentLocation;
+
 
     public Vehicle(Long id, String model, String licenseNumber, int passengerSeats,
-                   boolean babyTransport, boolean petTransport, CarType vehicleType, float pricePerKilometer) {
+                   boolean babyTransport, boolean petTransport, VehicleType vehicleType, Location currentLocation) {
         this.id = id;
         this.model = model;
         this.licenseNumber = licenseNumber;
@@ -19,7 +22,7 @@ public class Vehicle {
         this.babyTransport = babyTransport;
         this.petTransport = petTransport;
         this.vehicleType = vehicleType;
-        this.pricePerKilometer = pricePerKilometer;
+        this.currentLocation = currentLocation;
     }
 
     @Override
@@ -31,8 +34,7 @@ public class Vehicle {
                 ", capacity=" + passengerSeats +
                 ", acceptBabies=" + babyTransport +
                 ", acceptPets=" + petTransport +
-                ", carType=" + vehicleType +
-                ", pricePerKilometer=" + pricePerKilometer +
+                ", carType=" + vehicleType.getType() +
                 '}';
     }
 
@@ -86,19 +88,19 @@ public class Vehicle {
         this.petTransport = petTransport;
     }
 
-    public CarType getVehicleType() {
+    public VehicleType getVehicleType() {
         return vehicleType;
     }
 
-    public void setVehicleType(CarType vehicleType) {
+    public void setVehicleType(VehicleType vehicleType) {
         this.vehicleType = vehicleType;
     }
 
-    public float getPricePerKilometer() {
-        return pricePerKilometer;
+    public Location getCurrentLocation() {
+        return currentLocation;
     }
 
-    public void setPricePerKilometer(float pricePerKilometer) {
-        this.pricePerKilometer = pricePerKilometer;
+    public void setCurrentLocation(Location currentLocation) {
+        this.currentLocation = currentLocation;
     }
 }

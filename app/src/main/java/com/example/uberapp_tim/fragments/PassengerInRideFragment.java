@@ -373,11 +373,7 @@ public class PassengerInRideFragment extends Fragment implements OnMapReadyCallb
                 }
             }
 
-            else {      // RideStatus.ACCEPTED
-                Log.i("koja je ovde:", "a");
-            }
-
-        }, throwable -> Log.i("Throwable iz inRide-a: ", throwable.getMessage()));
+        });
 
     }
 }
