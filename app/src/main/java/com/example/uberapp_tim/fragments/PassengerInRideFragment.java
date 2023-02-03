@@ -260,8 +260,12 @@ public class PassengerInRideFragment extends Fragment implements OnMapReadyCallb
                     }
                 });
             }
-            Log.i("koja je ovde:", "a");
-        });
+            else {      // RideStatus.ACCEPTED
+                Log.i("koja je ovde:", "a");
+            }
+
+        }, throwable -> Log.i("Throwable iz inRide-a: ", throwable.getMessage()));
+        
     }
 
     public void showReviewDialog(){
@@ -307,8 +311,7 @@ public class PassengerInRideFragment extends Fragment implements OnMapReadyCallb
         });
 
         dialog.show();
-        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener()
-        {
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 boolean sendDriver = false;
@@ -372,12 +375,7 @@ public class PassengerInRideFragment extends Fragment implements OnMapReadyCallb
                     //else dialog stays open. Make sure you have an obvious way to close the dialog especially if you set cancellable to false.
                 }
             }
-
-            else {      // RideStatus.ACCEPTED
-                Log.i("koja je ovde:", "a");
-            }
-
-        }, throwable -> Log.i("Throwable iz inRide-a: ", throwable.getMessage()));
-
+        });
     }
 }
+
