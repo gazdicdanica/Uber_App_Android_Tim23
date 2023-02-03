@@ -1,6 +1,7 @@
 package com.example.uberapp_tim.fragments;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -24,7 +25,10 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.uberapp_tim.R;
+import com.example.uberapp_tim.connection.WebSocket;
 import com.example.uberapp_tim.dialogs.LocationDialog;
+import com.example.uberapp_tim.dto.VehicleLocatingDTO;
+import com.example.uberapp_tim.model.ride.RideStatus;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -35,6 +39,14 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 public class DriverMapFragment extends Fragment implements LocationListener, OnMapReadyCallback {
 
@@ -46,6 +58,9 @@ public class DriverMapFragment extends Fragment implements LocationListener, OnM
     private AlertDialog dialog;
     private Marker home;
     private GoogleMap map;
+
+    private List<Marker> activeDrivers = new ArrayList<>();
+    private List<Marker> busyDrivers = new ArrayList<>();
 
     public static DriverMapFragment newInstance() {
         DriverMapFragment mpf = new DriverMapFragment();
@@ -238,5 +253,107 @@ public class DriverMapFragment extends Fragment implements LocationListener, OnM
         if (location != null) {
             addMarker(location);
         }
+
+        subscribeToWebsocket();
+    }
+
+    @SuppressLint("CheckResult")
+    private void subscribeToWebsocket(){
+        Log.d("subscribe to websocket", "");
+        WebSocket webSocket = new WebSocket();
+        webSocket.stompClient.topic("/update-vehicle-location/").subscribe(topicMessage -> {
+            String message = topicMessage.getPayload();
+
+            Gson g = new GsonBuilder().create();
+            Type listType = new TypeToken<ArrayList<VehicleLocatingDTO>>(){}.getType();
+            List<VehicleLocatingDTO> vehicles= g.fromJson(message, listType);
+
+            for(VehicleLocatingDTO v : vehicles){
+                if(v.getDriverId().equals(Long.valueOf(getActivity().getSharedPreferences("AirRide_preferences", Context.MODE_PRIVATE).getString("id", "")))){
+                   continue;
+                }
+                getActivity().runOnUiThread(
+                        new Runnable() {
+                            @Override
+                            public void run() {
+                                addVehicle(v);
+                            }
+                        }
+                );
+
+            }
+        });
+    }
+
+    private void addVehicle(VehicleLocatingDTO vehicle) {
+        if (vehicle.getRideStatus() == RideStatus.FINISHED && !checkPresentOnMap(vehicle)) {
+            LatLng location = new LatLng(vehicle.getVehicle().getCurrentLocation().getLatitude(), vehicle.getVehicle().getCurrentLocation().getLongitude());
+            Marker m = map.addMarker(
+                    new MarkerOptions()
+                            .title("Available")
+                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))
+                            .position(location)
+            );
+            m.setTag(vehicle.getVehicle().getId());
+            this.activeDrivers.add(m);
+        } else if (vehicle.getRideStatus().equals(RideStatus.ACTIVE) && !this.checkPresentOnMap(vehicle)) {
+            LatLng location = new LatLng(vehicle.getVehicle().getCurrentLocation().getLatitude(), vehicle.getVehicle().getCurrentLocation().getLongitude());
+            Marker m = map.addMarker(new MarkerOptions()
+                    .title("Busy")
+                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE))
+                    .position(location)
+            );
+            m.setTag(vehicle.getVehicle().getId());
+            this.busyDrivers.add(m);
+        } else if (this.checkPresentOnMap(vehicle) && vehicle.getRideStatus().equals(RideStatus.ACTIVE)
+                && this.getVehicleMarkerById(vehicle.getVehicle().getId()).getTitle().equals("Available")) {
+            Marker m = this.getVehicleMarkerById(vehicle.getVehicle().getId());
+            m.remove();
+            this.activeDrivers.remove(m);
+            LatLng location = new LatLng(vehicle.getVehicle().getCurrentLocation().getLatitude(), vehicle.getVehicle().getCurrentLocation().getLongitude());
+            m.setPosition(location);
+            this.busyDrivers.add(m);
+        } else if (this.checkPresentOnMap(vehicle) && vehicle.getRideStatus().equals(RideStatus.FINISHED)
+                && this.getVehicleMarkerById(vehicle.getVehicle().getId()).getTitle().equals("Busy")) {
+            Marker m = this.getVehicleMarkerById(vehicle.getVehicle().getId());
+            m.remove();
+            this.busyDrivers.remove(m);
+            m.setTitle("Active");
+            LatLng location = new LatLng(vehicle.getVehicle().getCurrentLocation().getLatitude(), vehicle.getVehicle().getCurrentLocation().getLongitude());
+            m.setPosition(location);
+            this.activeDrivers.add(m);
+        }else{
+            LatLng location = new LatLng(vehicle.getVehicle().getCurrentLocation().getLatitude(), vehicle.getVehicle().getCurrentLocation().getLongitude());
+            this.getVehicleMarkerById(vehicle.getVehicle().getId()).setPosition(location);
+        }
+    }
+
+    private Marker getVehicleMarkerById(Long id){
+        for(Marker driverMarker : this.activeDrivers){
+            if(driverMarker.getTag().equals(id)){
+                return driverMarker;
+            }
+        }
+
+        for(Marker driverMarker : this.busyDrivers){
+            if(driverMarker.getTag().equals(id)){
+                return driverMarker;
+            }
+        }
+        return null;
+    }
+
+    private boolean checkPresentOnMap(VehicleLocatingDTO vehicle){
+        for(Marker driverMarker : this.activeDrivers){
+            if(Objects.equals(driverMarker.getTag(), vehicle.getVehicle().getId())){
+                return true;
+            }
+        }
+        for(Marker driverMarker : this.activeDrivers){
+            if(Objects.equals(driverMarker.getTag(), vehicle.getVehicle().getId())){
+                return true;
+            }
+        }
+        return false;
     }
 }
