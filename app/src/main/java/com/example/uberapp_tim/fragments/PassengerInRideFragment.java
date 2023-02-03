@@ -273,8 +273,11 @@ public class PassengerInRideFragment extends Fragment implements OnMapReadyCallb
                     }
                 });
             }
-            Log.i("koja je ovde:", "a");
-        });
+           else {      // RideStatus.ACCEPTED
+                Log.i("koja je ovde:", "a");
+            }
+
+        }, throwable -> Log.i("Throwable iz inRide-a: ", throwable.getMessage()));
 
         webSocket.stompClient.topic("/update-vehicle-location/").subscribe(topicMessage -> {
             String message = topicMessage.getPayload();
@@ -347,6 +350,7 @@ public class PassengerInRideFragment extends Fragment implements OnMapReadyCallb
             CameraUpdate update = CameraUpdateFactory.newCameraPosition(cameraPosition);
             mMap.animateCamera(update);
         }
+
     }
 
     public void showReviewDialog(){
@@ -392,8 +396,7 @@ public class PassengerInRideFragment extends Fragment implements OnMapReadyCallb
         });
 
         dialog.show();
-        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener()
-        {
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 boolean sendDriver = false;
@@ -462,3 +465,4 @@ public class PassengerInRideFragment extends Fragment implements OnMapReadyCallb
 
     }
 }
+
