@@ -26,6 +26,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -42,6 +44,7 @@ import com.example.uberapp_tim.connection.ServiceUtils;
 import com.example.uberapp_tim.connection.WebSocket;
 import com.example.uberapp_tim.dto.MessageDTO;
 import com.example.uberapp_tim.dto.RideDTO;
+import com.example.uberapp_tim.dto.VehicleLocatingDTO;
 import com.example.uberapp_tim.model.message.Panic;
 import com.example.uberapp_tim.receiver.NotificationReceiver;
 import com.example.uberapp_tim.service.FragmentToActivity;
@@ -66,6 +69,7 @@ import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
+import com.google.gson.reflect.TypeToken;
 import com.google.maps.DirectionsApi;
 import com.google.maps.DirectionsApiRequest;
 import com.google.maps.GeoApiContext;
@@ -81,6 +85,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -102,10 +107,13 @@ public class RideFragment extends Fragment implements LocationListener, OnMapRea
     private RideDTO ride;
     private Long id;
 
+    private String estimation;
+    private TextView estimationView;
+
     private Marker endMarker;
     private Polyline activeRoute;
 
-    private static WebSocket webSocket;
+    private static WebSocket webSocket = new WebSocket();
     private FragmentToActivity mCallback;
 
     private Handler mHandler;
@@ -127,7 +135,6 @@ public class RideFragment extends Fragment implements LocationListener, OnMapRea
         Bundle res = activity.getIdBundle();
         id = res.getLong("id");
 
-        webSocket = new WebSocket();
         webSocket.stompClient.topic("/ride-panic/"+getActivity().getSharedPreferences("AirRide_preferences", Context.MODE_PRIVATE).getString("id", null)).subscribe(
                 topicMessage->{
                     activity.runOnUiThread(new Runnable()
@@ -191,6 +198,7 @@ public class RideFragment extends Fragment implements LocationListener, OnMapRea
         });
     }
 
+
     private void updateLocation(){
 
         mHandler = new Handler();
@@ -198,11 +206,10 @@ public class RideFragment extends Fragment implements LocationListener, OnMapRea
             @Override
             public void run() {
 
-                Log.wtf("HANDLEr", "TOUCHED");
                 if(home!= null){
                     SharedPreferences sharedPreferences = getActivity().getSharedPreferences("AirRide_preferences", Context.MODE_PRIVATE);
                     Long id = Long.valueOf(sharedPreferences.getString("id", ""));
-                    String jwt = sharedPreferences.getString("accessToken", "");
+                    String jwt = "Bearer " + sharedPreferences.getString("accessToken", "");
                     Log.d("jwt " , jwt);
                     ServiceUtils.driverService.getDriverLocation(jwt, id).enqueue(new Callback<com.example.uberapp_tim.model.route.Location>() {
                         @Override
@@ -505,6 +512,7 @@ public class RideFragment extends Fragment implements LocationListener, OnMapRea
         super.onDetach();
     }
 
+    @SuppressLint("CheckResult")
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
@@ -526,6 +534,33 @@ public class RideFragment extends Fragment implements LocationListener, OnMapRea
         MaterialButton startRideBtn = activity.findViewById(R.id.start_ride_btn);
         MaterialButton endRideBtn = activity.findViewById(R.id.end_ride_btn);
         MaterialButton panicBtn = activity.findViewById(R.id.panic_btn);
+        estimationView = activity.findViewById(R.id.countdown_time);
+        LinearLayout estLayout = activity.findViewById(R.id.ride_parametersLayout);
+        estLayout.bringToFront();
+
+        Gson g = new Gson();
+        webSocket.stompClient.topic("/update-vehicle-location/").subscribe(topicMessage ->{
+            String message = topicMessage.getPayload();
+            Type listType = new TypeToken<ArrayList<VehicleLocatingDTO>>(){}.getType();
+            List<VehicleLocatingDTO> vehicles= g.fromJson(message, listType);
+            if(activity != null){
+                for(VehicleLocatingDTO v : vehicles){
+                    if(Objects.equals(v.getDriverId(), Long.valueOf(activity.getSharedPreferences("AirRide_preferences", Context.MODE_PRIVATE).getString("id", "")))){
+                        this.estimation = v.getDuration();
+                        if(this.estimation != null){
+                            getActivity().runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    estimationView.setText(estimation);
+                                }
+                            });
+                        }
+
+                    }
+                }
+            }
+
+        });
 
         startRideBtn.setOnClickListener(new View.OnClickListener() {
             @Override

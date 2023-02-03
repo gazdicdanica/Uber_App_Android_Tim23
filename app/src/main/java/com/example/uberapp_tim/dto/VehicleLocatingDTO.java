@@ -8,13 +8,15 @@ public class VehicleLocatingDTO {
     private String driverEmail;
     private Vehicle vehicle;
     private RideStatus rideStatus;
+    private String duration;
 
 
-    public VehicleLocatingDTO(Long driverId, String driverEmail, Vehicle vehicle, RideStatus rideStatus) {
+    public VehicleLocatingDTO(Long driverId, String driverEmail, Vehicle vehicle, RideStatus rideStatus, String duration) {
         this.driverId = driverId;
         this.driverEmail = driverEmail;
         this.vehicle = vehicle;
         this.rideStatus = rideStatus;
+        this.duration = duration;
     }
 
     public Long getDriverId() {
@@ -47,5 +49,13 @@ public class VehicleLocatingDTO {
 
     public void setRideStatus(RideStatus rideStatus) {
         this.rideStatus = rideStatus;
+    }
+
+    public String getDuration() {
+        return duration;
+    }
+
+    public void setDuration(String duration) {
+        this.duration = duration;
     }
 }
