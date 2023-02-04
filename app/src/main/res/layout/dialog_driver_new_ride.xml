@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="30dp">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:text="@string/driver_ride_dialog_title"
+        android:textSize="24sp"
+        android:layout_marginBottom="16dp"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="text"
+        android:id="@+id/start_location_dialog"
+        android:drawablePadding="7dp"
+        android:layout_marginBottom="10dp"
+        android:enabled="false"
+        android:drawableStart="@drawable/ic_baseline_location_on_24"
+        android:drawableTint="?attr/colorOnBackground"
+        />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="text"
+        android:id="@+id/end_location_dialog"
+        android:drawableStart="@drawable/ic_baseline_location_on_24"
+        android:drawablePadding="7dp"
+        android:enabled="false"
+        android:drawableTint="?attr/colorOnBackground"
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <EditText
+            android:id="@+id/dialog_time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableStart="@drawable/ic_baseline_timelapse_24"
+            android:drawableTint="?attr/colorOnBackground"
+            android:drawablePadding="7dp"
+            android:layout_weight="1"
+            android:inputType="number"
+            android:enabled="false"/>
+        <EditText
+            android:id="@+id/dialog_kilometers"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="numberDecimal"
+            android:drawableStart="@drawable/ic_baseline_compare_arrows_24"
+            android:drawableTint="?attr/colorOnBackground"
+            android:drawablePadding="7dp"
+            android:layout_weight="1"
+            android:enabled="false"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <EditText
+            android:id="@+id/person_num_dialog"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:enabled="false"
+            android:inputType="number"
+            android:drawableStart="@drawable/ic_baseline_people_24"
+            android:drawableTint="?attr/colorOnBackground"
+            android:drawablePadding="7dp"
+            android:layout_weight="1"
+            />
+        <EditText
+            android:id="@+id/price_dialog"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:enabled="false"
+            android:inputType="numberDecimal"
+            android:drawableStart="@drawable/ic_baseline_attach_money_24"
+            android:drawableTint="?attr/colorOnBackground"
+            android:drawablePadding="7dp"
+            android:layout_weight="1"/>
+    </LinearLayout>
+
+</LinearLayout>
