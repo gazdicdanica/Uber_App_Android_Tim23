@@ -113,7 +113,7 @@ public class PassengerInboxActivity extends AppCompatActivity {
         sharedPreferences = getSharedPreferences("AirRide_preferences", Context.MODE_PRIVATE);
 
         Long userId = Long.valueOf(sharedPreferences.getString("id", null));
-        ServiceUtils.userService.getAllMessages(sharedPreferences.getString("accessToken", null), userId).enqueue(
+        ServiceUtils.userService.getAllMessages("Bearer "+sharedPreferences.getString("accessToken", null), userId).enqueue(
                 new Callback<ResponseBody>() {
                     @Override
                     public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
