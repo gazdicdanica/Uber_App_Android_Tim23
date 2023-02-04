@@ -44,6 +44,7 @@ import com.example.uberapp_tim.model.ride.RideStatus;
 import com.example.uberapp_tim.model.route.Location;
 import com.example.uberapp_tim.model.route.Route;
 import com.example.uberapp_tim.model.vehicle.CarType;
+import com.example.uberapp_tim.receiver.NotificationReceiver;
 import com.example.uberapp_tim.service.FragmentToActivity;
 import com.example.uberapp_tim.tools.FragmentTransition;
 import com.google.android.gms.maps.model.LatLng;
@@ -589,6 +590,18 @@ public class PassengerMainActivity extends AppCompatActivity implements View.OnC
                 Log.i("Ovde puca", "da");
             }
         }, throwable -> Log.e("TROWABLE WEBSOCKET: ", throwable.getMessage()));
+
+        String id = getSharedPreferences("AirRide_preferences", Context.MODE_PRIVATE).getString("id", null);
+        webSocket.stompClient.topic("/linkPassengers/" + id).subscribe(topicMessage-> {
+            Intent intent = new Intent(this, NotificationReceiver.class);
+            intent.putExtra("title", "Ride");
+            intent.putExtra("text", "You have been linked by a friend to a new ride");
+            intent.putExtra("channel", "passenger_channel");
+            intent.putExtra("id", id);
+            sendBroadcast(intent);
+
+            // TODO - dialog??????
+        });
 
     }
 
