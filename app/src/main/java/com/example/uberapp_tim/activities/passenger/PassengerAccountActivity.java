@@ -330,9 +330,12 @@ public class PassengerAccountActivity extends AppCompatActivity {
         phoneNum.setText(user.getPhoneNumber());
         address.setText(user.getAddress());
         password.setText(user.getPassword());
-        byte[] bytes = Base64.decode(passenger.getProfilePhoto(), Base64.DEFAULT);
-        Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-        set.setImageBitmap(bitmap);
+        if(passenger.getProfilePhoto() != null){
+            byte[] bytes = Base64.decode(passenger.getProfilePhoto(), Base64.DEFAULT);
+            Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+            set.setImageBitmap(bitmap);
+        }
+
     }
 
     @Override

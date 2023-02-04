@@ -102,10 +102,11 @@ public class DriverInboxActivity extends AppCompatActivity {
             }
         });
 
+        Log.d("INBOX", "usao");
         sharedPreferences = getSharedPreferences("AirRide_preferences", Context.MODE_PRIVATE);
 
         Long userId = Long.valueOf(sharedPreferences.getString("id", null));
-        ServiceUtils.userService.getAllMessages(sharedPreferences.getString("accessToken", null), userId).enqueue(
+        ServiceUtils.userService.getAllMessages("Bearer " + sharedPreferences.getString("accessToken", null), userId).enqueue(
                 new Callback<ResponseBody>() {
                     @Override
                     public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -118,6 +119,7 @@ public class DriverInboxActivity extends AppCompatActivity {
                                 }
                             }).create();
                             Type listType = new TypeToken<ArrayList<MessageDTO>>(){}.getType();
+
 
                             String message = response.body().string();
                             List<MessageDTO> messages = new ArrayList<>();

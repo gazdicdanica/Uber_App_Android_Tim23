@@ -605,7 +605,6 @@ public class PassengerMainActivity extends AppCompatActivity implements View.OnC
             intent.putExtra("channel", "passenger_channel");
             intent.putExtra("id", id);
             sendBroadcast(intent);
-
             String rideMessage = topicMessage.getPayload();
             Gson g = null;
 
