@@ -85,6 +85,7 @@ public class PassengerInRideFragment extends Fragment implements OnMapReadyCallb
     private WebSocket webSocket = new WebSocket();
     private RideDTO rideRespDTO;
     private Long driverId;
+    private String rideId;
     CircleButton panic;
 
     Marker driverMarker;
@@ -101,6 +102,7 @@ public class PassengerInRideFragment extends Fragment implements OnMapReadyCallb
         start = b.getParcelable("start");
         end = b.getParcelable("finish");
         driverId = Long.valueOf(b.getString("driverID"));
+        rideId = b.getString("rideId");
         locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
         subscribeToWebSocket();
     }
@@ -301,6 +303,17 @@ public class PassengerInRideFragment extends Fragment implements OnMapReadyCallb
                 }
             }
 
+        });
+
+        webSocket.stompClient.topic("/driver-arrived/"+rideId).subscribe(topicMessage -> {
+            Intent i = new Intent(getContext(), NotificationReceiver.class);
+            i.putExtra("title", "Ride");
+            i.putExtra("text", "Driver arrived on departure location");
+            i.putExtra("channel", "passenger_channel");
+            i.putExtra("id", getActivity().getSharedPreferences("AirRide_preferences", Context.MODE_PRIVATE).getString("id", null));
+
+            Log.d("BEFORE BROADCAS", "");
+            getActivity().sendBroadcast(i);
         });
     }
 

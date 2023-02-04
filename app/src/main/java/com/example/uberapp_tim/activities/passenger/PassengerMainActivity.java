@@ -578,6 +578,7 @@ public class PassengerMainActivity extends AppCompatActivity implements View.OnC
                     alertDialog.dismiss();
                     Bundle b = rideBundle();
                     b.putString("driverID", String.valueOf(rideRespDTO.getDriver().getId()));
+                    b.putString("rideId", String.valueOf(rideRespDTO.getId()));
                     PassengerInRideFragment fragment = PassengerInRideFragment.newInstance();
                     fragment.setArguments(b);
 
@@ -667,6 +668,7 @@ public class PassengerMainActivity extends AppCompatActivity implements View.OnC
                         acceptRideDialog.dismiss();
                         Bundle b = rideBundle();
                         b.putString("driverID", String.valueOf(dtoForDialog.getDriver().getId()));
+                        b.putString("rideId", String.valueOf(rideRespDTO.getId()));
                         PassengerInRideFragment fragment = PassengerInRideFragment.newInstance();
                         fragment.setArguments(b);
 
