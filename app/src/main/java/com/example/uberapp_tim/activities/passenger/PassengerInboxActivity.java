@@ -3,13 +3,16 @@ package com.example.uberapp_tim.activities.passenger;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.Build;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -17,11 +20,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.uberapp_tim.R;
-import com.example.uberapp_tim.activities.RideHistoryActivity;
 import com.example.uberapp_tim.adapters.ChatAdapter;
 import com.example.uberapp_tim.connection.ServiceUtils;
 import com.example.uberapp_tim.dto.MessageDTO;
-import com.example.uberapp_tim.fragments.InboxFragment;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
@@ -38,7 +39,6 @@ import java.lang.reflect.Type;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -49,10 +49,13 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class PassengerInboxActivity extends AppCompatActivity {
+public class PassengerInboxActivity extends AppCompatActivity implements SensorEventListener {
 
     SharedPreferences sharedPreferences;
     Map<Long, List<MessageDTO>> data = new LinkedHashMap<>();
+
+    SensorManager sensorManager;
+    private float mAccel, mAccelCur, mAccelLast;
 
     BottomNavigationView passengerNav;
 
@@ -62,6 +65,8 @@ public class PassengerInboxActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstance){
         super.onCreate(savedInstance);
         setContentView(R.layout.passenger_inbox_activity);
+
+        sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
 
         Toolbar toolbar = findViewById(R.id.toolbarPassengerInbox);
         setSupportActionBar(toolbar);
@@ -81,7 +86,6 @@ public class PassengerInboxActivity extends AppCompatActivity {
         passengerNav = findViewById(R.id.passengerInboxNav);
         passengerNav.setSelectedItemId(R.id.action_inbox);
         passengerNav.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
-            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 Intent i;
@@ -200,11 +204,16 @@ public class PassengerInboxActivity extends AppCompatActivity {
     protected void onResume(){
         super.onResume();
         passengerNav.setSelectedItemId(R.id.action_inbox);
+        Objects.requireNonNull(sensorManager).registerListener(this,
+                sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
+                SensorManager.SENSOR_DELAY_NORMAL);
+
     }
 
     @Override
     protected void onPause(){
         super.onPause();
+        sensorManager.unregisterListener(this);
     }
 
     @Override
@@ -215,5 +224,26 @@ public class PassengerInboxActivity extends AppCompatActivity {
     @Override
     protected void onDestroy(){
         super.onDestroy();
+    }
+
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+        float x = event.values[0];
+        float y = event.values[1];
+        float z = event.values[2];
+
+        mAccelLast = mAccelCur;
+        mAccelCur = (float) Math.sqrt((double) (x*x + y*y + z*z));
+        float delta = mAccelCur - mAccelLast;
+        mAccel = mAccel * 0.9f + delta;
+        if (mAccel > 12) {
+            Toast.makeText(this, "SHAKE EVENT", Toast.LENGTH_SHORT).show();
+//            Collections.sort();
+        }
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int i) {
+
     }
 }

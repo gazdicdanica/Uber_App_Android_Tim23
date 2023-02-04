@@ -224,55 +224,59 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
                 }
             }
 
-        });
+        }, throwable -> Log.wtf("Trowable map fragment update vehicle loc:", throwable.getMessage()));
     }
 
     private void addVehicle(VehicleLocatingDTO vehicle) {
-        if (vehicle.getRideStatus() == RideStatus.FINISHED && !checkPresentOnMap(vehicle)) {
-            Log.d("NE POSTOJI", "FINISHED");
-            LatLng location = new LatLng(vehicle.getVehicle().getCurrentLocation().getLatitude(), vehicle.getVehicle().getCurrentLocation().getLongitude());
-            Marker m = map.addMarker(
-                    new MarkerOptions()
-                            .title("Available")
-                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))
-                            .position(location)
-            );
-            m.setTag(vehicle.getVehicle().getId());
-            this.activeDrivers.add(m);
-        } else if (vehicle.getRideStatus().equals(RideStatus.ACTIVE) && !this.checkPresentOnMap(vehicle)) {
-            Log.d("NE POSTOJI", "ACTIVE");
-            LatLng location = new LatLng(vehicle.getVehicle().getCurrentLocation().getLatitude(), vehicle.getVehicle().getCurrentLocation().getLongitude());
-            Marker m = map.addMarker(new MarkerOptions()
-                    .title("Busy")
-                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE))
-                    .position(location)
-            );
-            m.setTag(vehicle.getVehicle().getId());
-            this.busyDrivers.add(m);
-        } else if (this.checkPresentOnMap(vehicle) && vehicle.getRideStatus().equals(RideStatus.ACTIVE)
-                && this.getVehicleMarkerById(vehicle.getVehicle().getId()).getTitle().equals("Available")) {
-            Log.d("AVAILABLE TO ", "BUSY");
-            Marker m = this.getVehicleMarkerById(vehicle.getVehicle().getId());
-            this.activeDrivers.remove(m);
-            m.setTitle("Busy");
-            m.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
-            LatLng location = new LatLng(vehicle.getVehicle().getCurrentLocation().getLatitude(), vehicle.getVehicle().getCurrentLocation().getLongitude());
-            m.setPosition(location);
-            this.busyDrivers.add(m);
-        } else if (this.checkPresentOnMap(vehicle) && vehicle.getRideStatus().equals(RideStatus.FINISHED)
-                && this.getVehicleMarkerById(vehicle.getVehicle().getId()).getTitle().equals("Busy")) {
-            Log.d("BUSY YO", "AVAILABLE");
-            Marker m = this.getVehicleMarkerById(vehicle.getVehicle().getId());
-            this.busyDrivers.remove(m);
-            m.setTitle("Active");
-            m.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
-            LatLng location = new LatLng(vehicle.getVehicle().getCurrentLocation().getLatitude(), vehicle.getVehicle().getCurrentLocation().getLongitude());
-            m.setPosition(location);
-            this.activeDrivers.add(m);
-        }else{
-            Log.d("PROMENA", "LOKACIJE");
-            LatLng location = new LatLng(vehicle.getVehicle().getCurrentLocation().getLatitude(), vehicle.getVehicle().getCurrentLocation().getLongitude());
-            this.getVehicleMarkerById(vehicle.getVehicle().getId()).setPosition(location);
+        if(map != null ) {
+            if (vehicle.getRideStatus() == RideStatus.FINISHED && !checkPresentOnMap(vehicle)) {
+                Log.d("NE POSTOJI", "FINISHED");
+                LatLng location = new LatLng(vehicle.getVehicle().getCurrentLocation().getLatitude(), vehicle.getVehicle().getCurrentLocation().getLongitude());
+                Marker m = map.addMarker(
+                        new MarkerOptions()
+                                .title("Available")
+                                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))
+                                .position(location)
+                );
+                m.setTag(vehicle.getVehicle().getId());
+                this.activeDrivers.add(m);
+            } else if (vehicle.getRideStatus().equals(RideStatus.ACTIVE) && !this.checkPresentOnMap(vehicle)) {
+                Log.d("NE POSTOJI", "ACTIVE");
+                LatLng location = new LatLng(vehicle.getVehicle().getCurrentLocation().getLatitude(), vehicle.getVehicle().getCurrentLocation().getLongitude());
+                Marker m = map.addMarker(new MarkerOptions()
+                        .title("Busy")
+                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE))
+                        .position(location)
+                );
+                m.setTag(vehicle.getVehicle().getId());
+                this.busyDrivers.add(m);
+            } else if (this.checkPresentOnMap(vehicle) && vehicle.getRideStatus().equals(RideStatus.ACTIVE)
+                    && this.getVehicleMarkerById(vehicle.getVehicle().getId()).getTitle().equals("Available")) {
+                Log.d("AVAILABLE TO ", "BUSY");
+                Marker m = this.getVehicleMarkerById(vehicle.getVehicle().getId());
+                this.activeDrivers.remove(m);
+                m.setTitle("Busy");
+                m.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
+                LatLng location = new LatLng(vehicle.getVehicle().getCurrentLocation().getLatitude(), vehicle.getVehicle().getCurrentLocation().getLongitude());
+                m.setPosition(location);
+                m.setTag(vehicle.getVehicle().getId());
+                this.busyDrivers.add(m);
+            } else if (this.checkPresentOnMap(vehicle) && vehicle.getRideStatus().equals(RideStatus.FINISHED)
+                    && this.getVehicleMarkerById(vehicle.getVehicle().getId()).getTitle().equals("Busy")) {
+                Log.d("BUSY YO", "AVAILABLE");
+                Marker m = this.getVehicleMarkerById(vehicle.getVehicle().getId());
+                this.busyDrivers.remove(m);
+                m.setTitle("Active");
+                m.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+                LatLng location = new LatLng(vehicle.getVehicle().getCurrentLocation().getLatitude(), vehicle.getVehicle().getCurrentLocation().getLongitude());
+                m.setPosition(location);
+                m.setTag(vehicle.getVehicle().getId());
+                this.activeDrivers.add(m);
+            } else {
+                Log.d("PROMENA", "LOKACIJE");
+                LatLng location = new LatLng(vehicle.getVehicle().getCurrentLocation().getLatitude(), vehicle.getVehicle().getCurrentLocation().getLongitude());
+                this.getVehicleMarkerById(vehicle.getVehicle().getId()).setPosition(location);
+            }
         }
     }
 

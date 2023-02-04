@@ -57,9 +57,6 @@ public class DriverRideActivity extends AppCompatActivity implements FragmentToA
                 startActivity(chatIntent);
             }
         });
-
-        Fragment fragment = RideFragment.newInstance();
-//        FragmentTransition.to(fragment, DriverRideActivity.this, false);
     }
 
     public Bundle getIdBundle(){

@@ -547,7 +547,9 @@ public class RideFragment extends Fragment implements LocationListener, OnMapRea
                 for(VehicleLocatingDTO v : vehicles){
                     if(Objects.equals(v.getDriverId(), Long.valueOf(activity.getSharedPreferences("AirRide_preferences", Context.MODE_PRIVATE).getString("id", "")))){
                         this.estimation = v.getDuration();
+
                         if(this.estimation != null && this.getActivity()!=null){
+
                             getActivity().runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
@@ -645,6 +647,7 @@ public class RideFragment extends Fragment implements LocationListener, OnMapRea
                                 Toast.makeText(activity, "Panic was sent", Toast.LENGTH_SHORT).show();
                                 Intent main = new Intent(activity, DriverMainActivity.class);
                                 main.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
+                                getActivity().finish();
                                 startActivity(main);
                             }
 

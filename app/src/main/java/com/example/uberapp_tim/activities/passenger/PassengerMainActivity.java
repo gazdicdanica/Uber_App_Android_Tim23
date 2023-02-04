@@ -11,7 +11,9 @@ import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.InputType;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -30,8 +32,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.uberapp_tim.R;
-import com.example.uberapp_tim.activities.driver.DriverMainActivity;
-import com.example.uberapp_tim.activities.driver.DriverRideActivity;
+import com.example.uberapp_tim.activities.InRideChatActivity;
 import com.example.uberapp_tim.connection.ServiceUtils;
 import com.example.uberapp_tim.connection.WebSocket;
 import com.example.uberapp_tim.dto.RideDTO;
@@ -95,8 +96,8 @@ public class PassengerMainActivity extends AppCompatActivity implements View.OnC
     private com.example.uberapp_tim.model.route.Location startLocation = null, endLocation = null;
     private float distance=0;
     private double duration;
-    private boolean isClicked = false;
-    String startLoc="", finishLoc="", timeData="", carTypeSelected = "STANDARD";
+    private boolean isClicked = false, textInputted=false;
+    String startLoc="", finishLoc="", timeData="", carTypeSelected = "STANDARD", sLocation="", fLocation="";
     LatLng s, f;
     List<String> invitedPeople = new ArrayList<>();
     private boolean isus = false;
@@ -140,6 +141,7 @@ public class PassengerMainActivity extends AppCompatActivity implements View.OnC
         estimateTxt = findViewById(R.id.timeTctLayout);
         start = findViewById(R.id.startLocation);
         finish = findViewById(R.id.whereTo);
+//        onTextChanged();
 
         carType = findViewById(R.id.carType);
         carType.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, CarType.values()));
@@ -301,6 +303,19 @@ public class PassengerMainActivity extends AppCompatActivity implements View.OnC
         }
         else if (view == requestRideBtn) {
             if (start != null && finish != null) {
+                Toast.makeText(this, "Pokusana Konverzija", Toast.LENGTH_SHORT).show();
+                Log.i("ADRS1:", start.getText().toString());
+                Log.i("ADRS2:", finish.getText().toString());
+                s = getLocationFromAddress(start.getText().toString());
+                f = getLocationFromAddress(finish.getText().toString());
+                if (endLocation == null || startLocation == null) {
+                    endLocation = new Location(f.longitude, f.latitude);
+                    startLocation = new Location(s.longitude, s.latitude);
+                    startLoc = start.getText().toString();
+                    finishLoc = finish.getText().toString();
+                }
+                Log.i("Star:", s.toString());
+                Log.i("Finish: ", f.toString());
                 if (isClicked) {
                     requestRideBtn.setVisibility(View.GONE);
                     createRide();
@@ -387,8 +402,14 @@ public class PassengerMainActivity extends AppCompatActivity implements View.OnC
             builder.create().show();
         }
         else if (view == chatBtn) {
-            Toast.makeText(this, "Danice Ciganko", Toast.LENGTH_SHORT).show();
-            // TODO Danica Ciganka
+            Intent chatIntent = new Intent(PassengerMainActivity.this, InRideChatActivity.class);
+            // rideId
+            chatIntent.putExtra("rideId", rideRespDTO.getId());
+            // userId
+            chatIntent.putExtra("userId", rideRespDTO.getDriver().getId());
+            startActivity(chatIntent);
+
+            // TODO NA POVRATKU JE INKONZISTENTNO :(((
         }
     }
 
@@ -479,24 +500,27 @@ public class PassengerMainActivity extends AppCompatActivity implements View.OnC
     }
 
     public LatLng getLocationFromAddress(String strAddress) {
-        Geocoder geocoder = new Geocoder(this);
-        List<Address> addresses;
-        LatLng p1;
+        Geocoder coder = new Geocoder(this);
+        List<Address> address;
+        LatLng p1 = null;
+
         try {
-            addresses = geocoder.getFromLocationName(strAddress, 1);
-            if (addresses == null) {
+            address = coder.getFromLocationName(strAddress, 2,
+                    45.085839, 19.503961,
+                    45.423230, 20.108896);
+            if (address == null) {
                 return null;
             }
-            Address location = addresses.get(0);
+            Address location = address.get(0);
             location.getLatitude();
             location.getLongitude();
 
-            p1 = new LatLng((location.getLatitude() * 1E6), (location.getLongitude() * 1E6));
-            return p1;
+            p1 = new LatLng(location.getLatitude(), location.getLongitude());
+
         } catch (IOException e) {
             e.printStackTrace();
-            return null;
         }
+        return p1;
     }
 
     public String getAddressFromLocation(LatLng location) {
@@ -578,11 +602,13 @@ public class PassengerMainActivity extends AppCompatActivity implements View.OnC
                     alertDialog.dismiss();
                     Bundle b = rideBundle();
                     b.putString("driverID", String.valueOf(rideRespDTO.getDriver().getId()));
+                    b.putString("rideId", String.valueOf(rideRespDTO.getId()));
                     PassengerInRideFragment fragment = PassengerInRideFragment.newInstance();
                     fragment.setArguments(b);
 
+//                    FragmentTransition.remove(this);
+                    FragmentTransition.to(fragment, this, true);
 
-                    FragmentTransition.to(fragment, this, false);
                     isus = !isus;
                 }
             }
@@ -592,8 +618,10 @@ public class PassengerMainActivity extends AppCompatActivity implements View.OnC
                 overridePendingTransition(0, 0);
                 startActivity(getIntent());
                 overridePendingTransition(0, 0);
-            } else{
-                Log.i("Ovde puca", "da");
+            }
+            else{
+                
+                Log.i("Ovde puca", "da"+rideRespDTO);
             }
         }, throwable -> Log.e("TROWABLE WEBSOCKET: ", throwable.getMessage()));
 
@@ -627,6 +655,43 @@ public class PassengerMainActivity extends AppCompatActivity implements View.OnC
                 }
             });
         });
+
+        webSocket.stompClient.topic("/scheduledNotifications/"+id).subscribe(
+                topicMessage -> {
+                    Gson g = new GsonBuilder().registerTypeAdapter(LocalDateTime.class, new JsonDeserializer<LocalDateTime>() {
+                        @Override
+                        public LocalDateTime deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+                            DateTimeFormatter format = DateTimeFormatter.ofPattern("yyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+                            return LocalDateTime.parse(json.getAsJsonPrimitive().getAsString(), format);
+                        }
+                    }).create();
+
+                    RideDTO schedule = g.fromJson(topicMessage.getPayload(), RideDTO.class);
+                    Intent intent = new Intent(this, NotificationReceiver.class);
+                    intent.putExtra("channel", "passenger_channel");
+                    intent.putExtra("id", id);
+                    if (schedule.getStatus() == RideStatus.REJECTED) {
+                        intent.putExtra("title", "Unsuccessful ride schedule");
+                        intent.putExtra("text", "Unfortunately, all drivers are busy.");
+                    } else if (schedule.getStatus() == RideStatus.ACCEPTED) {
+                        intent.putExtra("title", "Scheduled ride");
+                        intent.putExtra("text", "Driver is on his way");
+                        dtoForDialog = schedule;
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (isFinishing() || isDestroyed()) {
+                                    Log.wtf("your blood is my", "wine");
+                                } else {
+                                    showLinkedPassengerDialog();
+                                }
+                            }
+                        });
+                        // TODO dialog koji vodi u ride
+
+                    }
+                    sendBroadcast(intent);
+                }, throwable -> Log.wtf("Throwable is schNotif:", throwable.getMessage()));
     }
 
     private void showLinkedPassengerDialog() {
@@ -667,14 +732,12 @@ public class PassengerMainActivity extends AppCompatActivity implements View.OnC
                         acceptRideDialog.dismiss();
                         Bundle b = rideBundle();
                         b.putString("driverID", String.valueOf(dtoForDialog.getDriver().getId()));
+                        b.putString("rideId", String.valueOf(rideRespDTO.getId()));
                         PassengerInRideFragment fragment = PassengerInRideFragment.newInstance();
                         fragment.setArguments(b);
 
 
                         setTextForRide();
-                        Log.i("VREDNOST INC DTO:", dtoForDialog.toString());
-                        Log.i("VREDNOST DISTANCE", String.valueOf(dtoForDialog.getTotalDistance()));
-                        Log.i("VREDNOST vremena", String.valueOf(dtoForDialog.getEstimatedTimeInMinutes()));
                         estimateTxt.setText(String.valueOf(dtoForDialog.getEstimatedTimeInMinutes()));
                         distanceTxt.setText(String.valueOf(dtoForDialog.getTotalDistance()));
                         start.setText(dtoForDialog.getLocations().get(0).getDeparture().getAddress());
@@ -685,7 +748,7 @@ public class PassengerMainActivity extends AppCompatActivity implements View.OnC
                         requestRideBtn.setVisibility(View.GONE);
                         panicBtn.setVisibility(View.VISIBLE);
                         chatBtn.setVisibility(View.VISIBLE);
-                        FragmentTransition.to(fragment, that, false);
+                        FragmentTransition.to(fragment, that, true);
                     }
                 });
 
@@ -735,19 +798,54 @@ public class PassengerMainActivity extends AppCompatActivity implements View.OnC
                         }
                     }
                 }
-                else {
+                else if (response.code() == 400) {
                     finish();
                     overridePendingTransition(0, 0);
                     startActivity(getIntent());
                     overridePendingTransition(0, 0);
-                    Toast.makeText(PassengerMainActivity.this, "Invalid Request"+response.body().toString(), Toast.LENGTH_SHORT).show();
-                    Log.wtf("Greska zakazivanje Voznje", response.message());
+                    Toast.makeText(PassengerMainActivity.this, "No Available Vehicles", Toast.LENGTH_SHORT).show();
+                    Log.wtf("No Drivers Online", String.valueOf(response));
                 }
             }
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 Toast.makeText(PassengerMainActivity.this, "Greska 569", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void onTextChanged() {
+        start.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
+        finish.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
             }
         });
     }
