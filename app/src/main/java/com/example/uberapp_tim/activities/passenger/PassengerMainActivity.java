@@ -96,7 +96,7 @@ public class PassengerMainActivity extends AppCompatActivity implements View.OnC
     private com.example.uberapp_tim.model.route.Location startLocation = null, endLocation = null;
     private float distance=0;
     private double duration;
-    private boolean isClicked = false, textInputted=false;
+    private boolean isClicked = false, textInputted=false, notified5First=false, notified15=false, notified5Second=false;
     String startLoc="", finishLoc="", timeData="", carTypeSelected = "STANDARD", sLocation="", fLocation="";
     LatLng s, f;
     List<String> invitedPeople = new ArrayList<>();
@@ -303,7 +303,6 @@ public class PassengerMainActivity extends AppCompatActivity implements View.OnC
         }
         else if (view == requestRideBtn) {
             if (start != null && finish != null) {
-                Toast.makeText(this, "Pokusana Konverzija", Toast.LENGTH_SHORT).show();
                 Log.i("ADRS1:", start.getText().toString());
                 Log.i("ADRS2:", finish.getText().toString());
                 s = getLocationFromAddress(start.getText().toString());
@@ -587,7 +586,11 @@ public class PassengerMainActivity extends AppCompatActivity implements View.OnC
 
     @SuppressLint("CheckResult")
     private void subscribeToWebSocket() {
-        webSocket.stompClient.topic("/ride-passenger/"+getSharedPreferences("AirRide_preferences", Context.MODE_PRIVATE).getString("id", null)).subscribe(topicMassage -> {
+        String id = getSharedPreferences("AirRide_preferences", Context.MODE_PRIVATE).getString("id", null);
+
+
+        webSocket.stompClient.topic("/ride-passenger/"+ id).subscribe(
+                topicMassage -> {
             String message = topicMassage.getPayload();
             Gson g = new GsonBuilder().registerTypeAdapter(LocalDateTime.class, new JsonDeserializer<LocalDateTime>() {
                 @Override
@@ -623,10 +626,10 @@ public class PassengerMainActivity extends AppCompatActivity implements View.OnC
                 
                 Log.i("Ovde puca", "da"+rideRespDTO);
             }
-        }, throwable -> Log.e("TROWABLE WEBSOCKET: ", throwable.getMessage()));
+        }, throwable -> Log.e("THROWABLE WEBSOCKET: ", throwable.getMessage()));
 
-        String id = getSharedPreferences("AirRide_preferences", Context.MODE_PRIVATE).getString("id", null);
-        webSocket.stompClient.topic("/linkPassengers/" + id).subscribe(topicMessage-> {
+        webSocket.stompClient.topic("/linkPassengers/" + id).subscribe(
+                topicMessage-> {
             Intent intent = new Intent(this, NotificationReceiver.class);
             intent.putExtra("title", "Ride");
             intent.putExtra("text", "You have been linked by a friend to a new ride");
@@ -654,7 +657,7 @@ public class PassengerMainActivity extends AppCompatActivity implements View.OnC
                     }
                 }
             });
-        });
+        }, throwable -> Log.e("THROWABLE linkPassenger: ", throwable.getMessage()));
 
         webSocket.stompClient.topic("/scheduledNotifications/"+id).subscribe(
                 topicMessage -> {
@@ -691,7 +694,46 @@ public class PassengerMainActivity extends AppCompatActivity implements View.OnC
 
                     }
                     sendBroadcast(intent);
-                }, throwable -> Log.wtf("Throwable is schNotif:", throwable.getMessage()));
+                }, throwable -> Log.wtf("Throwable is scheduled:", throwable.getMessage()));
+
+        webSocket.stompClient.topic("/notify15/" + id).subscribe(
+                topicMessage -> {
+                    if (!notified15) {
+                        notified15 = true;
+                        Intent intent = new Intent(this, NotificationReceiver.class);
+                        intent.putExtra("channel", "passenger_channel");
+                        intent.putExtra("id", id);
+                        intent.putExtra("title", "Scheduled ride");
+                        intent.putExtra("text", "You Have Scheduled Ride In 15 Minutes");
+                        sendBroadcast(intent);
+                    }
+                }, throwable -> Log.e("TROWABLE WEBSOCKET: ", throwable.getMessage()));
+
+        webSocket.stompClient.topic("/notify10/" + id).subscribe(
+                topicMessage -> {
+                    if (!notified5First) {
+                        notified5First = true;
+                        Intent intent = new Intent(this, NotificationReceiver.class);
+                        intent.putExtra("channel", "passenger_channel");
+                        intent.putExtra("id", id);
+                        intent.putExtra("title", "Scheduled ride");
+                        intent.putExtra("text", "You Have Scheduled Ride In 10 Minutes");
+                        sendBroadcast(intent);
+                    }
+                }, throwable ->  Log.e("TROWABLE WEBSOCKET: ", throwable.getMessage()));
+
+        webSocket.stompClient.topic("/notify5/" + id).subscribe(
+                topicMessage -> {
+                    if (!notified5Second) {
+                        notified5Second = true;
+                        Intent intent = new Intent(this, NotificationReceiver.class);
+                        intent.putExtra("channel", "passenger_channel");
+                        intent.putExtra("id", id);
+                        intent.putExtra("title", "Scheduled ride");
+                        intent.putExtra("text", "You Have Scheduled Ride In 5 Minutes");
+                        sendBroadcast(intent);
+                    }
+                }, throwable ->  Log.e("TROWABLE WEBSOCKET: ", throwable.getMessage()));
     }
 
     private void showLinkedPassengerDialog() {

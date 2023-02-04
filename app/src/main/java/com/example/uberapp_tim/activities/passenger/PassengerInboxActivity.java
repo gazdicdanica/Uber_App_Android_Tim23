@@ -39,10 +39,13 @@ import java.lang.reflect.Type;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -238,7 +241,12 @@ public class PassengerInboxActivity extends AppCompatActivity implements SensorE
         mAccel = mAccel * 0.9f + delta;
         if (mAccel > 12) {
             Toast.makeText(this, "SHAKE EVENT", Toast.LENGTH_SHORT).show();
-//            Collections.sort();
+            Map<Long, List<MessageDTO>> sortedMap = data.entrySet().stream()
+                    .sorted(Map.Entry.comparingByKey())
+                    .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
+
+            ChatAdapter adapter = new ChatAdapter(PassengerInboxActivity.this, sortedMap);
+            recycler.setAdapter(adapter);
         }
     }
 
