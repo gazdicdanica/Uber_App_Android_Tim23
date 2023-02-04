@@ -165,9 +165,12 @@ public class DriverAccountActivity extends AppCompatActivity {
         address.setText(user.getAddress());
         phoneNum.setText(user.getPhoneNumber());
         password.setText(user.getPassword());
-        byte[] bytes = Base64.decode(driver.getProfilePhoto(), Base64.DEFAULT);
-        Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-        set.setImageBitmap(bitmap);
+        if(driver.getProfilePhoto() != null){
+            byte[] bytes = Base64.decode(driver.getProfilePhoto(), Base64.DEFAULT);
+            Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+            set.setImageBitmap(bitmap);
+        }
+
     }
 
     private void showImagePicker() {

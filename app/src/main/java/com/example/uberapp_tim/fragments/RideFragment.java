@@ -547,7 +547,9 @@ public class RideFragment extends Fragment implements LocationListener, OnMapRea
                 for(VehicleLocatingDTO v : vehicles){
                     if(Objects.equals(v.getDriverId(), Long.valueOf(activity.getSharedPreferences("AirRide_preferences", Context.MODE_PRIVATE).getString("id", "")))){
                         this.estimation = v.getDuration();
-                        if(this.estimation != null && this.getActivity()!= null){
+
+                        if(this.estimation != null && this.getActivity()!=null){
+
                             getActivity().runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {

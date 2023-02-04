@@ -45,6 +45,7 @@ import com.example.uberapp_tim.model.ride.RideStatus;
 import com.example.uberapp_tim.model.route.Location;
 import com.example.uberapp_tim.model.route.Route;
 import com.example.uberapp_tim.model.vehicle.CarType;
+import com.example.uberapp_tim.receiver.NotificationReceiver;
 import com.example.uberapp_tim.service.FragmentToActivity;
 import com.example.uberapp_tim.tools.FragmentTransition;
 import com.google.android.gms.maps.model.LatLng;
@@ -100,11 +101,11 @@ public class PassengerMainActivity extends AppCompatActivity implements View.OnC
     private boolean isus = false;
 
     public static WebSocket webSocket = new WebSocket();
-    AlertDialog alertDialog = null;
+    AlertDialog alertDialog = null, acceptRideDialog = null;
 
     private RideRequestDTO rideDTO = new RideRequestDTO();
     private Ride rideResp;
-    private RideDTO rideRespDTO = null;
+    private RideDTO rideRespDTO = null, dtoForDialog;
     MapFragment mapFragment;
     DrawRouteFragment drawRouteFragment;
 
@@ -309,26 +310,7 @@ public class PassengerMainActivity extends AppCompatActivity implements View.OnC
                     attemptCreateRide();
                 }
                 isClicked = true;
-                linkPsngr.setVisibility(View.GONE);
-                linkPassengerBtn.setVisibility(View.GONE);
-                btnTimePicker.setVisibility(View.GONE);
-                babies.setVisibility(View.GONE);
-                pets.setVisibility(View.GONE);
-                carType.setVisibility(View.GONE);
-                txtTime.setVisibility(View.GONE);
-
-                ly1.setVisibility(View.VISIBLE);
-                ly2.setVisibility(View.VISIBLE);
-                l3.setVisibility(View.VISIBLE);
-
-                estimateTxt.setVisibility(View.VISIBLE);
-                estimateTxt.setEnabled(false);
-                distanceTxt.setVisibility(View.VISIBLE);
-                distanceTxt.setEnabled(false);
-                priceTxt.setVisibility(View.VISIBLE);
-                priceTxt.setEnabled(false);
-                start.setEnabled(false);
-                finish.setEnabled(false);
+                setTextForRide();
 
 
                 drawRouteFragment = DrawRouteFragment.newInstance();
@@ -413,6 +395,29 @@ public class PassengerMainActivity extends AppCompatActivity implements View.OnC
 
             // TODO NA POVRATKU JE INKONZISTENTNO :(((
         }
+    }
+
+    private void setTextForRide() {
+        linkPsngr.setVisibility(View.GONE);
+        linkPassengerBtn.setVisibility(View.GONE);
+        btnTimePicker.setVisibility(View.GONE);
+        babies.setVisibility(View.GONE);
+        pets.setVisibility(View.GONE);
+        carType.setVisibility(View.GONE);
+        txtTime.setVisibility(View.GONE);
+
+        ly1.setVisibility(View.VISIBLE);
+        ly2.setVisibility(View.VISIBLE);
+        l3.setVisibility(View.VISIBLE);
+
+        estimateTxt.setVisibility(View.VISIBLE);
+        estimateTxt.setEnabled(false);
+        distanceTxt.setVisibility(View.VISIBLE);
+        distanceTxt.setEnabled(false);
+        priceTxt.setVisibility(View.VISIBLE);
+        priceTxt.setEnabled(false);
+        start.setEnabled(false);
+        finish.setEnabled(false);
     }
 
     public Bundle rideBundle(){
@@ -583,10 +588,11 @@ public class PassengerMainActivity extends AppCompatActivity implements View.OnC
 
 //                    FragmentTransition.remove(this);
                     FragmentTransition.to(fragment, this, true);
+
                     isus = !isus;
                 }
             }
-            else if (!isus){
+            else if (!isus && rideRespDTO.getStatus() != RideStatus.ACTIVE && rideRespDTO.getStatus() != RideStatus.FINISHED){
                 Log.i("ISUS", "da");
                 finish();
                 overridePendingTransition(0, 0);
@@ -597,6 +603,100 @@ public class PassengerMainActivity extends AppCompatActivity implements View.OnC
             }
         }, throwable -> Log.e("TROWABLE WEBSOCKET: ", throwable.getMessage()));
 
+        String id = getSharedPreferences("AirRide_preferences", Context.MODE_PRIVATE).getString("id", null);
+        webSocket.stompClient.topic("/linkPassengers/" + id).subscribe(topicMessage-> {
+            Intent intent = new Intent(this, NotificationReceiver.class);
+            intent.putExtra("title", "Ride");
+            intent.putExtra("text", "You have been linked by a friend to a new ride");
+            intent.putExtra("channel", "passenger_channel");
+            intent.putExtra("id", id);
+            sendBroadcast(intent);
+            String rideMessage = topicMessage.getPayload();
+            Gson g = null;
+
+            g = new GsonBuilder().registerTypeAdapter(LocalDateTime.class, new JsonDeserializer<LocalDateTime>() {
+                @Override
+                public LocalDateTime deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+                    DateTimeFormatter format = DateTimeFormatter.ofPattern("yyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+                    return LocalDateTime.parse(json.getAsJsonPrimitive().getAsString(), format);
+                }
+            }).create();
+            dtoForDialog = g.fromJson(rideMessage, RideDTO.class);
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if(isDestroyed() || isFinishing()){
+                        Log.wtf("Hey now, you're", "rock star");
+                    } else {
+                        showLinkedPassengerDialog();
+                    }
+                }
+            });
+        });
+    }
+
+    private void showLinkedPassengerDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        LayoutInflater inflater = PassengerMainActivity.this.getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.dialog_driver_new_ride, null);
+
+        final EditText startLocation = dialogView.findViewById(R.id.start_location_dialog);
+        final EditText endLocation = dialogView.findViewById(R.id.end_location_dialog);
+        final EditText time = dialogView.findViewById(R.id.dialog_time);
+        final EditText km = dialogView.findViewById(R.id.dialog_kilometers);
+        final EditText people = dialogView.findViewById(R.id.person_num_dialog);
+        final EditText price = dialogView.findViewById(R.id.price_dialog);
+
+
+        startLocation.setText(dtoForDialog.getLocations().get(0).getDeparture().getAddress());
+        endLocation.setText(dtoForDialog.getLocations().get(0).getDestination().getAddress());
+        String value = String.valueOf(dtoForDialog.getEstimatedTimeInMinutes()) + " min";
+        time.setText(value);
+        System.err.println(dtoForDialog.getLocations().get(0));
+        value = String.valueOf(dtoForDialog.getTotalDistance()) + " km";
+        km.setText(value);
+        people.setText(String.valueOf(dtoForDialog.getPassengers().size()));
+        value = String.valueOf(dtoForDialog.getTotalCost()) + " RSD";
+        price.setText(value);
+
+        builder.setView(dialogView);
+        s = new LatLng(dtoForDialog.getLocations().get(0).getDeparture().getLatitude(),
+                dtoForDialog.getLocations().get(0).getDeparture().getLongitude());
+        f = new LatLng(dtoForDialog.getLocations().get(0).getDestination().getLatitude(),
+                dtoForDialog.getLocations().get(0).getDestination().getLongitude());
+
+        PassengerMainActivity that = this;
+
+        builder.setPositiveButton(R.string.dialog_accept, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        acceptRideDialog.dismiss();
+                        Bundle b = rideBundle();
+                        b.putString("driverID", String.valueOf(dtoForDialog.getDriver().getId()));
+                        PassengerInRideFragment fragment = PassengerInRideFragment.newInstance();
+                        fragment.setArguments(b);
+
+
+                        setTextForRide();
+                        Log.i("VREDNOST INC DTO:", dtoForDialog.toString());
+                        Log.i("VREDNOST DISTANCE", String.valueOf(dtoForDialog.getTotalDistance()));
+                        Log.i("VREDNOST vremena", String.valueOf(dtoForDialog.getEstimatedTimeInMinutes()));
+                        estimateTxt.setText(String.valueOf(dtoForDialog.getEstimatedTimeInMinutes()));
+                        distanceTxt.setText(String.valueOf(dtoForDialog.getTotalDistance()));
+                        start.setText(dtoForDialog.getLocations().get(0).getDeparture().getAddress());
+                        finish.setText(dtoForDialog.getLocations().get(0).getDestination().getAddress());
+                        priceTxt.setText(String.valueOf(dtoForDialog.getTotalCost()));
+
+
+                        requestRideBtn.setVisibility(View.GONE);
+                        panicBtn.setVisibility(View.VISIBLE);
+                        chatBtn.setVisibility(View.VISIBLE);
+                        FragmentTransition.to(fragment, that, false);
+                    }
+                });
+
+        acceptRideDialog = builder.create();
+        acceptRideDialog.show();
     }
 
     private void attemptCreateRide() {
@@ -646,7 +746,8 @@ public class PassengerMainActivity extends AppCompatActivity implements View.OnC
                     overridePendingTransition(0, 0);
                     startActivity(getIntent());
                     overridePendingTransition(0, 0);
-                    Toast.makeText(PassengerMainActivity.this, "Invalid Request", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(PassengerMainActivity.this, "Invalid Request"+response.body().toString(), Toast.LENGTH_SHORT).show();
+                    Log.wtf("Greska zakazivanje Voznje", response.message());
                 }
             }
 
