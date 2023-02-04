@@ -628,6 +628,35 @@ public class PassengerMainActivity extends AppCompatActivity implements View.OnC
                 }
             });
         });
+
+        webSocket.stompClient.topic("/scheduledNotifications"+id).subscribe(
+                topicMessage -> {
+                    Gson g = new GsonBuilder().registerTypeAdapter(LocalDateTime.class, new JsonDeserializer<LocalDateTime>() {
+                        @Override
+                        public LocalDateTime deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+                            DateTimeFormatter format = DateTimeFormatter.ofPattern("yyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+                            return LocalDateTime.parse(json.getAsJsonPrimitive().getAsString(), format);
+                        }
+                    }).create();
+
+                    RideDTO schedule = g.fromJson(topicMessage.getPayload(), RideDTO.class);
+                    Intent intent = new Intent(this, NotificationReceiver.class);
+                    intent.putExtra("channel", "passenger_channel");
+                    intent.putExtra("id", id);
+                    if(schedule.getStatus() == RideStatus.REJECTED){
+                        intent.putExtra("title", "Unsuccessful ride schedule");
+                        intent.putExtra("text", "Unfortunately, all drivers are busy.");
+                    }
+                    else if(schedule.getStatus() == RideStatus.ACCEPTED){
+                        intent.putExtra("title", "Scheduled ride");
+                        intent.putExtra("text", "Driver is on his way");
+
+                        // TODO dialog koji vodi u ride
+
+                    }
+                    sendBroadcast(intent);
+                }
+        );
     }
 
     private void showLinkedPassengerDialog() {
